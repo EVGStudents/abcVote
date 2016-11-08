@@ -15,38 +15,35 @@ function store_new_election($postdata)
 
 //function gets the voters as array and delivers the jsonData concatenated as string
 function get_voters_jsonData(Array $data){
-  $returnString = "[";
-  foreach ($data as &$value) {
-    $returnString = $returnString . $value->getJsonData() . ",";
+  $returnString = "";
+  foreach ($data as $value) {
+    $returnString .= $returnString ? ',' : '';
+    $returnString .= $value->getJsonData();
   }
-  // remove last "," and close
-  $returnString = substr_replace($returnString, '', -1);
-  $returnString = $returnString . "]";
+  $returnString = "[" . $returnString . "]";
   return $returnString;
 }
 
-//function gets the generators as array and generates the key-value-pairs for the generators.json, but delivers it as string.
-function get_generators_as_JSON(Array $data){
-  $returnString = "[";
-  foreach ($data as &$value) {
-    $returnString = $returnString . '"' . $value->getGeneratorName() . '":';
-    $returnString = $returnString . '"' . $value->getGeneratorValue() . '"' . ",";
+//function gets the parameters as array and generates the key-value-pairs for the parameters.json, but delivers it as string.
+function get_parameters_as_JSON(Array $data){
+  $returnString = "";
+  foreach ($data as $value) {
+    $returnString .= $returnString ? ',' : '';
+    $returnString .= '"' . $value->getParameterName() . '":';
+    $returnString .= '"' . $value->getParameterValue() . '"';
   }
-  // remove last "," and close
-  $returnString = substr_replace($returnString, '', -1);
-  $returnString = $returnString . "]";
+  $returnString = "{" . $returnString . "}";
   return $returnString;
 }
 
 //function gets all elections as array and delivers the jsonData concatenated as string
 function get_elections_jsonData(Array $data){
-  $returnString = "[";
-  foreach ($data as &$value) {
-    $returnString = $returnString . $value->getJsonData() . ",";
+  $returnString = "";
+  foreach ($data as $value) {
+    $returnString .= $returnString ? ',' : '';
+    $returnString .= $value->getJsonData();
   }
-  // remove last "," and close
-  $returnString = substr_replace($returnString, '', -1);
-  $returnString = $returnString . "]";
+  $returnString = "[" . $returnString . "]";
   return $returnString;
 }
 

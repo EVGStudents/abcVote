@@ -56,19 +56,8 @@ $app->get('/voters', function (Request $request, Response $response) {
   $voters = $mapper->getVoters();
   $response = $response->withHeader('Content-type', 'application/json');
   $response = $response->withAddedHeader('Content-Disposition', 'attachment; filename=voters.json');
-  $response = $response->withJson($voters{"jsonData"});
-  /*foreach ($voters as &$voter) {
-    echo json_encode($voters{'jsonData'});
-    print_r($voter);
-    var_export($voter);
-    get_object_vars($voter);
-  }*/
-  $voters = $mapper->jsonifyVoters();
-    print_r($voters);
-    //var_export($voters);
-    //get_object_vars($voters);
-
-  return;
+  $response = $response->write(get_voters_jsonData($voters));
+  return $response;
 });
 
 // POST /elections : receives a new election
@@ -96,19 +85,19 @@ $app->post('/elections', function (Request $request, Response $response) {
   //return $response->write(store_new_election($postdata));
 });
 
-// GET /generators : get generators from bulletin board
+// GET /parameters : get parameters from bulletin board
 /*
-* UC 1.04: clientApp requests generators
+* UC 1.04: clientApp requests parameters
 * Request: (h1, h2, p, q) zum Berechnen des Wähler-Credentials u
 * Response: (h1, h2, p, q)
 * Remark: The adminApp also need those information for setting the electionGenerator h^
 */
-$app->get('/generators', function (Request $request, Response $response) {
-  $mapper = new GeneratorMapper($this->db);
-  $generators = $mapper->getGenerators();
+$app->get('/parameters', function (Request $request, Response $response) {
+  $mapper = new ParameterMapper($this->db);
+  $parameters = $mapper->getParameters();
   $response = $response->withHeader('Content-type', 'application/json');
-  $response = $response->withAddedHeader('Content-Disposition', 'attachment; filename=generators.json');
-  $response = $response->withJson(["generators" => $generators]);
+  $response = $response->withAddedHeader('Content-Disposition', 'attachment; filename=parameters.json');
+  $response = $response->write(get_parameters_as_JSON($parameters));
   return $response;
 });
 
@@ -118,7 +107,7 @@ $app->get('/elections', function (Request $request, Response $response) {
   $elections = $mapper->getElections();
   $response = $response->withHeader('Content-type', 'application/json');
   $response = $response->withAddedHeader('Content-Disposition', 'attachment; filename=elections.json');
-  $response = $response->withJson(get_elections_jsonData($elections));
+  $response = $response->write(get_elections_jsonData($elections));
   return $response;
 });
 
@@ -130,11 +119,11 @@ $app->get('/view/voters', function (Request $request, Response $response) {
   return $response;
 });
 
-// GET /view/generators: generates a html page which show the tblGenerators' content
-$app->get('/view/generators', function (Request $request, Response $response) {
-  $mapper = new GeneratorMapper($this->db);
-  $generators = $mapper->getGenerators();
-  $response = $this->view->render($response, "generators.phtml", ["generators" => $generators]);
+// GET /view/parameters: generates a html page which show the tblParameters' content
+$app->get('/view/parameters', function (Request $request, Response $response) {
+  $mapper = new ParameterMapper($this->db);
+  $parameters = $mapper->getParameters();
+  $response = $this->view->render($response, "parameters.phtml", ["parameters" => $parameters]);
   return $response;
 });
 
