@@ -22,4 +22,5 @@ class VoterEntity
     public function getJsonData() {
         return $this->jsonData;
     }
+
 }
