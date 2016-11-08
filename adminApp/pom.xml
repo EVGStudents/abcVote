@@ -110,5 +110,10 @@
             <artifactId>javax.json</artifactId>
             <version>1.0.4</version>
         </dependency>
+        <dependency>
+            <groupId>ch.bfh.unicrypt</groupId>
+            <artifactId>unicrypt</artifactId>
+            <version>2.2-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 </project>
