@@ -1,0 +1,33 @@
+<html>
+  <head>
+      <title>/view/elections</title>
+      <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css">
+  </head>
+  <body>
+    <h1>Information stored in tblElections</h1>
+
+    <table class="pure-table">
+        <tr>
+            <th>id</th>
+            <th>jsonData</th>
+            <th>electionTitle</th>
+            <th>beginDate</th>
+            <th>endDate</th>
+            <th>appVersion</th>
+        </tr>
+
+    <?php foreach($data['elections'] as $election): ?>
+
+        <tr>
+            <td><?=$election->getId() ?></td>
+            <td><?=$election->getJsonData() ?></td>
+            <td><?=$election->getElectionTitle() ?></td>
+            <td><?=$election->getBeginDate() ?></td>
+            <td><?=$election->getEndDate() ?></td>
+            <td><?=$election->getAppVersion() ?></td>
+        </tr>
+
+    <?php endforeach; ?>
+    </table>
+  </body>
+</html>
