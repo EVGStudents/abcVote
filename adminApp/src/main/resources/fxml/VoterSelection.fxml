@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.bfh.abcvote.adminapp.Controllers.VoterSelectionController">
+   <children>
+      <Button fx:id="btBack" layoutX="14.0" layoutY="561.0" mnemonicParsing="false" onAction="#btBackClicked" text="Back" />
+      <Button fx:id="btNext" layoutX="745.0" layoutY="561.0" mnemonicParsing="false" onAction="#btNextClicked" text="Next" />
+      <Label fx:id="lbSelectVoters" layoutX="14.0" layoutY="30.0" text="Please choose voters for the vote:" />
+      <ListView fx:id="lvVoters" layoutX="14.0" layoutY="53.0" prefHeight="497.0" prefWidth="770.0" />
+   </children>
+</AnchorPane>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+<AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="800.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="ch.bfh.abcvote.adminapp.Controllers.HomeController">
+   <children>
+      <Button fx:id="btCreateVote" layoutX="288.0" layoutY="247.0" mnemonicParsing="false" onAction="#createNewVote" prefHeight="87.0" prefWidth="225.0" text="Wahl erstellen" />
+   </children>
+</AnchorPane>

@@ -11,7 +11,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <mainClass>ch.bfh.abcvote.adminapp.MainApp</mainClass>
+        <mainClass>ch.bfh.abcvote.adminapp.AdminApp</mainClass>
     </properties>
 
     <organization>
@@ -104,5 +104,11 @@
             </plugin>
         </plugins>
     </build>
-
+    <dependencies>
+        <dependency>
+            <groupId>org.glassfish</groupId>
+            <artifactId>javax.json</artifactId>
+            <version>1.0.4</version>
+        </dependency>
+    </dependencies>
 </project>
