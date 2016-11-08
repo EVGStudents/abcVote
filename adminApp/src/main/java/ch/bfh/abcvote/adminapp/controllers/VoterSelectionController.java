@@ -55,6 +55,8 @@ public class VoterSelectionController implements Initializable, ControlledScreen
         // TODO
     }    
 
+    //stores the vote object in a global variable
+    //and gets a list of all current voters in order to display it
     @Override
     public void setScene(Vote vote) {
         this.vote = vote;
@@ -75,7 +77,8 @@ public class VoterSelectionController implements Initializable, ControlledScreen
         vote.setVoters(selectedVoters);
         parentController.setScreenWithVote(AdminApp.VOTEOPTIONCREATIONSCREENID, vote);
     }
-
+    
+    //Displays the given list of Voters in the ListView for selection
     private void populateVoterListView(List<Voter> voterlist) {
         
         ObservableList<Voter> listViewList = FXCollections.observableArrayList(voterlist);

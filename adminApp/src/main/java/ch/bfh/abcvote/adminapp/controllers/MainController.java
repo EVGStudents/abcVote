@@ -26,12 +26,15 @@ import javafx.util.Duration;
 import javafx.util.Pair;
 
 /**
- *
+ * The MainController Class acts as the root element of the Stage.
+ * It acts as a hub for the communication between the diffrent Screencontrollers
+ * and between the Screencontrollers and the CommunicationController
  * @author t.buerk
  */
+
 public class MainController extends StackPane {
-    //Holds the screens to be displayed
     
+    //Hashmap that holds all the registred Controllers and thie Screens
     private HashMap<String, Pair<ControlledScreen,Node>> screens = new HashMap<>();
     private CommunicationController communicationController;
     
@@ -40,19 +43,18 @@ public class MainController extends StackPane {
         communicationController = new CommunicationController();   
     }
     
-    //Add the screen to the collection
+    //Adds a new a new Controller and Screen Pair to the Hashmap
     public void addScreen(String name, Pair<ControlledScreen,Node> screenPair){
         screens.put(name, screenPair);
     }
     
-    //Returns the Node with the given name
+    //Returns the Controller and Screen Pair for the given name
     public Pair<ControlledScreen,Node> getScreen(String name) {
         return screens.get(name);
         
     }
     
-    //load the fxml file, add the screen to the screens collection and
-    //finally injects the screenPane to the Controller
+    //load the fxml file, and add its Controller and Screen Pair to the Hashmap for further refrence
     public boolean loadScreen(String name, String rescource){
         try{
             FXMLLoader loader = new FXMLLoader(getClass().getResource(rescource));
@@ -69,14 +71,14 @@ public class MainController extends StackPane {
         }
     }
     
-    //This method tries to display the screen with the given name
-    //First it makes sure the screen has already been loaded.
-    ///Then it adds the new Screen and if necessary removes the currently displayed screen.
-    
+    //This method exchanges the current Screen with the new Screen given by the name  
     public boolean setScreen(final String name){
+        //Checks if there is a Stored Screnn for the given name
         if (screens.get(name) != null){
             final DoubleProperty opacity = opacityProperty();
+            //checks if there is screen that is already displayed
             if ( !getChildren().isEmpty()){
+                //if there is an old screen present it gets faded out before the new screen gets faded in
                Timeline fade = new Timeline(
                 new KeyFrame(Duration.ZERO, new KeyValue(opacity, 1.0)),
                 new KeyFrame(new Duration(1000), new EventHandler<ActionEvent>() {
@@ -95,6 +97,7 @@ public class MainController extends StackPane {
                 fade.play();   
             }
             else{
+               //if there is no old screen the new screen just gets faded in
                setOpacity(0.0);
                getChildren().add(screens.get(name).getValue());
                Timeline fadeIn = new Timeline(
@@ -113,7 +116,7 @@ public class MainController extends StackPane {
 
     }
     
-    //Tis method will remove the screen with the given name from the collection of screens
+    //This method will remove the Controller and screen  pair with the given name from the collection of Pairs
     public boolean unloadScreen(String name) {
         if (screens.remove(name) == null){
             System.out.println("Screen didn't exist");
@@ -124,6 +127,8 @@ public class MainController extends StackPane {
         }
     }
 
+    //this method changes the current Screen to the given name
+    //and afterwards calls that screens setScene Method to pass the given vote object for display 
     boolean setScreenWithVote(String name, Vote vote) {
         
         setScreen(name);
@@ -132,6 +137,7 @@ public class MainController extends StackPane {
         return true;
     }
 
+    
     public VoteInfo getVoteInfo() {
         return communicationController.getVoteInformation();
     }

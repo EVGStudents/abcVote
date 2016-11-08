@@ -20,7 +20,7 @@ import javax.json.JsonReader;
 /**
  * Class that is in charge of communicating with the Bulletin Board.
  * It sends requests to the Bulletin Board and converts the recieved JSON Data into Java Objects and returns them.
- * Or converts java objects into JSON Object and posts them to the Bulletin Board
+ * Or converts java objects into JSON Objects and posts them to the Bulletin Board
  * @author t.buerk
  */
 public class CommunicationController {
