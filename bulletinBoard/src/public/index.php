@@ -4,7 +4,7 @@ use \Psr\Http\Message\ResponseInterface as Response;
 
 require '../vendor/autoload.php';
 require './configuration.php';
-require './functions.php';
+include './functions.php';
 
 spl_autoload_register(function ($classname) {
     require ("../classes/" . $classname . ".php");
@@ -17,7 +17,8 @@ $container['view'] = new \Slim\Views\PhpRenderer("../templates/");
 
 $container['db'] = function ($c) {
     $db = $c['settings']['db'];
-    $pdo = new PDO("mysql:host=" . $db['host'] . ";dbname=" . $db['dbname'],
+    $pdo = new PDO("mysql:host=" . $db['host'] . ";dbname=" . $db['dbname'] .
+        ';charset=utf8',
         $db['user'], $db['pass']);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
@@ -76,13 +77,21 @@ $app->post('/elections', function (Request $request, Response $response) {
     return $response;
   }
   try {
-    $json = $request->getParsedBody();
+    $jsonBodyAsArray = json_decode($request->getBody(), true);
+    $jsonBody = $request->getBody();
+    $electionArray = array('jsonData' => $jsonBody,
+                      'electionTitle' => $jsonBodyAsArray['electionTitle'],
+                      'beginDate' => $jsonBodyAsArray['beginDate'],
+                      'endDate' => $jsonBodyAsArray['endDate'],
+                      'appVersion' => $jsonBodyAsArray['appVersion']);
+    $election = new ElectionEntity($electionArray);
+    $mapper = new ElectionMapper($this->db);
+    return $mapper->storeElection($election);
   } catch (Exception $e) {
-    $app->response()->status(400);
-    $app->response()->header('X-Status-Reason', $e->getMessage());
+    $response = $response->withStatus(400);
+    $response = $response->withHeader('X-Status-Reason', $e->getMessage());
+    return $response;
   }
-  return;
-  //return $response->write(store_new_election($postdata));
 });
 
 // GET /parameters : get parameters from bulletin board

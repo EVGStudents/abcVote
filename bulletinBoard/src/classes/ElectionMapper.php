@@ -11,4 +11,24 @@ class ElectionMapper extends Mapper
         }
         return $results;
     }
+
+    public function storeElection(ElectionEntity $election) {
+      $stmt = $this->db->prepare("INSERT INTO tblElections
+        (jsonData, electionTitle, beginDate, endDate, appVersion)
+        VALUES (:jsonData, :electionTitle, :beginDate, :endDate, :appVersion)");
+
+      $stmt->bindParam(':jsonData', $jsonData);
+      $stmt->bindParam(':electionTitle', $electionTitle);
+      $stmt->bindParam(':beginDate', $beginDate);
+      $stmt->bindParam(':endDate', $endDate);
+      $stmt->bindParam(':appVersion', $appVersion);
+
+      $jsonData = $election->getJsonData();
+      $electionTitle = $election->getElectionTitle();
+      $beginDate = $election->getBeginDate();
+      $endDate = $election->getEndDate();
+      $appVersion = $election->getAppVersion();
+
+      return $stmt->execute();
+    }
 }

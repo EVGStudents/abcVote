@@ -1,18 +1,5 @@
 <?php
 
-function store_new_election($postdata)
-{
-  global $election;
-  global $app;
-  $data = json_decode($postdata,true);
-  echo $data["hello"];
-  print_r(array_values($data));
-  echo $data["electionTitle"];
-  file_put_contents("election-t.json",json_encode($data["electionTitle"]));
-  return;
-}
-
-
 //function gets the voters as array and delivers the jsonData concatenated as string
 function get_voters_jsonData(Array $data){
   $returnString = "";
@@ -46,6 +33,5 @@ function get_elections_jsonData(Array $data){
   $returnString = "[" . $returnString . "]";
   return $returnString;
 }
-
 
 ?>
