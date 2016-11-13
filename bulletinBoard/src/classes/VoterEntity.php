@@ -16,6 +16,8 @@ class VoterEntity
         }
         $this->jsonData = $data['jsonData'];
     }
+
+    // GETters
     public function getId() {
         return $this->id;
     }
@@ -23,4 +25,8 @@ class VoterEntity
         return $this->jsonData;
     }
 
+    // SETters
+    public function setJsonData($jsonData) {
+        $this->jsonData = $jsonData;
+    }
 }

@@ -11,4 +11,15 @@ class VoterMapper extends Mapper
       }
       return $results;
     }
+
+    public function storeVoter(VoterEntity $voter) {
+      $stmt = $this->db->prepare("INSERT INTO tblVoters (jsonData)
+        VALUES (:jsonData)");
+
+      $stmt->bindParam(':jsonData', $jsonData);
+
+      $jsonData = $voter->getJsonData();
+
+      return $stmt->execute();
+    }
 }

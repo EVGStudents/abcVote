@@ -34,4 +34,14 @@ function get_elections_jsonData(Array $data){
   return $returnString;
 }
 
+function is_Content_Type_JSON($request, $response) {
+  // check, if header is "Content-Type: application/json"
+  $contentType = $request->getHeader('Content-Type');
+  if (array_search("application/json", $contentType) === FALSE) {
+    return FALSE;
+  } else {
+    return TRUE;
+  }
+}
+
 ?>

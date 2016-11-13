@@ -4,7 +4,7 @@ use \Psr\Http\Message\ResponseInterface as Response;
 
 require '../vendor/autoload.php';
 require './configuration.php';
-include './functions.php';
+require './functions.php';
 
 spl_autoload_register(function ($classname) {
     require ("../classes/" . $classname . ".php");
@@ -108,6 +108,34 @@ $app->get('/parameters', function (Request $request, Response $response) {
   $response = $response->withAddedHeader('Content-Disposition', 'attachment; filename=parameters.json');
   $response = $response->write(get_parameters_as_JSON($parameters));
   return $response;
+});
+
+// POST /voters : receives a new voter's registration
+/*
+* UC 1.12: voterApp registers a new voter
+* Request: Wähler-Registrierung (Public Wähler-Credential, Signatur)
+* Response: Status
+*/
+$app->post('/voters', function (Request $request, Response $response) {
+  // if ContentType is JSON, than store entry, else return 406
+  if (is_Content_Type_JSON($request, $response) === TRUE) {
+    try {
+      $jsonBody = $request->getBody();
+      $voterArray = array('jsonData' => $jsonBody);
+      $voter = new VoterEntity($voterArray);
+      $mapper = new VoterMapper($this->db);
+      return $mapper->storeVoter($voter);
+    } catch (Exception $e) {
+      $response = $response->withStatus(400);
+      $response = $response->withHeader('X-Status-Reason', $e->getMessage());
+      return $response;
+    }
+  } else {
+    $response = $response->withStatus(406)
+                         ->withHeader('Content-Type', 'text/html')
+                         ->write('Wrong header, needs to be application/json!');
+    return $response;
+  }
 });
 
 // GET /elections : get all elections from bulletin board
