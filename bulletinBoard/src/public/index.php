@@ -70,6 +70,7 @@ $app->post('/elections', function (Request $request, Response $response) {
                         'electionTitle' => $jsonBodyAsArray['electionTitle'],
                         'beginDate' => $jsonBodyAsArray['beginDate'],
                         'endDate' => $jsonBodyAsArray['endDate'],
+                        'coefficients' => $jsonBodyAsArray['coefficients'],
                         'appVersion' => $jsonBodyAsArray['appVersion']);
       $election = new ElectionEntity($electionArray);
       $mapper = new ElectionMapper($this->db);

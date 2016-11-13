@@ -6,6 +6,7 @@ class ElectionEntity
     protected $electionTitle;
     protected $beginDate;
     protected $endDate;
+    protected $coefficients;
     protected $appVersion;
     /**
      * Accept an array of data matching properties of this class
@@ -22,6 +23,7 @@ class ElectionEntity
         $this->electionTitle = $data['electionTitle'];
         $this->beginDate = $data['beginDate'];
         $this->endDate = $data['endDate'];
+        $this->coefficients = $data['coefficients'];
         $this->appVersion = $data['appVersion'];
     }
 
@@ -41,6 +43,9 @@ class ElectionEntity
     public function getEndDate() {
         return $this->endDate;
     }
+    public function getCoefficients() {
+        return $this->coefficients;
+    }
     public function getAppVersion() {
         return $this->appVersion;
     }
@@ -57,6 +62,9 @@ class ElectionEntity
     }
     public function setEndDate($endDate) {
         $this->endDate = $endDate;
+    }
+    public function setCoefficients($coefficients) {
+        $this->coefficients = $coefficients;
     }
     public function setAppVersion($appVersion) {
         $this->appVersion = $appVersion;
