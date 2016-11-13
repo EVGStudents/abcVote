@@ -33,13 +33,6 @@ $container['errorHandler'] = function ($c) {
     };
 };
 
-// GET /hello/{name} : hello routine for testing purposes
-$app->get('/hello/{name}', function (Request $request, Response $response) {
-    $name = $request->getAttribute('name');
-    $response->getBody()->write("Hello, $name");
-    return $response;
-});
-
 // GET / : routine for testing purposes
 $app->get('/', function (Request $request, Response $response) {
     $response->getBody()->write("Hello, I'm Slim - a micro framework for PHP");
@@ -68,28 +61,28 @@ $app->get('/voters', function (Request $request, Response $response) {
 * Response: Status
 */
 $app->post('/elections', function (Request $request, Response $response) {
-  // check, if header is "Content-Type: application/json"
-  $contentType = $request->getHeader('Content-Type');
-  if (array_search("application/json", $contentType) === FALSE) {
+  // if ContentType is JSON, than store entry, else return 406
+  if (is_Content_Type_JSON($request, $response) === TRUE) {
+    try {
+      $jsonBodyAsArray = json_decode($request->getBody(), true);
+      $jsonBody = $request->getBody();
+      $electionArray = array('jsonData' => $jsonBody,
+                        'electionTitle' => $jsonBodyAsArray['electionTitle'],
+                        'beginDate' => $jsonBodyAsArray['beginDate'],
+                        'endDate' => $jsonBodyAsArray['endDate'],
+                        'appVersion' => $jsonBodyAsArray['appVersion']);
+      $election = new ElectionEntity($electionArray);
+      $mapper = new ElectionMapper($this->db);
+      return $mapper->storeElection($election);
+    } catch (Exception $e) {
+      $response = $response->withStatus(400);
+      $response = $response->withHeader('X-Status-Reason', $e->getMessage());
+      return $response;
+    }
+  } else {
     $response = $response->withStatus(406)
                          ->withHeader('Content-Type', 'text/html')
                          ->write('Wrong header, needs to be application/json!');
-    return $response;
-  }
-  try {
-    $jsonBodyAsArray = json_decode($request->getBody(), true);
-    $jsonBody = $request->getBody();
-    $electionArray = array('jsonData' => $jsonBody,
-                      'electionTitle' => $jsonBodyAsArray['electionTitle'],
-                      'beginDate' => $jsonBodyAsArray['beginDate'],
-                      'endDate' => $jsonBodyAsArray['endDate'],
-                      'appVersion' => $jsonBodyAsArray['appVersion']);
-    $election = new ElectionEntity($electionArray);
-    $mapper = new ElectionMapper($this->db);
-    return $mapper->storeElection($election);
-  } catch (Exception $e) {
-    $response = $response->withStatus(400);
-    $response = $response->withHeader('X-Status-Reason', $e->getMessage());
     return $response;
   }
 });
