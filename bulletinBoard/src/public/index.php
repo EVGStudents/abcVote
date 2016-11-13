@@ -132,6 +132,31 @@ $app->post('/voters', function (Request $request, Response $response) {
   }
 });
 
+// GET /elections/{id} : get all information about election X with id='id'
+/*
+* UC 3.08: clientApp requests all information about the election with id='id'
+* Request: Alle Informationen zur Abstimmung mit ID x
+* Response: Alle Informationen zur Abstimmung mit ID x
+*/
+$app->get('/elections/{id}', function (Request $request, Response $response) {
+  $mapper = new ElectionMapper($this->db);
+  $elections = $mapper->getElections();
+  $route = $request->getAttribute('route');
+  $electionIdentifier = $route->getArgument('id');
+  foreach ($elections as $election) {
+    if ($electionIdentifier == $election->getId()) {
+      $response = $response->withHeader('Content-type', 'application/json');
+      $response = $response->withAddedHeader('Content-Disposition', 'attachment; filename=election-'. $electionIdentifier .'.json');
+      $response = $response->write($election->getJsonData());
+      return $response;
+    }
+  }
+  $response = $response->withStatus(404)
+                       ->withHeader('Content-Type', 'text/html')
+                       ->write('Election ID not found!');
+  return $response;
+});
+
 // GET /elections : get all elections from bulletin board
 $app->get('/elections', function (Request $request, Response $response) {
   $mapper = new ElectionMapper($this->db);
