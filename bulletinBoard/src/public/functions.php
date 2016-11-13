@@ -28,9 +28,10 @@ function get_elections_jsonData(Array $data){
   $returnString = "";
   foreach ($data as $value) {
     $returnString .= $returnString ? ',' : '';
+    $returnString .= '"' . $value->getId() . '":';
     $returnString .= $value->getJsonData();
   }
-  $returnString = "[" . $returnString . "]";
+  $returnString = "{" . $returnString . "}";
   return $returnString;
 }
 
