@@ -68,15 +68,12 @@ public class CommunicationController {
              JsonArray obj = jsonReader.readArray();
              for (JsonObject result : obj.getValuesAs(JsonObject.class)) {
                    
-                String givenName = result.getString("givenName");       
-                String middleName = result.getString("middleName");
-                String surname = result.getString("surname");
-                String location = result.getString("location");
+                String email = result.getString("email");       
                 String signature = result.getString("signature");
                 String publicCredential = result.getString("publicCredential");
                 String appVersion = result.getString("appVersion");
                    
-                Voter voter = new Voter(givenName, middleName, surname, location, signature, publicCredential, appVersion);
+                Voter voter = new Voter(email, signature, publicCredential, appVersion);
                 voterlist.add(voter);
              }
              

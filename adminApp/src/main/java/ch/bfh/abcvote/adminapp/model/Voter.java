@@ -11,38 +11,20 @@ package ch.bfh.abcvote.adminapp.model;
  */
 public class Voter {
     
-    String givenName;       
-    String middleName;
-    String surname;
-    String location;
+    String email;
     String signature;
     String publicCredential;
     String appVersion;
     
-    public Voter(String givenName, String middleName, String surname, String location, String signature, String publicCredential, String appVersion){
-        this.givenName = givenName;
-        this.middleName = middleName;
-        this.surname = surname;
-        this.location = location;
+    public Voter(String email, String signature, String publicCredential, String appVersion){
+        this.email = email;
         this.signature = signature;
         this.publicCredential = publicCredential;
         this.appVersion = appVersion;
     }
     
-    public String getGivenName(){
-        return givenName;
-    }
-    
-    public String getMiddleName(){
-        return middleName;
-    }
-    
-    public String getSurName(){
-        return surname;
-    }
-    
-    public String getLocation(){
-        return location;
+    public String getEmail(){
+        return email;
     }
     
     public String getSignature(){
@@ -59,7 +41,7 @@ public class Voter {
     
     @Override
     public String toString(){
-        String printedString = surname + ", " + givenName + " " + middleName;
+        String printedString = email + ", version: " + appVersion;
         return printedString;
     }
 }
