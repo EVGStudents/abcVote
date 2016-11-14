@@ -35,6 +35,20 @@ function get_elections_jsonData(Array $data){
   return $returnString;
 }
 
+//function gets some informations about elections and delivers those concatenated as string
+function get_elections_shortInfo(Array $data){
+  $returnString = "";
+  foreach ($data as $value) {
+    $returnString .= $returnString ? ',' : '';
+    $returnString .= '{"id":"' . $value->getId() . '",';
+    $returnString .= '"electionTitle":"' . $value->getElectionTitle() . '",';
+    $returnString .= '"beginDate":"' . $value->getBeginDate() . '",';
+    $returnString .= '"endDate":"' . $value->getEndDate() . '"}';
+  }
+  $returnString = "[" . $returnString . "]";
+  return $returnString;
+}
+
 // function checks if request header is JSON
 function is_Content_Type_JSON($request, $response) {
   // check, if header is "Content-Type: application/json"

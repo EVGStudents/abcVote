@@ -132,6 +132,34 @@ $app->post('/voters', function (Request $request, Response $response) {
   }
 });
 
+// GET /elections/open: get general information about open elections
+/*
+* UC 3.04: clientApp requests general information about open elections
+* Request: Kopfdaten aller offenen Abstimmungen
+* Response: Kopfdaten der offenen Abstimmungen (ID, Titel, Wahlperiode)
+*/
+$app->get('/elections/open', function (Request $request, Response $response) {
+  $jsonBody = $request->getParsedBody();
+  $mapper = new ElectionMapper($this->db);
+  $elections = $mapper->getElections();
+  $openElections = array();
+  foreach ($elections as $election) {
+    if ($jsonBody['date'] <= $election->getEndDate()) {
+      array_push($openElections, $election);
+    }
+  }
+  if (empty($openElections)) {
+    $response = $response->withStatus(404)
+                         ->withHeader('Content-Type', 'text/html')
+                         ->write('No open election not found before this date!');
+  } else {
+    $response = $response->withHeader('Content-type', 'application/json');
+    $response = $response->withAddedHeader('Content-Disposition', 'attachment; filename=open-elections.json');
+    $response = get_elections_shortInfo($openElections);
+  }
+    return $response;
+});
+
 // GET /elections/{id} : get all information about election X with id='id'
 /*
 * UC 3.08: clientApp requests all information about the election with id='id'
@@ -163,7 +191,7 @@ $app->get('/elections', function (Request $request, Response $response) {
   $elections = $mapper->getElections();
   $response = $response->withHeader('Content-type', 'application/json');
   $response = $response->withAddedHeader('Content-Disposition', 'attachment; filename=elections.json');
-  $response = $response->write(get_elections_jsonData($elections));
+  $response = $response->write(get_elections_shortInfo($elections));
   return $response;
 });
 
