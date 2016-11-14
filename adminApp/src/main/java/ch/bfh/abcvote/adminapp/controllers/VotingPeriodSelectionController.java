@@ -8,41 +8,32 @@ package ch.bfh.abcvote.adminapp.controllers;
 import ch.bfh.abcvote.adminapp.AdminApp;
 import ch.bfh.abcvote.adminapp.ControlledScreen;
 import ch.bfh.abcvote.adminapp.model.Vote;
-import ch.bfh.abcvote.adminapp.model.VoteTopic;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
+import javafx.scene.control.DatePicker;
 
 /**
  * FXML Controller class
  *
  * @author t.buerk
  */
-public class VoteOptionCreationController implements Initializable, ControlledScreen  {
+public class VotingPeriodSelectionController implements Initializable, ControlledScreen {
 
-    MainController parentController;
     Vote vote;
+    MainController parentController;
     @FXML
     private Button btBack;
     @FXML
     private Button btNext;
     @FXML
-    private TextField txtVotingTopic;
+    private DatePicker dateStart;
     @FXML
-    private TextField txtOption1;
-    @FXML
-    private TextField txtOption2;
-    @FXML
-    private TextField txtPick;
-    
-        @Override
-    public void setScreenParent(MainController screenParent) {
-        parentController = screenParent;
-    }
+    private DatePicker dateEnd;
     
     /**
      * Initializes the controller class.
@@ -52,25 +43,29 @@ public class VoteOptionCreationController implements Initializable, ControlledSc
         // TODO
     }    
 
+    @Override
+    public void setScreenParent(MainController screenParent) {
+        parentController = screenParent;
+    }
 
     @Override
     public void setScene(Vote vote) {
-       this.vote = vote;
+        dateStart.setValue(LocalDate.now());
+        dateEnd.setValue(LocalDate.now());
+        this.vote = vote;
     }
 
     @FXML
     private void btBackClicked(ActionEvent event) {
-         parentController.setScreen(AdminApp.VOTERSELECTIONSCREENID);
+        parentController.setScreen(AdminApp.VOTEOPTIONCREATIONSCREENID);
     }
 
     @FXML
     private void btNextClicked(ActionEvent event) {
-        int pick = Integer.parseInt(txtPick.getText());
-        VoteTopic topic = new VoteTopic(txtVotingTopic.getText(), pick);
-        topic.addOption(txtOption1.getText());
-        topic.addOption(txtOption2.getText());
-        vote.setTopic(topic);
-        parentController.setScreenWithVote(AdminApp.VOTEINGPERIODSELECTIONSCREENID, vote);
+        LocalDate start = dateStart.getValue();
+        LocalDate end = dateEnd.getValue();
+        vote.setVotingPeriod(start, end);
+        parentController.setScreenWithVote(AdminApp.VOTESUMMARYSCREENID, vote);
     }
     
 }

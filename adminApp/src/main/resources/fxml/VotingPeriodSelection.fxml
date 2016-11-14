@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="800.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="ch.bfh.abcvote.adminapp.controllers.VotingPeriodSelectionController">
+    <children>
+      <Button fx:id="btBack" layoutX="14.0" layoutY="561.0" mnemonicParsing="false" onAction="#btBackClicked" text="Back" />
+      <Label layoutX="14.0" layoutY="27.0" text="Please enter the voting period for the vote:" />
+
+
+      <Button fx:id="btNext" layoutX="745.0" layoutY="561.0" mnemonicParsing="false" onAction="#btNextClicked" text="Next" />
+      <Text layoutX="14.0" layoutY="81.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Starting date:" />
+      <Text layoutX="14.0" layoutY="141.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Ending date:" />
+      <DatePicker fx:id="dateStart" layoutX="14.0" layoutY="93.0" />
+      <DatePicker fx:id="dateEnd" layoutX="14.0" layoutY="154.0" />
+   </children>
+</AnchorPane>

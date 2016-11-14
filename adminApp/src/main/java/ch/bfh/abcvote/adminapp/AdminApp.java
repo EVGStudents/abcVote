@@ -27,6 +27,10 @@ public class AdminApp extends Application {
     public static final String VOTERSELECTIONSCREENFILE = "/fxml/VoterSelection.fxml";
     public static final String VOTEOPTIONCREATIONSCREENID = "voteOptionCreation";
     public static final String VOTEOPTIONCREATIONSCREENFILE = "/fxml/VoteOptionCreation.fxml";
+    public static final String VOTEINGPERIODSELECTIONSCREENID = "voteingPeriodSelection";
+    public static final String VOTEINGPERIODSELECTIONSCREENFILE = "/fxml/VotingPeriodSelection.fxml";
+    public static final String VOTESUMMARYSCREENID = "voteSummary";
+    public static final String VOTESUMMARYSCREENFILE = "/fxml/VoteSummary.fxml"; 
     
     @Override
     public void start(Stage mainStage) throws Exception {
@@ -36,6 +40,8 @@ public class AdminApp extends Application {
         mainController.loadScreen(AdminApp.VOTETITLECREATIONSCREENID, AdminApp.VOTETITLECREATIONSCREENFILE);
         mainController.loadScreen(AdminApp.VOTERSELECTIONSCREENID, AdminApp.VOTERSELECTIONSCREENFILE);
         mainController.loadScreen(AdminApp.VOTEOPTIONCREATIONSCREENID, AdminApp.VOTEOPTIONCREATIONSCREENFILE);
+        mainController.loadScreen(AdminApp.VOTEINGPERIODSELECTIONSCREENID, AdminApp.VOTEINGPERIODSELECTIONSCREENFILE);
+        mainController.loadScreen(AdminApp.VOTESUMMARYSCREENID, AdminApp.VOTESUMMARYSCREENFILE);
         mainController.setScreen(AdminApp.HOMESCREENID);
         
         //Maincontroller is defined as root element of the stage

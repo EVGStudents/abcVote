@@ -5,6 +5,7 @@
  */
 package ch.bfh.abcvote.adminapp.model;
 
+import java.time.LocalDate;
 import java.util.List;
 
 
@@ -19,6 +20,8 @@ public class Vote {
     List<Voter> voterList;
     Generators generators;
     VoteTopic topic;
+    LocalDate startDate;
+    LocalDate endDate;
     
     public Vote(Generators generators){
         this.generators = generators;
@@ -50,6 +53,19 @@ public class Vote {
 
     public void setTopic(VoteTopic topic) {
         this.topic = topic;
+    }
+
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+
+    public LocalDate getEndDate() {
+        return endDate;
+    }
+    
+    public void setVotingPeriod(LocalDate startDate, LocalDate endDate){
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
     
 }
