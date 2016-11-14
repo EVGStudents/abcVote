@@ -7,7 +7,7 @@ package ch.bfh.abcvote.adminapp.Controllers;
 
 import ch.bfh.abcvote.adminapp.ControlledScreen;
 import ch.bfh.abcvote.adminapp.model.Vote;
-import ch.bfh.abcvote.adminapp.model.VoteInfo;
+import ch.bfh.abcvote.adminapp.model.Generators;
 import ch.bfh.abcvote.adminapp.model.Voter;
 import java.io.File;
 import java.util.HashMap;
@@ -138,8 +138,8 @@ public class MainController extends StackPane {
     }
 
     
-    public VoteInfo getVoteInfo() {
-        return communicationController.getVoteInformation();
+    public Generators getVoteInfo() {
+        return communicationController.getGenerators();
     }
 
     List<Voter> getAllARegisteredVoters() {

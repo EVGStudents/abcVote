@@ -5,7 +5,7 @@
  */
 package ch.bfh.abcvote.adminapp.Controllers;
 
-import ch.bfh.abcvote.adminapp.model.VoteInfo;
+import ch.bfh.abcvote.adminapp.model.Generators;
 import ch.bfh.abcvote.adminapp.model.Voter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,10 +26,31 @@ import javax.json.JsonReader;
 public class CommunicationController {
 
     
-    VoteInfo getVoteInformation() {
+    Generators getGenerators() {
+        try {
+             //At the moment the method gets the json containing the voters from a rescource file until bulletin board is available
+             
+             //URL url = new URL("https://graph.facebook.com/search?q=java&type=post");
+             URL url = getClass().getResource("/JSONFiles/generators.json");
+             
+             InputStream urlInputStream = url.openStream();
+             JsonReader jsonReader = Json.createReader(urlInputStream);
+             JsonObject obj = jsonReader.readObject();
+                   
+                String pString = obj.getString("p");       
+                String qString = obj.getString("q");
+                String h1String = obj.getString("h1");
+                String h2String = obj.getString("h2");
+
+                   
+                Generators voteInfo = new Generators(pString, qString, h1String, h2String);
+                return voteInfo;
+         } catch (Exception x) {
+             System.err.println(x);
+             return null;
+         }
+ 
         
-        VoteInfo voteInfo = new VoteInfo();
-        return voteInfo;
     }
 
     //gets the all registered voters from the bulletin board and returns them as al List of Voter objects
