@@ -3,13 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ch.bfh.abcvote.adminapp.Controllers;
+package ch.bfh.abcvote.adminapp.controllers;
 
 import ch.bfh.abcvote.adminapp.ControlledScreen;
 import ch.bfh.abcvote.adminapp.model.Vote;
 import ch.bfh.abcvote.adminapp.model.Generators;
 import ch.bfh.abcvote.adminapp.model.Voter;
-import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import javafx.animation.KeyFrame;
@@ -129,7 +128,7 @@ public class MainController extends StackPane {
 
     //this method changes the current Screen to the given name
     //and afterwards calls that screens setScene Method to pass the given vote object for display 
-    boolean setScreenWithVote(String name, Vote vote) {
+    public boolean setScreenWithVote(String name, Vote vote) {
         
         setScreen(name);
         screens.get(name).getKey().setScene(vote);
@@ -138,7 +137,7 @@ public class MainController extends StackPane {
     }
 
     
-    public Generators getVoteInfo() {
+    public Generators getGenerators() {
         return communicationController.getGenerators();
     }
 

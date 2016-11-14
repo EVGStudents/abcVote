@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ch.bfh.abcvote.adminapp.Controllers;
+package ch.bfh.abcvote.adminapp.controllers;
 
 import ch.bfh.abcvote.adminapp.AdminApp;
 import ch.bfh.abcvote.adminapp.ControlledScreen;
@@ -67,7 +67,7 @@ public class VoterSelectionController implements Initializable, ControlledScreen
 
     @FXML
     private void btBackClicked(ActionEvent event) {
-        parentController.setScreen(AdminApp.HOMESCREENID);
+        parentController.setScreen(AdminApp.VOTETITLECREATIONSCREENID);
     }
 
     @FXML

@@ -14,25 +14,24 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 
 /**
  * FXML Controller class
  *
  * @author t.buerk
  */
-public class VoteOptionCreationController implements Initializable, ControlledScreen  {
+public class VoteTitleCreationController implements Initializable , ControlledScreen  {
 
-    MainController parentController;
     @FXML
     private Button btBack;
     @FXML
+    private TextField txtTitle;
+    @FXML
     private Button btNext;
-    
-        @Override
-    public void setScreenParent(MainController screenParent) {
-        parentController = screenParent;
-    }
-    
+
+    MainController parentController;
+    Vote vote;
     /**
      * Initializes the controller class.
      */
@@ -41,19 +40,26 @@ public class VoteOptionCreationController implements Initializable, ControlledSc
         // TODO
     }    
 
-
-    @Override
-    public void setScene(Vote vote) {
-       
-    }
-
     @FXML
     private void btBackClicked(ActionEvent event) {
-         parentController.setScreen(AdminApp.VOTERSELECTIONSCREENID);
+        parentController.setScreen(AdminApp.HOMESCREENID);
     }
 
     @FXML
     private void btNextClicked(ActionEvent event) {
+        vote.setTitle(txtTitle.getText());
+        parentController.setScreenWithVote(AdminApp.VOTERSELECTIONSCREENID, vote);
+    }
+
+    @Override
+    public void setScreenParent(MainController screenParent) {
+        parentController = screenParent;
+    }
+
+    @Override
+    public void setScene(Vote vote) {
+        this.vote = vote; 
+        txtTitle.setText(vote.getTitle());
     }
     
 }

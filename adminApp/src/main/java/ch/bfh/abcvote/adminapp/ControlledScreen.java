@@ -5,7 +5,7 @@
  */
 package ch.bfh.abcvote.adminapp;
 
-import ch.bfh.abcvote.adminapp.Controllers.MainController;
+import ch.bfh.abcvote.adminapp.controllers.MainController;
 import ch.bfh.abcvote.adminapp.model.Vote;
 
 /**

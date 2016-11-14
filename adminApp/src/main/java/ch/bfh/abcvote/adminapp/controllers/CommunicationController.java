@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ch.bfh.abcvote.adminapp.Controllers;
+package ch.bfh.abcvote.adminapp.controllers;
 
 import ch.bfh.abcvote.adminapp.model.Generators;
 import ch.bfh.abcvote.adminapp.model.Voter;

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ch.bfh.abcvote.adminapp.Controllers;
+package ch.bfh.abcvote.adminapp.controllers;
 
 import ch.bfh.abcvote.adminapp.AdminApp;
 import ch.bfh.abcvote.adminapp.ControlledScreen;
@@ -46,10 +46,10 @@ public class HomeController implements Initializable, ControlledScreen {
      */
     @FXML
     private void createNewVote(ActionEvent event) {
-        Generators voteInfo = parentController.getVoteInfo();
-        Vote vote = new Vote();
+        Generators generators = parentController.getGenerators();
+        Vote vote = new Vote(generators);
         //maincontroller gets instructed to change the scene to the voterselection screen and pass the newly created vote
-        parentController.setScreenWithVote(AdminApp.VOTERSELECTIONSCREENID, vote);
+        parentController.setScreenWithVote(AdminApp.VOTETITLECREATIONSCREENID, vote);
     }
 
     @Override

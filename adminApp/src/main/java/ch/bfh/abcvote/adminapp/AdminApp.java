@@ -5,7 +5,7 @@
  */
 package ch.bfh.abcvote.adminapp;
 
-import ch.bfh.abcvote.adminapp.Controllers.MainController;
+import ch.bfh.abcvote.adminapp.controllers.MainController;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.scene.Group;
@@ -21,6 +21,8 @@ public class AdminApp extends Application {
     //IDs and rescourcefile paths of all Scenes are defined, so all scenecontrollers can refrence other scenes
     public static final String HOMESCREENID = "home";
     public static final String HOMESCREENFILE = "/fxml/Home.fxml";
+    public static final String VOTETITLECREATIONSCREENID = "voteTitleCreation";
+    public static final String VOTETITLECREATIONSCREENFILE = "/fxml/VoteTitleCreation.fxml";
     public static final String VOTERSELECTIONSCREENID = "voterSelection";
     public static final String VOTERSELECTIONSCREENFILE = "/fxml/VoterSelection.fxml";
     public static final String VOTEOPTIONCREATIONSCREENID = "voteOptionCreation";
@@ -31,6 +33,7 @@ public class AdminApp extends Application {
         //Maincontroller gets created and all defined Screens are passed to the Maincontroller to initialize and store
         MainController mainController = new MainController();
         mainController.loadScreen(AdminApp.HOMESCREENID, AdminApp.HOMESCREENFILE);
+        mainController.loadScreen(AdminApp.VOTETITLECREATIONSCREENID, AdminApp.VOTETITLECREATIONSCREENFILE);
         mainController.loadScreen(AdminApp.VOTERSELECTIONSCREENID, AdminApp.VOTERSELECTIONSCREENFILE);
         mainController.loadScreen(AdminApp.VOTEOPTIONCREATIONSCREENID, AdminApp.VOTEOPTIONCREATIONSCREENFILE);
         mainController.setScreen(AdminApp.HOMESCREENID);

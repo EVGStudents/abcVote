@@ -15,8 +15,21 @@ import java.util.List;
  */
 public class Vote {
 
+    String title;
     List<Voter> voterList;
+    Generators generators;
     
+    public Vote(Generators generators){
+        this.generators = generators;
+    }
+    
+    public String getTitle(){
+        return title;
+    }
+    
+    public void setTitle(String title){
+        this.title = title;
+    }
     
     public void setVoters(List<Voter> selectedVoters) {
         voterList = selectedVoters;
