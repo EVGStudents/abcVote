@@ -139,25 +139,93 @@ $app->post('/voters', function (Request $request, Response $response) {
 * Response: Kopfdaten der offenen Abstimmungen (ID, Titel, Wahlperiode)
 */
 $app->get('/elections/open', function (Request $request, Response $response) {
-  $jsonBody = $request->getParsedBody();
-  $mapper = new ElectionMapper($this->db);
-  $elections = $mapper->getElections();
-  $openElections = array();
-  foreach ($elections as $election) {
-    if ($jsonBody['date'] <= $election->getEndDate()) {
-      array_push($openElections, $election);
+  // if ContentType is JSON, than store entry, else return 406
+  if (is_Content_Type_JSON($request, $response) === TRUE) {
+    // if request is not empty, than proceed
+    if (empty($request->getParsedBody()) === FALSE) {
+      try{
+        $jsonBody = $request->getParsedBody();
+        $mapper = new ElectionMapper($this->db);
+        $elections = $mapper->getElections();
+        $openElections = array();
+        // search for open elections
+        foreach ($elections as $election) {
+          if ($jsonBody['date'] <= $election->getEndDate()) {
+            array_push($openElections, $election);
+          }
+        }
+        if (empty($openElections)) { //no open elections found...
+          $response = $response->withStatus(404)
+                               ->withHeader('Content-Type', 'text/html')
+                               ->write('No open elections found at the given date!');
+        } else { //open elections found, returning them
+          $response = $response->withHeader('Content-type', 'application/json')
+                              ->withAddedHeader('Content-Disposition', 'attachment; filename=open-elections.json');
+          $response = get_elections_shortInfo($openElections);
+        }
+      return $response;
+    } catch (Exception $e) {
+      return $response->withStatus(400)
+                      ->withHeader('X-Status-Reason', $e->getMessage());
     }
+  } else { //request was empty
+    return $response->withStatus(400)
+                    ->withHeader('Content-Type', 'text/html')
+                    ->write('Empty request!');
   }
-  if (empty($openElections)) {
-    $response = $response->withStatus(404)
-                         ->withHeader('Content-Type', 'text/html')
-                         ->write('No open election not found before this date!');
-  } else {
-    $response = $response->withHeader('Content-type', 'application/json');
-    $response = $response->withAddedHeader('Content-Disposition', 'attachment; filename=open-elections.json');
-    $response = get_elections_shortInfo($openElections);
+} else { //wrong ContentType
+  return $response->withStatus(406)
+                  ->withHeader('Content-Type', 'text/html')
+                  ->write('Wrong header, needs to be application/json!');
+}
+});
+
+// GET /elections/closed: get general information about closed elections
+/*
+* UC 4.02: verifierApp requests general information about closed elections
+* Request: Abfrage der abgeschlossenen Wahlen
+* Response: Kopfdaten der abgeschlossenen Wahlen (Wahl-ID, Titel, Wahlperiode)
+*/
+$app->get('/elections/closed', function (Request $request, Response $response) {
+  // if ContentType is JSON, than store entry, else return 406
+  if (is_Content_Type_JSON($request, $response) === TRUE) {
+    // if request is not empty, than proceed
+    if (empty($request->getParsedBody()) === FALSE) {
+      try{
+        $jsonBody = $request->getParsedBody();
+        $mapper = new ElectionMapper($this->db);
+        $elections = $mapper->getElections();
+        $closedElections = array();
+        // search for closed elections
+        foreach ($elections as $election) {
+          if ($jsonBody['date'] >= $election->getEndDate()) {
+            array_push($closedElections, $election);
+          }
+        }
+        if (empty($closedElections)) { //no closed elections found...
+          $response = $response->withStatus(404)
+                               ->withHeader('Content-Type', 'text/html')
+                               ->write('No closed elections found before the given date!');
+        } else { //closed elections found, returning them
+          $response = $response->withHeader('Content-type', 'application/json')
+                              ->withAddedHeader('Content-Disposition', 'attachment; filename=open-elections.json');
+          $response = get_elections_shortInfo($closedElections);
+        }
+      return $response;
+    } catch (Exception $e) {
+      return $response->withStatus(400)
+                      ->withHeader('X-Status-Reason', $e->getMessage());
+    }
+  } else { //request was empty
+    return $response->withStatus(400)
+                    ->withHeader('Content-Type', 'text/html')
+                    ->write('Empty request!');
   }
-    return $response;
+} else { //wrong ContentType
+  return $response->withStatus(406)
+                  ->withHeader('Content-Type', 'text/html')
+                  ->write('Wrong header, needs to be application/json!');
+}
 });
 
 // GET /elections/{id} : get all information about election X with id='id'
