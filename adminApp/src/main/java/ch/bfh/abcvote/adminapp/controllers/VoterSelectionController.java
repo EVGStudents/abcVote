@@ -74,7 +74,7 @@ public class VoterSelectionController implements Initializable, ControlledScreen
     private void btNextClicked(ActionEvent event) {
         ObservableList<Voter> selectedVoters;
         selectedVoters = lvVoters.getSelectionModel().getSelectedItems();
-        vote.setVoters(selectedVoters);
+        vote.setVoterList(selectedVoters);
         parentController.setScreenWithVote(AdminApp.VOTEOPTIONCREATIONSCREENID, vote);
     }
     

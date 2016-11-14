@@ -18,6 +18,7 @@ public class Vote {
     String title;
     List<Voter> voterList;
     Generators generators;
+    VoteTopic topic;
     
     public Vote(Generators generators){
         this.generators = generators;
@@ -30,13 +31,25 @@ public class Vote {
     public void setTitle(String title){
         this.title = title;
     }
-    
-    public void setVoters(List<Voter> selectedVoters) {
-        voterList = selectedVoters;
-    }
-    
-    public List<Voter> getVoters(){
+
+    public List<Voter> getVoterList() {
         return voterList;
+    }
+
+    public void setVoterList(List<Voter> voterList) {
+        this.voterList = voterList;
+    }
+
+    public Generators getGenerators() {
+        return generators;
+    }
+
+    public VoteTopic getTopic() {
+        return topic;
+    }
+
+    public void setTopic(VoteTopic topic) {
+        this.topic = topic;
     }
     
 }
