@@ -7,7 +7,7 @@ package ch.bfh.abcvote.adminapp.controllers;
 
 import ch.bfh.abcvote.adminapp.ControlledScreen;
 import ch.bfh.abcvote.adminapp.model.Vote;
-import ch.bfh.abcvote.adminapp.model.Generators;
+import ch.bfh.abcvote.adminapp.model.Parameters;
 import ch.bfh.abcvote.adminapp.model.Voter;
 import java.util.HashMap;
 import java.util.List;
@@ -39,7 +39,7 @@ public class MainController extends StackPane {
     
     public MainController(){
         super();
-        communicationController = new CommunicationController();   
+        communicationController = new CommunicationController("http://147.87.40.243:8080/");   
     }
     
     //Adds a new a new Controller and Screen Pair to the Hashmap
@@ -137,11 +137,15 @@ public class MainController extends StackPane {
     }
 
     
-    public Generators getGenerators() {
-        return communicationController.getGenerators();
+    public Parameters getParameters() {
+        return communicationController.getParameters();
     }
 
     List<Voter> getAllARegisteredVoters() {
         return communicationController.getAllARegisteredVoters();
+    }
+
+    void postVote(Vote vote) {
+        communicationController.postVote(vote);
     }
 }

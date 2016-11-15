@@ -15,7 +15,7 @@ import java.math.BigInteger;
  * @author t.buerk
  */
 
-public class Generators {
+public class Parameters {
     
     BigInteger p;
     BigInteger q;
@@ -26,7 +26,7 @@ public class Generators {
     Element h1;
     Element h2;
     
-    public Generators(String pString, String qString, String h1String, String h2String) throws UniCryptException{
+    public Parameters(String pString, String qString, String h1String, String h2String) throws UniCryptException{
        p = new BigInteger(pString);
        q = new BigInteger(qString);
         

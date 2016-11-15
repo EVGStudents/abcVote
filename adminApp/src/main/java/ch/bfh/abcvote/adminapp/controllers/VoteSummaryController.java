@@ -45,7 +45,9 @@ public class VoteSummaryController implements Initializable, ControlledScreen {
 
     @FXML
     private void btCreateClicked(ActionEvent event) {
+        //calcualte coefficents from selected voters
         
+        parentController.postVote(vote);
         parentController.setScreen(AdminApp.HOMESCREENID);
     }
 

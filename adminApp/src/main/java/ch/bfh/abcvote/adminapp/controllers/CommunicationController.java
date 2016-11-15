@@ -5,17 +5,28 @@
  */
 package ch.bfh.abcvote.adminapp.controllers;
 
-import ch.bfh.abcvote.adminapp.model.Generators;
+import ch.bfh.abcvote.adminapp.model.Parameters;
+import ch.bfh.abcvote.adminapp.model.Vote;
 import ch.bfh.abcvote.adminapp.model.Voter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.json.Json;
 import javax.json.JsonArray;
+import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
 import javax.json.JsonReader;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+
 
 /**
  * Class that is in charge of communicating with the Bulletin Board.
@@ -25,13 +36,18 @@ import javax.json.JsonReader;
  */
 public class CommunicationController {
 
+    String bulletinBoardUrl;
     
-    Generators getGenerators() {
+    public CommunicationController(String bulletinBoardUrl){
+        this.bulletinBoardUrl = bulletinBoardUrl;
+    }
+    
+    Parameters getParameters() {
         try {
              //At the moment the method gets the json containing the voters from a rescource file until bulletin board is available
              
-             //URL url = new URL("https://graph.facebook.com/search?q=java&type=post");
-             URL url = getClass().getResource("/JSONFiles/generators.json");
+             URL url = new URL(bulletinBoardUrl + "/parameters");
+             //URL url = getClass().getResource("/JSONFiles/parameters.json");
              
              InputStream urlInputStream = url.openStream();
              JsonReader jsonReader = Json.createReader(urlInputStream);
@@ -43,7 +59,7 @@ public class CommunicationController {
                 String h2String = obj.getString("h2");
 
                    
-                Generators voteInfo = new Generators(pString, qString, h1String, h2String);
+                Parameters voteInfo = new Parameters(pString, qString, h1String, h2String);
                 return voteInfo;
          } catch (Exception x) {
              System.err.println(x);
@@ -60,8 +76,8 @@ public class CommunicationController {
          try {
              //At the moment the method gets the json containing the voters from a rescource file until bulletin board is available
              
-             //URL url = new URL("https://graph.facebook.com/search?q=java&type=post");
-             URL url = getClass().getResource("/JSONFiles/voters.json");
+             URL url = new URL(bulletinBoardUrl + "/voters");
+             //URL url = getClass().getResource("/JSONFiles/voters.json");
              
              InputStream urlInputStream = url.openStream();
              JsonReader jsonReader = Json.createReader(urlInputStream);
@@ -82,5 +98,90 @@ public class CommunicationController {
          }
        return voterlist;
     }
+
+    void postVote(Vote vote){
+        JsonObjectBuilder jBuilder = Json.createObjectBuilder();
+        
+        jBuilder.add("electionTitle", vote.getTitle());
+        jBuilder.add("beginDate", vote.getStartDate().toString());
+        jBuilder.add("endDate", vote.getEndDate().toString());
+        //toDo: get AppVersion dynamically from build 
+        jBuilder.add("appVersion", "0.15");
+        
+        JsonArrayBuilder coefficientsBuilder = Json.createArrayBuilder();
+        //toDo: get coefficients Dynamically from vote object 
+        coefficientsBuilder.add("coefficientA0");
+        coefficientsBuilder.add("coefficientA1");
+        coefficientsBuilder.add("coefficientA2");
+        
+        jBuilder.add("coefficients", coefficientsBuilder);
+
+        //toDo: get vote generator Dynamically from vote object
+        jBuilder.add("electionGenerator", "hDach");
+        
+        JsonObjectBuilder votingTopicBuilder = Json.createObjectBuilder();
+        votingTopicBuilder.add("topic", vote.getTopic().getTitle());
+        votingTopicBuilder.add("pick", vote.getTopic().getPick());
+        
+        JsonArrayBuilder optionsBuilder = Json.createArrayBuilder();
+        for (String option : vote.getTopic().getOptions()) {
+                optionsBuilder.add(option);
+        }
+        votingTopicBuilder.add("options", optionsBuilder);
+        
+        jBuilder.add("votingTopic", votingTopicBuilder);
+        
+        JsonArrayBuilder votersBuilder = Json.createArrayBuilder();
+        
+        for (Voter voter : vote.getVoterList()){
+            JsonObjectBuilder voterBuilder = Json.createObjectBuilder();
+            voterBuilder.add("email", voter.getEmail());
+            voterBuilder.add("signature", voter.getSignature());
+            voterBuilder.add("publicCredential", voter.getPublicCredential());
+            voterBuilder.add("appVersion", voter.getAppVersion());
+            
+            votersBuilder.add(voterBuilder);
+        }
+        
+        jBuilder.add("voters", votersBuilder);
+        
+        JsonObject model = jBuilder.build();
+        
+        try { 
+            boolean requestOK = postJsonStringToURL(bulletinBoardUrl +  "/elections", model.toString());
+            if (requestOK) {
+                System.out.println("Vote posted!");
+            }
+            else{
+                System.out.println("Was not able to post Vote!");
+            }
+        } catch (IOException ex) {
+            System.out.println("Was not able to post Vote!");
+        }
+
+    }
+    public boolean postJsonStringToURL(String url, String json) throws IOException{
+        boolean responseOK = true;
+        CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+
+        try {
+            HttpPost request = new HttpPost(url);
+            StringEntity params = new StringEntity(json);
+            request.addHeader("content-type", "application/json");
+            request.setEntity(params);
+            
+            HttpResponse  response = httpClient.execute(request);
+            if (response.getStatusLine().getStatusCode() != 200){
+                responseOK = false;
+            }
+            
+        } catch (Exception ex) {
+            responseOK = false;
+        } finally {
+            httpClient.close();
+
+        } 
+        return responseOK;
+    }    
     
 }

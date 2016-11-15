@@ -8,7 +8,7 @@ package ch.bfh.abcvote.adminapp.controllers;
 import ch.bfh.abcvote.adminapp.AdminApp;
 import ch.bfh.abcvote.adminapp.ControlledScreen;
 import ch.bfh.abcvote.adminapp.model.Vote;
-import ch.bfh.abcvote.adminapp.model.Generators;
+import ch.bfh.abcvote.adminapp.model.Parameters;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -46,8 +46,8 @@ public class HomeController implements Initializable, ControlledScreen {
      */
     @FXML
     private void createNewVote(ActionEvent event) {
-        Generators generators = parentController.getGenerators();
-        Vote vote = new Vote(generators);
+        Parameters params = parentController.getParameters();
+        Vote vote = new Vote(params);
         //maincontroller gets instructed to change the scene to the voterselection screen and pass the newly created vote
         parentController.setScreenWithVote(AdminApp.VOTETITLECREATIONSCREENID, vote);
     }

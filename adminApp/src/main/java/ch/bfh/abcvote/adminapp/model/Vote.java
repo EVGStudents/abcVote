@@ -18,12 +18,12 @@ public class Vote {
 
     String title;
     List<Voter> voterList;
-    Generators generators;
+    Parameters generators;
     VoteTopic topic;
     LocalDate startDate;
     LocalDate endDate;
     
-    public Vote(Generators generators){
+    public Vote(Parameters generators){
         this.generators = generators;
     }
     
@@ -43,7 +43,7 @@ public class Vote {
         this.voterList = voterList;
     }
 
-    public Generators getGenerators() {
+    public Parameters getGenerators() {
         return generators;
     }
 
