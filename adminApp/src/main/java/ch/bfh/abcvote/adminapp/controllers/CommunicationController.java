@@ -105,17 +105,12 @@ public class CommunicationController {
         jBuilder.add("endDate", vote.getEndDate().toString());
         //toDo: get AppVersion dynamically from build 
         jBuilder.add("appVersion", "0.15");
+       
         
-        JsonArrayBuilder coefficientsBuilder = Json.createArrayBuilder();
-        //toDo: get coefficients Dynamically from vote object 
-        coefficientsBuilder.add("coefficientA0");
-        coefficientsBuilder.add("coefficientA1");
-        coefficientsBuilder.add("coefficientA2");
-        
-        jBuilder.add("coefficients", coefficientsBuilder);
+        jBuilder.add("coefficients", vote.getCredentialPolynomialString());
 
         //toDo: get vote generator Dynamically from vote object
-        jBuilder.add("electionGenerator", "hDach");
+        jBuilder.add("electionGenerator", vote.getH_HatString());
         
         JsonObjectBuilder votingTopicBuilder = Json.createObjectBuilder();
         votingTopicBuilder.add("topic", vote.getTopic().getTitle());

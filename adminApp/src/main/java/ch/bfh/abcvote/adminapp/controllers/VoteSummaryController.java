@@ -8,8 +8,11 @@ package ch.bfh.abcvote.adminapp.controllers;
 import ch.bfh.abcvote.adminapp.AdminApp;
 import ch.bfh.abcvote.adminapp.ControlledScreen;
 import ch.bfh.abcvote.adminapp.model.Vote;
+import ch.bfh.unicrypt.UniCryptException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -45,10 +48,16 @@ public class VoteSummaryController implements Initializable, ControlledScreen {
 
     @FXML
     private void btCreateClicked(ActionEvent event) {
-        //calcualte coefficents from selected voters
-        
-        parentController.postVote(vote);
-        parentController.setScreen(AdminApp.HOMESCREENID);
+        try {
+            //calcualte coefficents from selected voters
+            vote.calculateCoefficients();
+            vote.pickH_Hat();
+            
+            parentController.postVote(vote);
+            parentController.setScreen(AdminApp.HOMESCREENID);
+        } catch (UniCryptException ex) {
+            System.out.println("Sending vote failed!");
+        }
     }
 
     @Override

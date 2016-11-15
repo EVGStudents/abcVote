@@ -14,6 +14,8 @@ import ch.bfh.unicrypt.math.algebra.dualistic.interfaces.DualisticElement;
 import ch.bfh.unicrypt.math.algebra.general.interfaces.Element;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 
@@ -29,6 +31,7 @@ public class Vote {
     VoteTopic topic;
     LocalDate startDate;
     LocalDate endDate;
+    Element h_Hat;
     
     PolynomialElement credentialPolynomial;
     
@@ -49,12 +52,7 @@ public class Vote {
     }
 
     public void setVoterList(List<Voter> voterList) {
-        try {
             this.voterList = voterList;
-            calculateCoefficients();
-        } catch (UniCryptException ex) {
-            
-        }
     }
 
     public Parameters getGenerators() {
@@ -82,16 +80,13 @@ public class Vote {
         this.endDate = endDate;
     }
     
-    private void calculateCoefficients() throws UniCryptException{
+    public void calculateCoefficients() throws UniCryptException{
         ZMod Z_p = generators.getZ_p();
         DualisticElement zero = Z_p.getZeroElement();
 	DualisticElement one = Z_p.getOneElement();
         credentialPolynomial = null;
         for (Voter voter : voterList){
             Element u  = Z_p.getElementFrom(voter.publicCredential);
-            //Element u  = Z_p.getRandomElement();
-            System.out.println("U:");
-            System.out.println(u.convertToString());
             Polynomial newRoot = Polynomial.getInstance(new DualisticElement[]{(DualisticElement) u.invert(), one}, zero, one);
             
             if (credentialPolynomial == null){
@@ -101,17 +96,47 @@ public class Vote {
             else{      
                 credentialPolynomial = this.credentialPolynomial.multiply(PolynomialSemiRing.getInstance(Z_p).getElement(newRoot));
             }
-        }
-        System.out.println(credentialPolynomial.convertToString());
-	Polynomial testPoly = credentialPolynomial.getValue();
-        for (int i =0; i < testPoly.countCoefficients(); i++){
-            System.out.println("index: " + i);
-            System.out.println(testPoly.getCoefficient(i).toString());
-            
-        }
-        credentialPolynomial = PolynomialSemiRing.getInstance(Z_p).getElementFrom(credentialPolynomial.convertToString());
-        System.out.println(credentialPolynomial.convertToString());
+        }  
         
     }
+
+    public void pickH_Hat() {
+        h_Hat = generators.getG_q().getRandomGenerator();
+    }
+    
+    public Element getH_Hat() {
+        return h_Hat;
+    }
+    
+    public String getH_HatString() {
+        return h_Hat.convertToString();
+    }
+
+    public void setH_Hat(String h_HatString) {
+        try {
+            this.h_Hat = generators.getG_q().getElementFrom(h_HatString);
+        } catch (UniCryptException ex) {
+            
+        }
+    }
+    
+    public PolynomialElement getCredentialPolynomial() {
+        return credentialPolynomial;
+    }
+
+    public String getCredentialPolynomialString() {
+        return credentialPolynomial.convertToString();
+    }
+
+    public void setCredentialPolynomial(String credentialPolynomialString) {
+        ZMod Z_p = generators.getZ_p();
+        try { 
+            credentialPolynomial = PolynomialSemiRing.getInstance(Z_p).getElementFrom(credentialPolynomialString);
+        } catch (UniCryptException ex) {
+            ;
+        }
+    }
+    
+    
     
 }
