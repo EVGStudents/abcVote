@@ -3,7 +3,7 @@ class ParameterMapper extends Mapper
 {
     public function getParameters() {
         $sql = "SELECT parameterName, parameterValue
-            from tblParameters";
+            from tbl_parameters";
         $stmt = $this->db->query($sql);
         $results = [];
         while($row = $stmt->fetch()) {

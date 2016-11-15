@@ -1,0 +1,13 @@
+{
+	"c": "com_c",
+	"d": "com_d",
+	"e": [{
+		"question1": "answer1"
+	}, {
+		"question2": "answer2"
+	}],
+	"u_hat": "u_hat-value",
+	"pi1": "pi1-value",
+	"pi2": "pi2-value",
+	"pi3": "pi3-value"
+}

@@ -3,7 +3,7 @@ class ElectionMapper extends Mapper
 {
     public function getElections() {
         $sql = "SELECT id, jsonData, electionTitle, beginDate, endDate, coefficients, appVersion
-            from tblElections";
+            from tbl_elections";
         $stmt = $this->db->query($sql);
         $results = [];
         while($row = $stmt->fetch()) {
@@ -13,7 +13,7 @@ class ElectionMapper extends Mapper
     }
 
     public function storeElection(ElectionEntity $election) {
-      $stmt = $this->db->prepare("INSERT INTO tblElections
+      $stmt = $this->db->prepare("INSERT INTO tbl_elections
         (jsonData, electionTitle, beginDate, endDate, coefficients, appVersion)
         VALUES (:jsonData, :electionTitle, :beginDate, :endDate, :coefficients, :appVersion)");
 
