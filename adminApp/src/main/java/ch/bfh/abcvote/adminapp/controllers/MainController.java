@@ -39,7 +39,7 @@ public class MainController extends StackPane {
     
     public MainController(){
         super();
-        communicationController = new CommunicationController("http://147.87.40.243:8080/");   
+        communicationController = new CommunicationController("http://abc.2488.ch/");   
     }
     
     //Adds a new a new Controller and Screen Pair to the Hashmap
