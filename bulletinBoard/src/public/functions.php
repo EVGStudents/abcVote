@@ -60,4 +60,18 @@ function is_Content_Type_JSON($request, $response) {
   }
 }
 
+//function gets the ballots as array
+function get_ballots_as_JSON(Array $data){
+  $returnString = "";
+  foreach ($data as $value) {
+    $returnString .= $returnString ? ',' : '';
+    $returnString .= '{"id":"' . $value->getId() . '",';
+    $returnString .= '"electionIdentifier":"' . $value->getElectionIdentifier() . '",';
+    $returnString .= '"jsonData":' . $value->getJsonData() . ',';
+    $returnString .= '"timestamp":"' . $value->getTimestamp() . '"}';
+  }
+  $returnString = "[" . $returnString . "]";
+  return $returnString;
+}
+
 ?>

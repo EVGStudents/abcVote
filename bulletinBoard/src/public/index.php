@@ -113,22 +113,27 @@ $app->get('/parameters', function (Request $request, Response $response) {
 $app->post('/voters', function (Request $request, Response $response) {
   // if ContentType is JSON, than store entry, else return 406
   if (is_Content_Type_JSON($request, $response) === TRUE) {
-    try {
-      $jsonBody = $request->getBody();
-      $voterArray = array('jsonData' => $jsonBody);
-      $voter = new VoterEntity($voterArray);
-      $mapper = new VoterMapper($this->db);
-      return $mapper->storeVoter($voter);
-    } catch (Exception $e) {
-      $response = $response->withStatus(400);
-      $response = $response->withHeader('X-Status-Reason', $e->getMessage());
-      return $response;
+    // if request is not empty, than proceed
+    if (empty($request->getParsedBody()) === FALSE) {
+      try {
+        $jsonBody = $request->getBody();
+        $voterArray = array('jsonData' => $jsonBody);
+        $voter = new VoterEntity($voterArray);
+        $mapper = new VoterMapper($this->db);
+        return $mapper->storeVoter($voter);
+      } catch (Exception $e) {
+        return $response->withStatus(400)
+                        ->withHeader('X-Status-Reason', $e->getMessage());
+      }
+    } else { //request was empty
+      return $response->withStatus(400)
+                      ->withHeader('Content-Type', 'text/html')
+                      ->write('Empty request!');
     }
-  } else {
-    $response = $response->withStatus(406)
-                         ->withHeader('Content-Type', 'text/html')
-                         ->write('Wrong header, needs to be application/json!');
-    return $response;
+  } else { //wrong ContentType
+    return $response->withStatus(406)
+                    ->withHeader('Content-Type', 'text/html')
+                    ->write('Wrong header, needs to be application/json!');
   }
 });
 
@@ -231,8 +236,8 @@ $app->get('/elections/closed', function (Request $request, Response $response) {
 // GET /elections/{id} : get all information about election X with id='id'
 /*
 * UC 3.08: clientApp requests all information about the election with id='id'
-* Request: Alle Informationen zur Abstimmung mit ID x
-* Response: Alle Informationen zur Abstimmung mit ID x
+* Request: Alle Informationen zur Abstimmung mit ID x (inkl. Koeffizienten A & Wählerliste U)
+* Response: Alle Informationen zur Abstimmung mit ID x (inkl. Koeffizienten A & Wählerliste U)
 */
 $app->get('/elections/{id}', function (Request $request, Response $response) {
   $mapper = new ElectionMapper($this->db);
@@ -253,6 +258,76 @@ $app->get('/elections/{id}', function (Request $request, Response $response) {
   return $response;
 });
 
+// POST /elections/{id}/ballots : receives a ballot for election X with id='id'
+/*
+* UC 3.18: voterApp sends a ballot
+* Request: Stimmabgabe (Ballot B) für Abstimmung mit ID x
+* Response: Status
+*/
+$app->post('/elections/{id}/ballots', function (Request $request, Response $response) {
+  // if ContentType is JSON, than store entry, else return 406
+  if (is_Content_Type_JSON($request, $response) === TRUE) {
+    // if request is not empty, than proceed
+    if (empty($request->getParsedBody()) === FALSE) {
+      try {
+        $jsonBody = $request->getBody();
+        $route = $request->getAttribute('route');
+        $electionIdentifier = $route->getArgument('id');
+        $ballotArray = array('electionIdentifier' => $electionIdentifier,
+                              'jsonData' => $jsonBody);
+        $ballot = new BallotEntity($ballotArray);
+        $mapper = new BallotMapper($this->db);
+        return $mapper->storeBallot($ballot);
+      } catch (Exception $e) {
+        return $response->withStatus(400)
+                        ->withHeader('X-Status-Reason', $e->getMessage());
+      }
+    } else { //request was empty
+      return $response->withStatus(400)
+                      ->withHeader('Content-Type', 'text/html')
+                      ->write('Empty request!');
+    }
+  } else { //wrong ContentType
+    return $response->withStatus(406)
+                    ->withHeader('Content-Type', 'text/html')
+                    ->write('Wrong header, needs to be application/json!');
+  }
+});
+
+// GET /elections/{id}/ballots : gets all ballot for election X with id='id'
+/*
+* UC 4.06: verifierApp requests all ballots for a given election
+* Request: Abfrage aller Ballots B zur Abstimmung mit ID x
+* Response: Ballots B zur Abstimmung mit ID x
+*/
+$app->get('/elections/{id}/ballots', function (Request $request, Response $response) {
+  try {
+    $mapper = new BallotMapper($this->db);
+    $ballots = $mapper->getBallots();
+    $ballotArray = array();
+    $route = $request->getAttribute('route');
+    $electionIdentifier = $route->getArgument('id');
+    foreach ($ballots as $ballot) {
+      if ($electionIdentifier == $ballot->getElectionIdentifier()) {
+        array_push($ballotArray, $ballot);
+      }
+    }
+    if (empty($ballotArray)) { //no ballots found...
+      $response = $response->withStatus(404)
+                           ->withHeader('Content-Type', 'text/html')
+                           ->write('No ballots for the given election id!');
+    } else { //closed elections found, returning them
+      $response = $response->withHeader('Content-type', 'application/json')
+                          ->withAddedHeader('Content-Disposition', 'attachment; filename=ballots_for_election-'. $electionIdentifier . '.json');
+      $response = get_ballots_as_JSON($ballotArray);
+    }
+    return $response;
+  } catch (Exception $e) {
+    return $response->withStatus(400)
+                    ->withHeader('X-Status-Reason', $e->getMessage());
+  }
+});
+
 // GET /elections : get all elections from bulletin board
 $app->get('/elections', function (Request $request, Response $response) {
   $mapper = new ElectionMapper($this->db);
@@ -263,7 +338,7 @@ $app->get('/elections', function (Request $request, Response $response) {
   return $response;
 });
 
-// GET /view/voters: generates a html page which show the tblVoters' content
+// GET /view/voters: generates a html page which show the tbl_voters' content
 $app->get('/view/voters', function (Request $request, Response $response) {
   $mapper = new VoterMapper($this->db);
   $voters = $mapper->getVoters();
@@ -271,7 +346,7 @@ $app->get('/view/voters', function (Request $request, Response $response) {
   return $response;
 });
 
-// GET /view/parameters: generates a html page which show the tblParameters' content
+// GET /view/parameters: generates a html page which show the tbl_parameters' content
 $app->get('/view/parameters', function (Request $request, Response $response) {
   $mapper = new ParameterMapper($this->db);
   $parameters = $mapper->getParameters();
@@ -279,11 +354,19 @@ $app->get('/view/parameters', function (Request $request, Response $response) {
   return $response;
 });
 
-// GET /view/elections: generates a html page which show the tblElections' content
+// GET /view/elections: generates a html page which show the tbl_elections' content
 $app->get('/view/elections', function (Request $request, Response $response) {
   $mapper = new ElectionMapper($this->db);
   $elections = $mapper->getElections();
   $response = $this->view->render($response, "elections.phtml", ["elections" => $elections]);
+  return $response;
+});
+
+// GET /view/ballots: generates a html page which show the tbl_ballots' content
+$app->get('/view/ballots', function (Request $request, Response $response) {
+  $mapper = new BallotMapper($this->db);
+  $ballots = $mapper->getBallots();
+  $response = $this->view->render($response, "ballots.phtml", ["ballots" => $ballots]);
   return $response;
 });
 
