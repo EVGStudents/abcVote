@@ -1,4 +1,5 @@
 /adminApp/target/
+/adminApp/src/main/resources/certificates/
 /voterApp/target/
 /util/target/
 /util/src/main/resources/certificates/

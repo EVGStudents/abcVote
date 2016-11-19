@@ -13,6 +13,8 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
@@ -140,8 +142,17 @@ public class CommunicationController {
         
         JsonObject model = jBuilder.build();
         
+        SignatureController signController = new SignatureController();
+        JsonObject signedModel = null;
+                
+        try {
+            signedModel = signController.signJson(model);   
+        } catch (Exception ex) {
+            Logger.getLogger(CommunicationController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
         try { 
-            boolean requestOK = postJsonStringToURL(bulletinBoardUrl +  "/elections", model.toString());
+            boolean requestOK = postJsonStringToURL(bulletinBoardUrl +  "/elections", signedModel.toString());
             if (requestOK) {
                 System.out.println("Vote posted!");
             }

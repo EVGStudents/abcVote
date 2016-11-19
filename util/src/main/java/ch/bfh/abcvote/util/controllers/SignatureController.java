@@ -6,12 +6,12 @@
 package ch.bfh.abcvote.util.controllers;
 
 import java.security.PrivateKey;
-import java.security.PublicKey;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Map.Entry;
 import org.jose4j.jws.*;
 import javax.json.Json;
 import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+import javax.json.JsonValue;
 
 /**
  *
@@ -19,7 +19,7 @@ import javax.json.JsonObject;
  */
 public class SignatureController {
     
-    public String signJson (JsonObject jsonInput) throws Exception{
+    public JsonObject signJson (JsonObject jsonInput) throws Exception{
         
         // Create a new JsonWebSignature
         JsonWebSignature jws = new JsonWebSignature();
@@ -34,7 +34,7 @@ public class SignatureController {
         // Note that your application will need to determine where/how to get the key
         // and here we just use an example from the JWS spec
         CertificateController certHelper = new CertificateController();
-        PrivateKey privateKey = certHelper.getPemPrivateKey(getClass().getResource("/certificates/alice/alice_at_bfh.ch.privatekey.pkcs8.pem").toString(), "RSA");
+        PrivateKey privateKey = certHelper.getPemPrivateKey("/Users/snellen/Documents/dev/abcVote/adminApp/src/main/resources/certificates/alice/alice_at_bfh.ch.privatekey.pkcs8.pem", "RSA");
         jws.setKey(privateKey);
         
         // Sign the JWS and produce the compact serialization or complete JWS representation, which
@@ -42,9 +42,18 @@ public class SignatureController {
         // parts in the form Header.Payload.Signature
         String jwsCompactSerialization = jws.getCompactSerialization();
     
+        JsonObjectBuilder job = Json.createObjectBuilder();
+
+        for (Entry<String, JsonValue> entry : jsonInput.entrySet()) {
+            job.add(entry.getKey(), entry.getValue());
+        }
+        
+        job.add("signature", jwsCompactSerialization);
+        JsonObject jo = job.build();
+        
         // Do something useful with your JWS
         System.out.println(jwsCompactSerialization);
-        return jwsCompactSerialization;
+        return jo;
         
     }
     
