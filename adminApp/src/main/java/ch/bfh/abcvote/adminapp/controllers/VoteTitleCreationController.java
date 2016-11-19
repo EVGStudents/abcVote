@@ -7,7 +7,7 @@ package ch.bfh.abcvote.adminapp.controllers;
 
 import ch.bfh.abcvote.adminapp.AdminApp;
 import ch.bfh.abcvote.adminapp.ControlledScreen;
-import ch.bfh.abcvote.adminapp.model.Vote;
+import ch.bfh.abcvote.util.model.Vote;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;

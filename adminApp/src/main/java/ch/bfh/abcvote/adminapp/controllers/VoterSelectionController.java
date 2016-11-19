@@ -7,8 +7,8 @@ package ch.bfh.abcvote.adminapp.controllers;
 
 import ch.bfh.abcvote.adminapp.AdminApp;
 import ch.bfh.abcvote.adminapp.ControlledScreen;
-import ch.bfh.abcvote.adminapp.model.Vote;
-import ch.bfh.abcvote.adminapp.model.Voter;
+import ch.bfh.abcvote.util.model.Vote;
+import ch.bfh.abcvote.util.model.Voter;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;

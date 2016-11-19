@@ -6,7 +6,7 @@
 package ch.bfh.abcvote.adminapp;
 
 import ch.bfh.abcvote.adminapp.controllers.MainController;
-import ch.bfh.abcvote.adminapp.model.Vote;
+import ch.bfh.abcvote.util.model.Vote;
 
 /**
  *  Interface all scene controllers implement in order to create a uniform way to pass them the maincontroller and the vote Object to display 

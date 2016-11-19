@@ -5,9 +5,9 @@
  */
 package ch.bfh.abcvote.adminapp.controllers;
 
-import ch.bfh.abcvote.adminapp.model.Parameters;
-import ch.bfh.abcvote.adminapp.model.Vote;
-import ch.bfh.abcvote.adminapp.model.Voter;
+import ch.bfh.abcvote.util.model.Parameters;
+import ch.bfh.abcvote.util.model.Vote;
+import ch.bfh.abcvote.util.model.Voter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
