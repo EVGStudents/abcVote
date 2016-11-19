@@ -6,6 +6,7 @@
 package ch.bfh.abcvote.adminapp.controllers;
 
 import ch.bfh.abcvote.adminapp.ControlledScreen;
+import ch.bfh.abcvote.util.controllers.CommunicationController;
 import ch.bfh.abcvote.util.model.Parameters;
 import ch.bfh.abcvote.util.model.Vote;
 import ch.bfh.abcvote.util.model.Voter;

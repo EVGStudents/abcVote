@@ -40,7 +40,7 @@ public class CommunicationController {
         this.bulletinBoardUrl = bulletinBoardUrl;
     }
     
-    Parameters getParameters() {
+    public Parameters getParameters() {
         try {
              //At the moment the method gets the json containing the voters from a rescource file until bulletin board is available
              
@@ -68,7 +68,7 @@ public class CommunicationController {
     }
 
     //gets the all registered voters from the bulletin board and returns them as al List of Voter objects
-    List<Voter> getAllARegisteredVoters() {
+    public List<Voter> getAllARegisteredVoters() {
        List<Voter> voterlist = new ArrayList<Voter>(); 
         	
          try {
@@ -97,7 +97,7 @@ public class CommunicationController {
        return voterlist;
     }
 
-    void postVote(Vote vote){
+    public void postVote(Vote vote){
         JsonObjectBuilder jBuilder = Json.createObjectBuilder();
         
         jBuilder.add("electionTitle", vote.getTitle());
