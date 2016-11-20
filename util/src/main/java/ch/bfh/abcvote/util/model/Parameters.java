@@ -18,15 +18,16 @@ import java.math.BigInteger;
 
 public class Parameters {
     
-    BigInteger p;
-    BigInteger q;
+    private BigInteger p;
+    private BigInteger q;
     
-    GStarModSafePrime G_p;
-    GStarModSafePrime G_q;
-    ZMod Z_p;
+    private GStarModSafePrime G_p;
+    private GStarModSafePrime G_q;
+    private ZMod Z_p;
+    private ZMod Z_q;
     
-    Element h1;
-    Element h2;
+    private Element h1;
+    private Element h2;
     
     public Parameters(String pString, String qString, String h1String, String h2String) throws UniCryptException{
        p = new BigInteger(pString);
@@ -35,10 +36,12 @@ public class Parameters {
        G_p = GStarModSafePrime.getInstance(p);
        G_q =  GStarModSafePrime.getInstance(q);
        Z_p = G_p.getZModOrder();
+       Z_q = G_q.getZModOrder();
         
+
        h1 = G_q.getElementFrom(h1String);
        h2 =  G_q.getElementFrom(h2String);
-       
+       System.out.println(h1.toString() + h2.toString());
     }
     
     public GStarModSafePrime getG_p() {
@@ -52,7 +55,11 @@ public class Parameters {
     public ZMod getZ_p() {
         return Z_p;
     }
-
+    
+    public ZMod getZ_q() {
+        return Z_q;
+    }
+    
     public Element getH1() {
         return h1;
     }

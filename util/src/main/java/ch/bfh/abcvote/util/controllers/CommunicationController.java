@@ -6,8 +6,12 @@
 package ch.bfh.abcvote.util.controllers;
 
 import ch.bfh.abcvote.util.model.Parameters;
+import ch.bfh.abcvote.util.model.PrivateCredentials;
 import ch.bfh.abcvote.util.model.Vote;
 import ch.bfh.abcvote.util.model.Voter;
+import ch.bfh.unicrypt.math.algebra.general.interfaces.Element;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -187,5 +191,71 @@ public class CommunicationController {
         } 
         return responseOK;
     }    
+
+    public void registerNewVoter(String email) {
+        //get Parameters
+        Parameters parameters = getParameters();
+        
+        //pick private Credentials
+        PrivateCredentials privateCredentials = new PrivateCredentials(parameters);
+        //calculate public credentials
+        Element u = privateCredentials.getU();
+        //Store private Credentials
+        storePrivateCredentials(privateCredentials);
+        //create Voter json
+        JsonObjectBuilder jBuilder = Json.createObjectBuilder();
+        
+        jBuilder.add("email", email);
+        jBuilder.add("signature", "standInSignatur");
+        jBuilder.add("publicCredential", u.convertToString());
+        jBuilder.add("appVersion", "1.15");
+        
+        JsonObject model = jBuilder.build();
+                
+        //post Voter
+        try { 
+            boolean requestOK = postJsonStringToURL(bulletinBoardUrl +  "/voters", model.toString());
+            if (requestOK) {
+                System.out.println("Voter posted!");
+            }
+            else{
+                System.out.println("Was not able to post Voter!");
+            }
+        } catch (IOException ex) {
+            System.out.println("Was not able to post Voter!");
+        }
+        
+    }
+
+    private void storePrivateCredentials(PrivateCredentials privateCredentials) {
+
+            //ToDo might need to be moved once Credentials are stored diffrentliy
+            JsonObjectBuilder jBuilder = Json.createObjectBuilder();
+            jBuilder.add("alpha", privateCredentials.getAlpha().convertToString());
+            jBuilder.add("beta", privateCredentials.getBeta().convertToString());
+            JsonObject credentialsJson = jBuilder.build();
+            String path = System.getProperty("user.home") + File.separator + "Documents";
+            path += File.separator + "abcVote";
+            File josnDir = new File(path);
+            if (josnDir.exists()|| josnDir.mkdirs()) {
+                
+                FileWriter file = null;
+                try {
+                    file = new FileWriter(path + File.separator +  "privateCredentials.json");
+                    file.write(credentialsJson.toString());
+                    file.close();
+                    System.out.println("File created");
+                } catch (IOException ex) {
+                    System.out.println("File not created");
+                } finally{
+                    
+                }
+                
+                
+            } else {
+                System.out.println("Directory not created");
+            }
+
+    }
     
 }
