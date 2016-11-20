@@ -134,4 +134,8 @@ public class MainController extends StackPane {
         return true;
     }
 
+    public void registerNewVoter(String email) {
+        communicationController.registerNewVoter(email);
+    }
+
 }

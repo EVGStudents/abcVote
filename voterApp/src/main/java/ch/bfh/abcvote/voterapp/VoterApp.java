@@ -14,12 +14,14 @@ public class VoterApp extends Application {
     //IDs and rescourcefile paths of all Scenes are defined, so all scenecontrollers can refrence other scenes
     public static final String HOMESCREENID = "home";
     public static final String HOMESCREENFILE = "/fxml/Home.fxml";
-
+    public static final String VOTERREGISTRATIONSCREENID = "voterRegistration";
+    public static final String VOTERREGISTRATIONFILE = "/fxml/VoterRegistration.fxml";
     @Override
     public void start(Stage mainStage) throws Exception {
         //Maincontroller gets created and all defined Screens are passed to the Maincontroller to initialize and store
         MainController mainController = new MainController();
         mainController.loadScreen(VoterApp.HOMESCREENID, VoterApp.HOMESCREENFILE);
+        mainController.loadScreen(VoterApp.VOTERREGISTRATIONSCREENID, VoterApp.VOTERREGISTRATIONFILE);
         mainController.setScreen(VoterApp.HOMESCREENID);
         
         //Maincontroller is defined as root element of the stage
