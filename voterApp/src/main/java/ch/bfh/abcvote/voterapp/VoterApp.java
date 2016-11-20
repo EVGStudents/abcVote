@@ -16,12 +16,22 @@ public class VoterApp extends Application {
     public static final String HOMESCREENFILE = "/fxml/Home.fxml";
     public static final String VOTERREGISTRATIONSCREENID = "voterRegistration";
     public static final String VOTERREGISTRATIONFILE = "/fxml/VoterRegistration.fxml";
+    public static final String ELECTIONSOVERVIEWSCREENID = "electionsOverview";
+    public static final String ELECTIONSOVERVIEWFILE = "/fxml/ElectionsOverview.fxml";
+    public static final String PICKOPTIONSSCREENID = "pickOptions";
+    public static final String PICKOPTIONSFILE = "/fxml/PickOptions.fxml";
+    public static final String BALLOTSUMMARYSCREENID = "ballotSummary";
+    public static final String BALLOTSUMMARYFILE = "/fxml/BallotSummary.fxml";
+    
     @Override
     public void start(Stage mainStage) throws Exception {
         //Maincontroller gets created and all defined Screens are passed to the Maincontroller to initialize and store
         MainController mainController = new MainController();
         mainController.loadScreen(VoterApp.HOMESCREENID, VoterApp.HOMESCREENFILE);
         mainController.loadScreen(VoterApp.VOTERREGISTRATIONSCREENID, VoterApp.VOTERREGISTRATIONFILE);
+        mainController.loadScreen(VoterApp.ELECTIONSOVERVIEWSCREENID, VoterApp.ELECTIONSOVERVIEWFILE);
+        mainController.loadScreen(VoterApp.PICKOPTIONSSCREENID, VoterApp.PICKOPTIONSFILE);
+        mainController.loadScreen(VoterApp.BALLOTSUMMARYSCREENID, VoterApp.BALLOTSUMMARYFILE);
         mainController.setScreen(VoterApp.HOMESCREENID);
         
         //Maincontroller is defined as root element of the stage

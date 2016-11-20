@@ -20,16 +20,15 @@ import javafx.scene.control.Button;
  *
  * @author t.buerk
  */
-public class HomeController implements Initializable, ControlledScreen {
+public class BallotSummaryController implements Initializable,ControlledScreen {
 
     @FXML
-    private Button btRegister;
-    @FXML
-    private Button btVote;
+    private Button btBack;
 
     MainController parentController;
+    @FXML
+    private Button btCastBallot;
     
-
     /**
      * Initializes the controller class.
      */
@@ -39,13 +38,8 @@ public class HomeController implements Initializable, ControlledScreen {
     }    
 
     @FXML
-    private void btRegisterClicked(ActionEvent event) {
-        parentController.setScreen(VoterApp.VOTERREGISTRATIONSCREENID);
-    }
-
-    @FXML
-    private void btVoteClicked(ActionEvent event) {
-        parentController.setScreen(VoterApp.ELECTIONSOVERVIEWSCREENID);
+    private void btBackClicked(ActionEvent event) {
+        parentController.setScreen(VoterApp.PICKOPTIONSSCREENID);
     }
 
 
@@ -57,6 +51,11 @@ public class HomeController implements Initializable, ControlledScreen {
     @Override
     public void setScene(Vote vote) {
         
+    }
+
+    @FXML
+    private void btNextClicked(ActionEvent event) {
+        parentController.setScreen(VoterApp.HOMESCREENID);
     }
     
 }

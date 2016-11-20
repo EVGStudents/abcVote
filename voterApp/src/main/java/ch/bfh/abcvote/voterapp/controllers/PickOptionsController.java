@@ -14,22 +14,30 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 
 /**
  * FXML Controller class
  *
  * @author t.buerk
  */
-public class HomeController implements Initializable, ControlledScreen {
+public class PickOptionsController implements Initializable,ControlledScreen {
 
     @FXML
-    private Button btRegister;
-    @FXML
-    private Button btVote;
+    private Button btBack;
 
     MainController parentController;
+    @FXML
+    private Button btNext;
+    @FXML
+    private TextField txtPick;
+    @FXML
+    private Label txtTopic;
+    @FXML
+    private ListView<?> lvOptions;
     
-
     /**
      * Initializes the controller class.
      */
@@ -39,12 +47,7 @@ public class HomeController implements Initializable, ControlledScreen {
     }    
 
     @FXML
-    private void btRegisterClicked(ActionEvent event) {
-        parentController.setScreen(VoterApp.VOTERREGISTRATIONSCREENID);
-    }
-
-    @FXML
-    private void btVoteClicked(ActionEvent event) {
+    private void btBackClicked(ActionEvent event) {
         parentController.setScreen(VoterApp.ELECTIONSOVERVIEWSCREENID);
     }
 
@@ -57,6 +60,11 @@ public class HomeController implements Initializable, ControlledScreen {
     @Override
     public void setScene(Vote vote) {
         
+    }
+
+    @FXML
+    private void btNextClicked(ActionEvent event) {
+        parentController.setScreen(VoterApp.BALLOTSUMMARYSCREENID);
     }
     
 }
