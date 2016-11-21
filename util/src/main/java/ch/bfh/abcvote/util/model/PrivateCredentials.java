@@ -5,6 +5,7 @@
  */
 package ch.bfh.abcvote.util.model;
 
+import ch.bfh.unicrypt.UniCryptException;
 import ch.bfh.unicrypt.math.algebra.dualistic.classes.ZMod;
 import ch.bfh.unicrypt.math.algebra.general.interfaces.Element;
 
@@ -24,6 +25,14 @@ public class PrivateCredentials {
         ZMod Z_q = parameters.getZ_q();
         alpha = Z_q.getRandomElement();
         beta = Z_q.getRandomElement();
+        this.parameters = parameters;
+    }
+    
+        public PrivateCredentials(Parameters parameters, String alphaString, String betaString) throws UniCryptException{
+        // restore private Credentials from String
+        ZMod Z_q = parameters.getZ_q();
+        alpha = Z_q.getElementFrom(alphaString);
+        beta = Z_q.getElementFrom(betaString);
         this.parameters = parameters;
     }
     

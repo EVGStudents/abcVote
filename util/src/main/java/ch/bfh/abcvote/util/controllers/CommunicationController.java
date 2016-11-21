@@ -14,6 +14,7 @@ import ch.bfh.abcvote.util.model.VoteTopic;
 import ch.bfh.abcvote.util.model.Voter;
 import ch.bfh.unicrypt.math.algebra.general.interfaces.Element;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -389,6 +390,40 @@ public class CommunicationController {
          }
         return vote;
     }
+
+    public PrivateCredentials getPrivateCredentials() {
+            //ToDo might need to be moved once Credentials are stored diffrentliy
+            PrivateCredentials privateCredentials = null;
+            String path = System.getProperty("user.home") + File.separator + "Documents";
+            path += File.separator + "abcVote";
+            File josnDir = new File(path);
+            if (josnDir.exists()) {
+                
+                FileReader file = null;
+                try {
+                    file = new FileReader(path + File.separator +  "privateCredentials.json");
+                    JsonReader jsonReader = Json.createReader(file);
+                    JsonObject obj = jsonReader.readObject();
+                    String alphaString = obj.getString("alpha");
+                    String betaString = obj.getString("beta");
+                    file.close();
+                    
+                    Parameters parameters = getParameters();
+                    privateCredentials = new PrivateCredentials(parameters, alphaString, betaString);
+                    
+                } catch (Exception ex) {
+                    System.out.println("File does not exist");
+                } finally{
+                    
+                }
+                
+                
+            } else {
+                System.out.println("Directory not created");
+            }
+            return privateCredentials;
+    }
+
     
        
     
