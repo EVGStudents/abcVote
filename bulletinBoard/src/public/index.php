@@ -144,8 +144,6 @@ $app->post('/voters', function (Request $request, Response $response) {
 * Response: Kopfdaten der offenen Abstimmungen (ID, Titel, Wahlperiode)
 */
 $app->get('/elections/open', function (Request $request, Response $response) {
-  // if ContentType is JSON, than store entry, else return 406
-  if (is_Content_Type_JSON($request, $response) === TRUE) {
     // if request is not empty, than proceed
     if (empty($request->getQueryParam('date')) === FALSE) {
       try{
@@ -178,11 +176,6 @@ $app->get('/elections/open', function (Request $request, Response $response) {
                     ->withHeader('Content-Type', 'text/html')
                     ->write('Empty request!');
   }
-} else { //wrong ContentType
-  return $response->withStatus(406)
-                  ->withHeader('Content-Type', 'text/html')
-                  ->write('Wrong header, needs to be application/json!');
-}
 });
 
 // GET /elections/closed: get general information about closed elections
@@ -192,8 +185,6 @@ $app->get('/elections/open', function (Request $request, Response $response) {
 * Response: Kopfdaten der abgeschlossenen Wahlen (Wahl-ID, Titel, Wahlperiode)
 */
 $app->get('/elections/closed', function (Request $request, Response $response) {
-  // if ContentType is JSON, than store entry, else return 406
-  if (is_Content_Type_JSON($request, $response) === TRUE) {
     // if request is not empty, than proceed
     if (empty($request->getQueryParam('date')) === FALSE) {
       try{
@@ -226,11 +217,6 @@ $app->get('/elections/closed', function (Request $request, Response $response) {
                     ->withHeader('Content-Type', 'text/html')
                     ->write('Empty request!');
   }
-} else { //wrong ContentType
-  return $response->withStatus(406)
-                  ->withHeader('Content-Type', 'text/html')
-                  ->write('Wrong header, needs to be application/json!');
-}
 });
 
 // GET /elections/{id} : get all information about election X with id='id'
