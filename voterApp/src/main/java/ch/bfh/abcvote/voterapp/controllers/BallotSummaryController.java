@@ -57,5 +57,10 @@ public class BallotSummaryController implements Initializable,ControlledScreen {
     private void btNextClicked(ActionEvent event) {
         parentController.setScreen(VoterApp.HOMESCREENID);
     }
+
+    @Override
+    public void setScene() {
+        
+    }
     
 }

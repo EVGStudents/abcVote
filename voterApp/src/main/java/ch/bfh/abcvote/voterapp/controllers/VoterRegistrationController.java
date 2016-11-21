@@ -63,4 +63,8 @@ public class VoterRegistrationController implements Initializable, ControlledScr
         parentController.setScreen(VoterApp.HOMESCREENID);
     }
     
+    @Override
+    public void setScene() {
+        
+    }
 }

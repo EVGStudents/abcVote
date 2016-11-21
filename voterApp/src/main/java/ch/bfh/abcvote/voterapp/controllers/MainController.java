@@ -6,9 +6,12 @@
 package ch.bfh.abcvote.voterapp.controllers;
 
 import ch.bfh.abcvote.util.controllers.CommunicationController;
+import ch.bfh.abcvote.util.model.ElectionFilterTyp;
+import ch.bfh.abcvote.util.model.ElectionHeader;
 import ch.bfh.abcvote.util.model.Vote;
 import ch.bfh.abcvote.voterapp.ControlledScreen;
 import java.util.HashMap;
+import java.util.List;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -30,6 +33,8 @@ import javafx.util.Pair;
  */
 
 public class MainController extends StackPane {
+
+
     
     //Hashmap that holds all the registred Controllers and thie Screens
     private HashMap<String, Pair<ControlledScreen,Node>> screens = new HashMap<>();
@@ -68,9 +73,9 @@ public class MainController extends StackPane {
         }
     }
     
-    //This method exchanges the current Screen with the new Screen given by the name  
-    public boolean setScreen(final String name){
-        //Checks if there is a Stored Screnn for the given name
+    //This method exchanges the current Screen with the new Screen given by the name
+    private boolean changeScreen(final String name){
+       //Checks if there is a Stored Screnn for the given name
         if (screens.get(name) != null){
             final DoubleProperty opacity = opacityProperty();
             //checks if there is screen that is already displayed
@@ -109,8 +114,15 @@ public class MainController extends StackPane {
            System.out.println("screen hasn't been loaded! \n");
            return false;
         
-        }
-
+        } 
+    }
+    
+    //This method exchanges the current Screen with the new Screen given by the name
+    //And afterwards calls its setScrene Method
+    public boolean setScreen(final String name){
+        changeScreen(name);
+        screens.get(name).getKey().setScene();
+        return true;
     }
     
     //This method will remove the Controller and screen  pair with the given name from the collection of Pairs
@@ -124,11 +136,12 @@ public class MainController extends StackPane {
         }
     }
 
+    
     //this method changes the current Screen to the given name
     //and afterwards calls that screens setScene Method to pass the given vote object for display 
     public boolean setScreenWithVote(String name, Vote vote) {
         
-        setScreen(name);
+        changeScreen(name);
         screens.get(name).getKey().setScene(vote);
         
         return true;
@@ -136,6 +149,11 @@ public class MainController extends StackPane {
 
     public void registerNewVoter(String email) {
         communicationController.registerNewVoter(email);
+    }
+    
+    public List<ElectionHeader> getElectionHeaders(ElectionFilterTyp filter) {
+        List<ElectionHeader> electionHeadersList = communicationController.getElectionHeaders(filter);
+        return electionHeadersList;
     }
 
 }

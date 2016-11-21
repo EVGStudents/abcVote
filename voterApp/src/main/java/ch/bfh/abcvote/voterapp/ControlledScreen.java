@@ -18,5 +18,7 @@ public interface ControlledScreen {
     public void setScreenParent(MainController screenParent);
     //This method will allow the maincontroller to pass the controller a vote object to display
     public void setScene(Vote vote);
+    
+    public void setScene();
 }
 

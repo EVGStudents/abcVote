@@ -59,4 +59,8 @@ public class HomeController implements Initializable, ControlledScreen {
         
     }
     
+    @Override
+    public void setScene() {
+        
+    }
 }

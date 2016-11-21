@@ -5,11 +5,16 @@
  */
 package ch.bfh.abcvote.voterapp.controllers;
 
+import ch.bfh.abcvote.util.model.ElectionFilterTyp;
+import ch.bfh.abcvote.util.model.ElectionHeader;
 import ch.bfh.abcvote.util.model.Vote;
 import ch.bfh.abcvote.voterapp.ControlledScreen;
 import ch.bfh.abcvote.voterapp.VoterApp;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -30,7 +35,7 @@ public class ElectionsOverviewController implements Initializable,ControlledScre
     @FXML
     private Button btNext;
     @FXML
-    private ListView<?> lvElections;
+    private ListView<ElectionHeader> lvElections;
     
     /**
      * Initializes the controller class.
@@ -61,4 +66,19 @@ public class ElectionsOverviewController implements Initializable,ControlledScre
         parentController.setScreen(VoterApp.PICKOPTIONSSCREENID);
     }
     
+    @Override
+    public void setScene() {
+        //get Election Headers and display them in listView
+        List<ElectionHeader> electionHeadersList = parentController.getElectionHeaders(ElectionFilterTyp.OPEN);
+        populateElectionHeaderListView(electionHeadersList);
+    }
+    
+    
+        //Displays the given list of Voters in the ListView for selection
+    private void populateElectionHeaderListView(List<ElectionHeader> electionHeaderList) {
+        
+        ObservableList<ElectionHeader> listViewList = FXCollections.observableArrayList(electionHeaderList);
+        lvElections.setItems(listViewList);
+        
+    }
 }

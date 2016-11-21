@@ -67,4 +67,8 @@ public class PickOptionsController implements Initializable,ControlledScreen {
         parentController.setScreen(VoterApp.BALLOTSUMMARYSCREENID);
     }
     
+    @Override
+    public void setScene() {
+        
+    }
 }
