@@ -5,6 +5,8 @@
  */
 package ch.bfh.abcvote.util.controllers;
 
+import ch.bfh.abcvote.util.model.ElectionFilterTyp;
+import ch.bfh.abcvote.util.model.ElectionHeader;
 import ch.bfh.abcvote.util.model.Parameters;
 import ch.bfh.abcvote.util.model.PrivateCredentials;
 import ch.bfh.abcvote.util.model.Vote;
@@ -15,6 +17,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -257,5 +261,35 @@ public class CommunicationController {
             }
 
     }
+
+    public List<ElectionHeader> getElectionHeaders(ElectionFilterTyp filter) {
+        List<ElectionHeader> electionHeaderlist = new ArrayList<ElectionHeader>(); 
+        	
+         try {
+
+             URL url = new URL(bulletinBoardUrl + "/elections");
+             
+             InputStream urlInputStream = url.openStream();
+             JsonReader jsonReader = Json.createReader(urlInputStream);
+             JsonArray obj = jsonReader.readArray();
+             DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+             for (JsonObject result : obj.getValuesAs(JsonObject.class)) {
+                   
+                int id = Integer.parseInt(result.getString("id"));       
+                String title = result.getString("electionTitle");
+                LocalDate beginDate = LocalDate.parse(result.getString("beginDate"), format);
+                LocalDate endDate= LocalDate.parse(result.getString("endDate"), format);
+                   
+                ElectionHeader electionHeader = new ElectionHeader(id, title, beginDate, endDate);
+                electionHeaderlist.add(electionHeader);
+             }
+             
+         } catch (IOException x) {
+             System.err.println(x);
+         }
+       return electionHeaderlist;
+    }
+    
+       
     
 }
