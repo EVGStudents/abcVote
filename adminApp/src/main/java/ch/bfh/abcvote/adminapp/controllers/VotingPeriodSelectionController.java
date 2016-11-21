@@ -10,6 +10,8 @@ import ch.bfh.abcvote.adminapp.ControlledScreen;
 import ch.bfh.abcvote.util.model.Vote;
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -64,7 +66,9 @@ public class VotingPeriodSelectionController implements Initializable, Controlle
     private void btNextClicked(ActionEvent event) {
         LocalDate start = dateStart.getValue();
         LocalDate end = dateEnd.getValue();
-        vote.setVotingPeriod(start, end);
+        LocalDateTime startDateTime = LocalDateTime.of(start, LocalTime.parse("00:00:00"));
+        LocalDateTime endDateTime = LocalDateTime.of(end, LocalTime.parse("00:00:00"));
+        vote.setVotingPeriod(startDateTime, endDateTime);
         parentController.setScreenWithVote(AdminApp.VOTESUMMARYSCREENID, vote);
     }
     

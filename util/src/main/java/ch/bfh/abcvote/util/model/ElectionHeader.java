@@ -5,7 +5,7 @@
  */
 package ch.bfh.abcvote.util.model;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  *
@@ -15,10 +15,10 @@ public class ElectionHeader {
     
    private int id;
    private String title;
-   private LocalDate startDate;
-   private LocalDate endDate;
+   private LocalDateTime startDate;
+   private LocalDateTime endDate;
 
-    public ElectionHeader(int id, String title, LocalDate startDate, LocalDate endDate) {
+    public ElectionHeader(int id, String title, LocalDateTime startDate, LocalDateTime endDate) {
         this.id = id;
         this.title = title;
         this.startDate = startDate;
@@ -33,11 +33,11 @@ public class ElectionHeader {
         return title;
     }
 
-    public LocalDate getStartDate() {
+    public LocalDateTime getStartDate() {
         return startDate;
     }
 
-    public LocalDate getEndDate() {
+    public LocalDateTime getEndDate() {
         return endDate;
     }
    

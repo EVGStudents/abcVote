@@ -12,7 +12,7 @@ import ch.bfh.unicrypt.math.algebra.dualistic.classes.PolynomialSemiRing;
 import ch.bfh.unicrypt.math.algebra.dualistic.classes.ZMod;
 import ch.bfh.unicrypt.math.algebra.dualistic.interfaces.DualisticElement;
 import ch.bfh.unicrypt.math.algebra.general.interfaces.Element;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -29,8 +29,8 @@ public class Vote {
     private List<Voter> voterList;
     private Parameters generators;
     private VoteTopic topic;
-    private LocalDate startDate;
-    private LocalDate endDate;
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
     private Element h_Hat;
     private String appVersion;
     
@@ -40,7 +40,7 @@ public class Vote {
         this.generators = generators;
     }
 
-    public Vote(int id, String title, List<Voter> voterList, Parameters generators, LocalDate startDate, LocalDate endDate, String appVersion, String h_HatString, String credentialPolynomialString) {
+    public Vote(int id, String title, List<Voter> voterList, Parameters generators, LocalDateTime startDate, LocalDateTime endDate, String appVersion, String h_HatString, String credentialPolynomialString) {
         this.id = id;
         this.title = title;
         this.voterList = voterList;
@@ -81,15 +81,15 @@ public class Vote {
         this.topic = topic;
     }
 
-    public LocalDate getStartDate() {
+    public LocalDateTime getStartDate() {
         return startDate;
     }
 
-    public LocalDate getEndDate() {
+    public LocalDateTime getEndDate() {
         return endDate;
     }
     
-    public void setVotingPeriod(LocalDate startDate, LocalDate endDate){
+    public void setVotingPeriod(LocalDateTime startDate, LocalDateTime endDate){
         this.startDate = startDate;
         this.endDate = endDate;
     }

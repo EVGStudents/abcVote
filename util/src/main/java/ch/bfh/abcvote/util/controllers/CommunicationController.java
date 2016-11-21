@@ -21,7 +21,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -114,10 +113,11 @@ public class CommunicationController {
 
     public void postVote(Vote vote){
         JsonObjectBuilder jBuilder = Json.createObjectBuilder();
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         
         jBuilder.add("electionTitle", vote.getTitle());
-        jBuilder.add("beginDate", vote.getStartDate().toString());
-        jBuilder.add("endDate", vote.getEndDate().toString());
+        jBuilder.add("beginDate", vote.getStartDate().format(format));
+        jBuilder.add("endDate", vote.getEndDate().format(format));
         //toDo: get AppVersion dynamically from build 
         jBuilder.add("appVersion", "0.15");
        
@@ -324,8 +324,8 @@ public class CommunicationController {
 
                int id = Integer.parseInt(result.getString("id"));       
                String title = result.getString("electionTitle");
-               LocalDate beginDate = LocalDate.parse(result.getString("beginDate"), format);
-               LocalDate endDate= LocalDate.parse(result.getString("endDate"), format);
+               LocalDateTime beginDate = LocalDateTime.parse(result.getString("beginDate"), format);
+               LocalDateTime endDate= LocalDateTime.parse(result.getString("endDate"), format);
 
                ElectionHeader electionHeader = new ElectionHeader(id, title, beginDate, endDate);
                electionHeaderlist.add(electionHeader);
@@ -347,13 +347,13 @@ public class CommunicationController {
              InputStream urlInputStream = url.openStream();
              JsonReader jsonReader = Json.createReader(urlInputStream);
              JsonObject obj = jsonReader.readObject();
-             DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd  HH:mm:ss");
+             DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
              Parameters parameters = this.getParameters();
              
              //get Election Data       
              String title = obj.getString("electionTitle");
-             LocalDate beginDate = LocalDate.parse(obj.getString("beginDate"), format);
-             LocalDate endDate = LocalDate.parse(obj.getString("endDate"), format);
+             LocalDateTime beginDate = LocalDateTime.parse(obj.getString("beginDate"), format);
+             LocalDateTime endDate = LocalDateTime.parse(obj.getString("endDate"), format);
              String appVersion = obj.getString("appVersion");
              String coefficientsString = obj.getString("coefficients");
              String h_HatString = obj.getString("electionGenerator");
