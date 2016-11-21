@@ -6,10 +6,14 @@
 package ch.bfh.abcvote.voterapp.controllers;
 
 import ch.bfh.abcvote.util.model.Vote;
+import ch.bfh.abcvote.util.model.VoteTopic;
 import ch.bfh.abcvote.voterapp.ControlledScreen;
 import ch.bfh.abcvote.voterapp.VoterApp;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -36,7 +40,9 @@ public class PickOptionsController implements Initializable,ControlledScreen {
     @FXML
     private Label txtTopic;
     @FXML
-    private ListView<?> lvOptions;
+    private ListView<String> lvOptions;
+    
+    private Vote vote;
     
     /**
      * Initializes the controller class.
@@ -59,7 +65,11 @@ public class PickOptionsController implements Initializable,ControlledScreen {
 
     @Override
     public void setScene(Vote vote) {
-        
+        this.vote = vote;
+        VoteTopic topic = vote.getTopic();
+        this.txtPick.setText(String.valueOf(topic.getPick()));
+        this.txtTopic.setText(topic.getTitle());
+        populateOptionsListView(topic.getOptions());
     }
 
     @FXML
@@ -69,6 +79,13 @@ public class PickOptionsController implements Initializable,ControlledScreen {
     
     @Override
     public void setScene() {
+        
+    }
+    
+    private void populateOptionsListView(List<String> optionsList) {
+        
+        ObservableList<String> listViewList = FXCollections.observableArrayList(optionsList);
+        lvOptions.setItems(listViewList);
         
     }
 }

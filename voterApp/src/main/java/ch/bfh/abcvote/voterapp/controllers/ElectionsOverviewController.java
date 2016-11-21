@@ -63,7 +63,16 @@ public class ElectionsOverviewController implements Initializable,ControlledScre
 
     @FXML
     private void btNextClicked(ActionEvent event) {
-        parentController.setScreen(VoterApp.PICKOPTIONSSCREENID);
+        ObservableList<ElectionHeader> selectedElections;
+        selectedElections = lvElections.getSelectionModel().getSelectedItems();
+        if( !selectedElections.isEmpty()){
+           ElectionHeader selectedElectionHeader = selectedElections.get(0);
+           int electionId = selectedElectionHeader.getId();
+           Vote vote = parentController.getElectionById(electionId);
+           parentController.setScreenWithVote(VoterApp.PICKOPTIONSSCREENID, vote);
+        }
+        
+
     }
     
     @Override
