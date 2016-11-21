@@ -382,7 +382,7 @@ public class CommunicationController {
              }
                
              
-             vote = new Vote(electionId, title, voterlist, parameters, beginDate, endDate, appVersion, h_HatString, coefficientsString); 
+             vote = new Vote(electionId, title, voterlist, parameters, beginDate, endDate, voteTopic, appVersion, h_HatString, coefficientsString); 
              
          } catch (IOException x) {
              System.err.println(x);

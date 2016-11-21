@@ -41,7 +41,7 @@ public class Parameters {
 
        h1 = G_q.getElementFrom(h1String);
        h2 =  G_q.getElementFrom(h2String);
-       System.out.println(h1.toString() + h2.toString());
+       
     }
     
     public GStarModSafePrime getG_p() {

@@ -40,13 +40,14 @@ public class Vote {
         this.generators = generators;
     }
 
-    public Vote(int id, String title, List<Voter> voterList, Parameters generators, LocalDateTime startDate, LocalDateTime endDate, String appVersion, String h_HatString, String credentialPolynomialString) {
+    public Vote(int id, String title, List<Voter> voterList, Parameters generators, LocalDateTime startDate, LocalDateTime endDate, VoteTopic topic, String appVersion, String h_HatString, String credentialPolynomialString) {
         this.id = id;
         this.title = title;
         this.voterList = voterList;
         this.generators = generators;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.topic = topic;
         this.appVersion = appVersion;
         this.setH_Hat(h_HatString);
         this.setCredentialPolynomial(credentialPolynomialString);
