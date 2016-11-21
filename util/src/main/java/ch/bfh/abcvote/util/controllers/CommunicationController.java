@@ -16,8 +16,12 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -264,29 +268,72 @@ public class CommunicationController {
 
     public List<ElectionHeader> getElectionHeaders(ElectionFilterTyp filter) {
         List<ElectionHeader> electionHeaderlist = new ArrayList<ElectionHeader>(); 
-        	
-         try {
+        
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime actualDateTime = LocalDateTime.now();
+        String dateTimeString = actualDateTime.getYear() + "-" 
+                + actualDateTime.getMonthValue() + "-"
+                + actualDateTime.getDayOfMonth() + " "
+                + actualDateTime.getHour() + ":"
+                + actualDateTime.getMinute() + ":"
+                + actualDateTime.getSecond();
+        
+        URL url = null;
+        
+        switch (filter) {
+            
+            case ALL: 
+                {
+                    try {
+                        url = new URL(bulletinBoardUrl + "/elections");
+                    } catch (MalformedURLException ex) {
+                        Logger.getLogger(CommunicationController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }  
+                break; 
+             
+            case OPEN:
+                {
+                    try {
+                        url = new URL(bulletinBoardUrl + "/elections/open?date=" + URLEncoder.encode(dateTimeString, "UTF-8").replace("+", "%20"));
+                    } catch (UnsupportedEncodingException | MalformedURLException ex) {
+                        System.err.println(ex);
+                    }
+                }
+                break; 
+                
+            case CLOSED:
+                {
+                    try {
+                        url = new URL(bulletinBoardUrl + "/elections/closed?date=" + URLEncoder.encode(dateTimeString, "UTF-8").replace("+", "%20"));
+                    } catch (UnsupportedEncodingException | MalformedURLException ex) {
+                        System.err.println(ex);
+                    }
+                }
+                break; 
+        }        
+            
+        try {    
 
-             URL url = new URL(bulletinBoardUrl + "/elections");
-             
-             InputStream urlInputStream = url.openStream();
-             JsonReader jsonReader = Json.createReader(urlInputStream);
-             JsonArray obj = jsonReader.readArray();
-             DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-             for (JsonObject result : obj.getValuesAs(JsonObject.class)) {
-                   
-                int id = Integer.parseInt(result.getString("id"));       
-                String title = result.getString("electionTitle");
-                LocalDate beginDate = LocalDate.parse(result.getString("beginDate"), format);
-                LocalDate endDate= LocalDate.parse(result.getString("endDate"), format);
-                   
-                ElectionHeader electionHeader = new ElectionHeader(id, title, beginDate, endDate);
-                electionHeaderlist.add(electionHeader);
-             }
-             
-         } catch (IOException x) {
-             System.err.println(x);
-         }
+            InputStream urlInputStream = url.openStream();
+            JsonReader jsonReader = Json.createReader(urlInputStream);
+            JsonArray obj = jsonReader.readArray();
+
+            for (JsonObject result : obj.getValuesAs(JsonObject.class)) {
+
+               int id = Integer.parseInt(result.getString("id"));       
+               String title = result.getString("electionTitle");
+               LocalDate beginDate = LocalDate.parse(result.getString("beginDate"), format);
+               LocalDate endDate= LocalDate.parse(result.getString("endDate"), format);
+
+               ElectionHeader electionHeader = new ElectionHeader(id, title, beginDate, endDate);
+               electionHeaderlist.add(electionHeader);
+            }
+        } catch (IOException x) {
+            System.err.println(x);
+        }
+        
+        
        return electionHeaderlist;
     }
     
