@@ -156,4 +156,9 @@ public class MainController extends StackPane {
         return electionHeadersList;
     }
 
+    Vote getElectionById(int electionId) {
+        Vote vote = communicationController.getElectionById(electionId);
+        return vote;
+    }
+
 }
