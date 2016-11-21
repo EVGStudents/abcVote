@@ -10,6 +10,7 @@ import ch.bfh.abcvote.util.model.ElectionHeader;
 import ch.bfh.abcvote.util.model.Parameters;
 import ch.bfh.abcvote.util.model.PrivateCredentials;
 import ch.bfh.abcvote.util.model.Vote;
+import ch.bfh.abcvote.util.model.VoteTopic;
 import ch.bfh.abcvote.util.model.Voter;
 import ch.bfh.unicrypt.math.algebra.general.interfaces.Element;
 import java.io.File;
@@ -288,6 +289,58 @@ public class CommunicationController {
              System.err.println(x);
          }
        return electionHeaderlist;
+    }
+
+    public Vote getElectionById(int electionId) {
+        Vote vote = null;
+        try {
+
+             URL url = new URL(bulletinBoardUrl + "/elections/" + electionId);
+             
+             InputStream urlInputStream = url.openStream();
+             JsonReader jsonReader = Json.createReader(urlInputStream);
+             JsonObject obj = jsonReader.readObject();
+             DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd  HH:mm:ss");
+             Parameters parameters = this.getParameters();
+             
+             //get Election Data       
+             String title = obj.getString("electionTitle");
+             LocalDate beginDate = LocalDate.parse(obj.getString("beginDate"), format);
+             LocalDate endDate = LocalDate.parse(obj.getString("endDate"), format);
+             String appVersion = obj.getString("appVersion");
+             String coefficientsString = obj.getString("coefficients");
+             String h_HatString = obj.getString("electionGenerator");
+             List<Voter> voterlist = new ArrayList<Voter>(); 
+             //get voterlist
+             for (JsonObject result : obj.getJsonArray("voters").getValuesAs(JsonObject.class)) {
+                   
+                String voterEmail = result.getString("email");       
+                String voterSignature = result.getString("signature");
+                String voterPublicCredential = result.getString("publicCredential");
+                String voterAppVersion = result.getString("appVersion");
+                   
+                Voter voter = new Voter(voterEmail, voterSignature, voterPublicCredential, voterAppVersion);
+                voterlist.add(voter);
+             }
+             //get votingTopic
+             JsonObject voteTopicObj = obj.getJsonObject("votingTopic");
+             
+             String topic = voteTopicObj.getString("topic");
+             int pick = voteTopicObj.getInt("pick");
+             
+             VoteTopic voteTopic = new VoteTopic(topic, pick);
+             JsonArray optionsArray = voteTopicObj.getJsonArray("options");
+             for(int i = 0; i < optionsArray.size(); i++){
+                   voteTopic.addOption(optionsArray.getString(i));
+             }
+               
+             
+             vote = new Vote(electionId, title, voterlist, parameters, beginDate, endDate, appVersion, h_HatString, coefficientsString); 
+             
+         } catch (IOException x) {
+             System.err.println(x);
+         }
+        return vote;
     }
     
        

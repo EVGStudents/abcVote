@@ -14,8 +14,7 @@ import ch.bfh.unicrypt.math.algebra.dualistic.interfaces.DualisticElement;
 import ch.bfh.unicrypt.math.algebra.general.interfaces.Element;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 
 
 
@@ -24,20 +23,35 @@ import java.util.logging.Logger;
  * @author t.buerk
  */
 public class Vote {
-
-    String title;
-    List<Voter> voterList;
-    Parameters generators;
-    VoteTopic topic;
-    LocalDate startDate;
-    LocalDate endDate;
-    Element h_Hat;
+    
+    private int id;
+    private String title;
+    private List<Voter> voterList;
+    private Parameters generators;
+    private VoteTopic topic;
+    private LocalDate startDate;
+    private LocalDate endDate;
+    private Element h_Hat;
+    private String appVersion;
     
     PolynomialElement credentialPolynomial;
     
     public Vote(Parameters generators){
         this.generators = generators;
     }
+
+    public Vote(int id, String title, List<Voter> voterList, Parameters generators, LocalDate startDate, LocalDate endDate, String appVersion, String h_HatString, String credentialPolynomialString) {
+        this.id = id;
+        this.title = title;
+        this.voterList = voterList;
+        this.generators = generators;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.appVersion = appVersion;
+        this.setH_Hat(h_HatString);
+        this.setCredentialPolynomial(credentialPolynomialString);
+    }
+    
     
     public String getTitle(){
         return title;
@@ -133,8 +147,16 @@ public class Vote {
         try { 
             credentialPolynomial = PolynomialSemiRing.getInstance(Z_p).getElementFrom(credentialPolynomialString);
         } catch (UniCryptException ex) {
-            ;
+            
         }
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getAppVersion() {
+        return appVersion;
     }
     
     
