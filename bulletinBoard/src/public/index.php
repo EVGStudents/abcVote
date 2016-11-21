@@ -147,15 +147,15 @@ $app->get('/elections/open', function (Request $request, Response $response) {
   // if ContentType is JSON, than store entry, else return 406
   if (is_Content_Type_JSON($request, $response) === TRUE) {
     // if request is not empty, than proceed
-    if (empty($request->getParsedBody()) === FALSE) {
+    if (empty($request->getQueryParam('date')) === FALSE) {
       try{
-        $jsonBody = $request->getParsedBody();
+        $date = $request->getQueryParam('date');
         $mapper = new ElectionMapper($this->db);
         $elections = $mapper->getElections();
         $openElections = array();
         // search for open elections
         foreach ($elections as $election) {
-          if ($jsonBody['date'] <= $election->getEndDate()) {
+          if ($date <= $election->getEndDate()) {
             array_push($openElections, $election);
           }
         }
@@ -195,15 +195,15 @@ $app->get('/elections/closed', function (Request $request, Response $response) {
   // if ContentType is JSON, than store entry, else return 406
   if (is_Content_Type_JSON($request, $response) === TRUE) {
     // if request is not empty, than proceed
-    if (empty($request->getParsedBody()) === FALSE) {
+    if (empty($request->getQueryParam('date')) === FALSE) {
       try{
-        $jsonBody = $request->getParsedBody();
+        $date = $request->getQueryParam('date');
         $mapper = new ElectionMapper($this->db);
         $elections = $mapper->getElections();
         $closedElections = array();
         // search for closed elections
         foreach ($elections as $election) {
-          if ($jsonBody['date'] >= $election->getEndDate()) {
+          if ($date >= $election->getEndDate()) {
             array_push($closedElections, $election);
           }
         }
