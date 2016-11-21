@@ -5,6 +5,7 @@
  */
 package ch.bfh.abcvote.voterapp.controllers;
 
+import ch.bfh.abcvote.util.model.Ballot;
 import ch.bfh.abcvote.util.model.ElectionFilterTyp;
 import ch.bfh.abcvote.util.model.ElectionHeader;
 import ch.bfh.abcvote.util.model.Vote;
@@ -88,6 +89,11 @@ public class ElectionsOverviewController implements Initializable,ControlledScre
         
         ObservableList<ElectionHeader> listViewList = FXCollections.observableArrayList(electionHeaderList);
         lvElections.setItems(listViewList);
+        
+    }
+    
+    @Override
+    public void setScene(Ballot ballot) {
         
     }
 }

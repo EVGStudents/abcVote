@@ -5,6 +5,7 @@
  */
 package ch.bfh.abcvote.voterapp.controllers;
 
+import ch.bfh.abcvote.util.model.Ballot;
 import ch.bfh.abcvote.util.model.Vote;
 import ch.bfh.abcvote.voterapp.ControlledScreen;
 import ch.bfh.abcvote.voterapp.VoterApp;
@@ -67,4 +68,9 @@ public class VoterRegistrationController implements Initializable, ControlledScr
     public void setScene() {
         
     }
+    
+    @Override
+    public void setScene(Ballot ballot) {
+        
+    }    
 }

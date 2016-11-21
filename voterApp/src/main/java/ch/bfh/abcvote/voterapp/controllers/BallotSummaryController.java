@@ -5,6 +5,8 @@
  */
 package ch.bfh.abcvote.voterapp.controllers;
 
+import ch.bfh.abcvote.util.model.Ballot;
+import ch.bfh.abcvote.util.model.PrivateCredentials;
 import ch.bfh.abcvote.util.model.Vote;
 import ch.bfh.abcvote.voterapp.ControlledScreen;
 import ch.bfh.abcvote.voterapp.VoterApp;
@@ -28,6 +30,8 @@ public class BallotSummaryController implements Initializable,ControlledScreen {
     MainController parentController;
     @FXML
     private Button btCastBallot;
+    
+    private Ballot ballot;
     
     /**
      * Initializes the controller class.
@@ -55,12 +59,19 @@ public class BallotSummaryController implements Initializable,ControlledScreen {
 
     @FXML
     private void btNextClicked(ActionEvent event) {
+        PrivateCredentials privatCredentials = parentController.getPrivateCredentials();
+        ballot.calculateProves(privatCredentials);
         parentController.setScreen(VoterApp.HOMESCREENID);
     }
 
     @Override
     public void setScene() {
         
+    }
+
+    @Override
+    public void setScene(Ballot ballot) {
+        this.ballot = ballot;
     }
     
 }

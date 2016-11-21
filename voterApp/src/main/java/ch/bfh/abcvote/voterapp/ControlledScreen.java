@@ -5,6 +5,7 @@
  */
 package ch.bfh.abcvote.voterapp;
 
+import ch.bfh.abcvote.util.model.Ballot;
 import ch.bfh.abcvote.util.model.Vote;
 import ch.bfh.abcvote.voterapp.controllers.MainController;
 
@@ -18,6 +19,8 @@ public interface ControlledScreen {
     public void setScreenParent(MainController screenParent);
     //This method will allow the maincontroller to pass the controller a vote object to display
     public void setScene(Vote vote);
+
+    public void setScene(Ballot ballot);
     
     public void setScene();
 }

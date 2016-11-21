@@ -6,8 +6,10 @@
 package ch.bfh.abcvote.voterapp.controllers;
 
 import ch.bfh.abcvote.util.controllers.CommunicationController;
+import ch.bfh.abcvote.util.model.Ballot;
 import ch.bfh.abcvote.util.model.ElectionFilterTyp;
 import ch.bfh.abcvote.util.model.ElectionHeader;
+import ch.bfh.abcvote.util.model.PrivateCredentials;
 import ch.bfh.abcvote.util.model.Vote;
 import ch.bfh.abcvote.voterapp.ControlledScreen;
 import java.util.HashMap;
@@ -159,6 +161,17 @@ public class MainController extends StackPane {
     Vote getElectionById(int electionId) {
         Vote vote = communicationController.getElectionById(electionId);
         return vote;
+    }
+
+    public boolean setScreenWithBallot(String name, Ballot ballot) {
+        changeScreen(name);
+        screens.get(name).getKey().setScene(ballot);
+        return true;
+    }
+
+    PrivateCredentials getPrivateCredentials() {
+       PrivateCredentials privateCredentials =  communicationController.getPrivateCredentials();
+       return privateCredentials;
     }
 
 }

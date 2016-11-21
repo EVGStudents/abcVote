@@ -5,6 +5,7 @@
  */
 package ch.bfh.abcvote.voterapp.controllers;
 
+import ch.bfh.abcvote.util.model.Ballot;
 import ch.bfh.abcvote.util.model.Vote;
 import ch.bfh.abcvote.util.model.VoteTopic;
 import ch.bfh.abcvote.voterapp.ControlledScreen;
@@ -74,7 +75,12 @@ public class PickOptionsController implements Initializable,ControlledScreen {
 
     @FXML
     private void btNextClicked(ActionEvent event) {
-        parentController.setScreen(VoterApp.BALLOTSUMMARYSCREENID);
+        
+        ObservableList<String> selectedOptions;
+        selectedOptions = lvOptions.getSelectionModel().getSelectedItems();
+        Ballot ballot = new Ballot(vote,selectedOptions);
+        parentController.setScreenWithBallot(VoterApp.BALLOTSUMMARYSCREENID, ballot);
+
     }
     
     @Override
@@ -88,4 +94,8 @@ public class PickOptionsController implements Initializable,ControlledScreen {
         lvOptions.setItems(listViewList);
         
     }
+    @Override
+    public void setScene(Ballot ballot) {
+        
+    }    
 }
