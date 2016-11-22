@@ -5,6 +5,7 @@
  */
 package ch.bfh.abcvote.util.controllers;
 
+import java.io.File;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.Map;
@@ -36,8 +37,11 @@ public class SignatureController {
         // Set the signing key on the JWS
         // Note that your application will need to determine where/how to get the key
         // and here we just use an example from the JWS spec
-        CertificateController certHelper = new CertificateController();
-        PrivateKey privateKey = certHelper.getPemPrivateKey("/Users/snellen/Documents/dev/abcVote/adminApp/src/main/resources/certificates/alice/alice_at_bfh.ch.privatekey.pkcs8.pem", "RSA");
+        String pathToKeyStore = System.getProperty("user.home") + File.separator + "Documents" + File.separator + "abcVote" + File.separator + "test.jks";
+        String keyStorePassword = "Bern2016";
+        String stringKeyPassword = "Bern2016";
+        String stringAlias = "alice-at-bfh.ch";
+        PrivateKey privateKey = KeyStoreController.readPrivateKeyFromKeyStore(pathToKeyStore, keyStorePassword, stringKeyPassword, stringAlias);
         jws.setKey(privateKey);
         
         // Sign the JWS and produce the compact serialization or complete JWS representation, which
@@ -59,7 +63,7 @@ public class SignatureController {
     }
     
     
-    public boolean verify(JsonObject signedModel) throws JoseException, Exception{
+    public boolean verifyJsonSignature(JsonObject signedModel) throws JoseException, Exception{
         // The complete JWS representation, or compact serialization, is string consisting of
         // three dot ('.') separated base64url-encoded parts in the form Header.Payload.Signature
 
@@ -86,7 +90,6 @@ public class SignatureController {
         // Note that your application will need to determine where/how to get the key
         // Here we use an example from the JWS spec
         CertificateController certController = new CertificateController();
-        //PublicKey publicKey = certController.getPemPublicKey("/Users/snellen/Documents/dev/abcVote/adminApp/src/main/resources/certificates/alice/alice_at_bfh.ch.pubkey.pem", "RSA");
         PublicKey publicKey = certController.getPublicKeyFromX509Certificate("-----BEGIN CERTIFICATE-----\n" +
             "MIIDBTCCAe2gAwIBAgIBAjANBgkqhkiG9w0BAQsFADAsMR0wGwYDVQQDDBRuZWxs\n" +
             "czEtYmZoLWNsaWVudC1jYTELMAkGA1UEBhMCQ0gwHhcNMTYwMzE1MjA1NTMzWhcN\n" +
