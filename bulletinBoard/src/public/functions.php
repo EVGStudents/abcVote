@@ -1,5 +1,10 @@
 <?php
 
+use Namshi\JOSE\SimpleJWS;
+use Namshi\JOSE\JWS;
+use Namshi\JOSE\Base64\Base64UrlSafeEncoder;
+use Namshi\JOSE\Signer\SecLib\RS256;
+
 //function gets the voters as array and delivers the jsonData concatenated as string
 function get_voters_jsonData(Array $data){
   $returnString = "";
@@ -72,6 +77,20 @@ function get_ballots_as_JSON(Array $data){
   }
   $returnString = "[" . $returnString . "]";
   return $returnString;
+}
+
+//function verifies the JWS signature passed in jsonData against the value stored in DB
+function verify_signature($email, $certificate, $jsonData){
+
+  //extract JWS signature from json, remove not needed stuff
+  $matches = array();
+  preg_match('/,"\bsignature\b":"[a-zA-Z0-9.\-_]+"}/', $jsonData, $matches);
+  $signature = substr(substr($matches[0], 14), 0, -2);
+
+  $jws = JWS::load($signature);
+  $publicKey = openssl_pkey_get_public($certificate);
+
+  return $jws->verify($publicKey); // Returns true
 }
 
 ?>

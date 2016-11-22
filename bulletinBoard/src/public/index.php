@@ -73,8 +73,31 @@ $app->post('/elections', function (Request $request, Response $response) {
                         'coefficients' => $jsonBodyAsArray['coefficients'],
                         'appVersion' => $jsonBodyAsArray['appVersion']);
       $election = new ElectionEntity($electionArray);
-      $mapper = new ElectionMapper($this->db);
-      return $mapper->storeElection($election);
+      $electMapper = new ElectionMapper($this->db);
+
+      $certMapper = new CertificateMapper($this->db);
+      $certs = $certMapper->getCertificates();
+
+      //TODO implement the email's fetch from jsonData
+      //$email = $jsonBodyAsArray['creator'];
+      $email = "alice@bfh.ch";
+      $certificate = "";
+
+      foreach ($certs as $cert) {
+        if ($cert->getEmailAdress() == $email) {
+          $certificate = $cert->getCertificate();
+        }
+      }
+
+      if (verify_signature($email, $certificate, $jsonBody . "") === TRUE) {
+        return $electMapper->storeElection($election);
+      } else {
+        $response = $response->withStatus(401);
+        $response = $response->withHeader('Content-Type', 'text/html')
+                              ->write('Wrong signature!');
+        return $response;
+      }
+
     } catch (Exception $e) {
       $response = $response->withStatus(400);
       $response = $response->withHeader('X-Status-Reason', $e->getMessage());
