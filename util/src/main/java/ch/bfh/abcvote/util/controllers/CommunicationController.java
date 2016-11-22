@@ -65,14 +65,16 @@ public class CommunicationController {
              InputStream urlInputStream = url.openStream();
              JsonReader jsonReader = Json.createReader(urlInputStream);
              JsonObject obj = jsonReader.readObject();
-                   
-                String pString = obj.getString("p");       
-                String qString = obj.getString("q");
+                
+                String oString = obj.getString("o");
+                String pString = obj.getString("p");
+                String h0String = obj.getString("h0");
                 String h1String = obj.getString("h1");
                 String h2String = obj.getString("h2");
-
+                String g0String = obj.getString("g0");
+                String g1String = obj.getString("g1");
                    
-                Parameters voteInfo = new Parameters(pString, qString, h1String, h2String);
+                Parameters voteInfo = new Parameters(oString, pString, h0String, h1String, h2String, g0String, g1String);
                 return voteInfo;
          } catch (Exception x) {
              System.err.println(x);
