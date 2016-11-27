@@ -6,7 +6,11 @@
 package ch.bfh.abcvote.util.model;
 
 import ch.bfh.unicrypt.UniCryptException;
+import ch.bfh.unicrypt.crypto.schemes.commitment.classes.DiscreteLogarithmCommitmentScheme;
+import ch.bfh.unicrypt.crypto.schemes.commitment.classes.GeneralizedPedersenCommitmentScheme;
+import ch.bfh.unicrypt.crypto.schemes.commitment.classes.PedersenCommitmentScheme;
 import ch.bfh.unicrypt.math.algebra.dualistic.classes.ZMod;
+import ch.bfh.unicrypt.math.algebra.general.classes.Pair;
 import ch.bfh.unicrypt.math.algebra.general.interfaces.CyclicGroup;
 import ch.bfh.unicrypt.math.algebra.general.interfaces.Element;
 import ch.bfh.unicrypt.math.algebra.multiplicative.classes.GStarModPrime;
@@ -33,6 +37,8 @@ public class Parameters {
     
     private Element g0;
     private Element g1;
+    
+    private final int SECURITY_FACTOR = 80;
     
     public Parameters(String oString, String pString, String h0String, String h1String, String h2String, String g0String, String g1String) throws UniCryptException{
         G_p = GStarModPrime.getInstance(new BigInteger(oString, 10), new BigInteger(pString, 10));
@@ -84,6 +90,22 @@ public class Parameters {
     public Element getG1() {
         return g1;
     }
+
+    public PedersenCommitmentScheme getCommitmentSchemeP(){
+       PedersenCommitmentScheme com_P =  PedersenCommitmentScheme.getInstance(g0, g1);
+       return com_P;
+    }
+    
+    public GeneralizedPedersenCommitmentScheme getCommitmentSchemeQ(){
+        Pair messageGenerators = Pair.getInstance(h1,h2);
+        GeneralizedPedersenCommitmentScheme com_Q = GeneralizedPedersenCommitmentScheme.getInstance(h0,messageGenerators);
+        return com_Q;
+    }
+
+    public int getSECURITY_FACTOR() {
+        return SECURITY_FACTOR;
+    }
+    
 
     
 }

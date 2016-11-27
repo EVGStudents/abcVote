@@ -5,6 +5,7 @@
  */
 package ch.bfh.abcvote.util.controllers;
 
+import ch.bfh.abcvote.util.model.Ballot;
 import ch.bfh.abcvote.util.model.ElectionFilterTyp;
 import ch.bfh.abcvote.util.model.ElectionHeader;
 import ch.bfh.abcvote.util.model.Parameters;
@@ -424,6 +425,38 @@ public class CommunicationController {
                 System.out.println("Directory not created");
             }
             return privateCredentials;
+    }
+
+    public void postBallot(Ballot ballot) {
+        JsonObjectBuilder jBuilder = Json.createObjectBuilder();
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        
+        JsonArrayBuilder optionsBuilder = Json.createArrayBuilder();
+        for (String option : ballot.getSelectedOptions()) {
+                optionsBuilder.add(option);
+        }
+        jBuilder.add("e", optionsBuilder);
+        jBuilder.add("u_Hat", ballot.getU_HatString());
+        jBuilder.add("c", ballot.getCString());
+        jBuilder.add("d", ballot.getDString());
+        jBuilder.add("pi1", ballot.getPi1String());
+        jBuilder.add("pi2", ballot.getPi2String());
+        jBuilder.add("pi3", ballot.getPi3String());
+        
+        JsonObject model = jBuilder.build();
+        
+
+        try { 
+            boolean requestOK = postJsonStringToURL(bulletinBoardUrl +  "/elections/" + ballot.getVote().getId() + "/ballots", model.toString());
+            if (requestOK) {
+                System.out.println("Ballot posted!");
+            }
+            else{
+                System.out.println("Was not able to post Ballot!");
+            }
+        } catch (IOException ex) {
+            System.out.println("Was not able to post Ballot!");
+        }
     }
 
     
