@@ -61,6 +61,7 @@ public class BallotSummaryController implements Initializable,ControlledScreen {
     private void btNextClicked(ActionEvent event) {
         PrivateCredentials privatCredentials = parentController.getPrivateCredentials();
         ballot.calculateProves(privatCredentials);
+        parentController.postBallot(ballot);
         parentController.setScreen(VoterApp.HOMESCREENID);
     }
 

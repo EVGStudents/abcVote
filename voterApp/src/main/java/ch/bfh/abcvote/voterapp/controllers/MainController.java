@@ -174,4 +174,8 @@ public class MainController extends StackPane {
        return privateCredentials;
     }
 
+    void postBallot(Ballot ballot) {
+        communicationController.postBallot(ballot);
+    }
+
 }
