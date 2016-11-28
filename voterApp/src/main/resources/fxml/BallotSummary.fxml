@@ -13,5 +13,13 @@
    
    
             <Button fx:id="btCastBallot" layoutX="714.0" layoutY="561.0" mnemonicParsing="false" onAction="#btNextClicked" text="Cast Ballot" />
+      <Label layoutX="14.0" layoutY="88.0" text="Election:" />
+      <Label fx:id="lbElectionTitle" layoutX="98.0" layoutY="88.0" text="Label" />
+      <Label layoutX="14.0" layoutY="146.0" text="Topic:" />
+      <Label fx:id="lbTopic" layoutX="98.0" layoutY="146.0" text="Label" />
+      <Label layoutX="14.0" layoutY="183.0" text="Pick:" />
+      <Label layoutX="12.0" layoutY="228.0" text="Selected options:" />
+      <Label fx:id="lbPick" layoutX="98.0" layoutY="183.0" text="Label" />
+      <ListView fx:id="lvSelectedOptions" layoutX="14.0" layoutY="253.0" prefHeight="301.0" prefWidth="771.0" />
    </children>
 </AnchorPane>
