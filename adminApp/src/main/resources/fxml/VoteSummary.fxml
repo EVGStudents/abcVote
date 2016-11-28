@@ -13,6 +13,18 @@
 
 
       <Button fx:id="btCreate" layoutX="735.0" layoutY="561.0" mnemonicParsing="false" onAction="#btCreateClicked" text="Create" />
+      <Label layoutX="14.0" layoutY="52.0" text="Title:" />
+      <Label layoutX="13.0" layoutY="106.0" text="Voters:" />
+      <ListView fx:id="lvVoters" layoutX="14.0" layoutY="131.0" prefHeight="184.0" prefWidth="775.0" />
+      <ListView fx:id="lvOptions" layoutX="14.0" layoutY="417.0" prefHeight="126.0" prefWidth="775.0" />
+      <Label layoutX="16.0" layoutY="346.0" text="Topic:" />
+      <Label layoutX="15.0" layoutY="369.0" text="Pick:" />
+      <Label layoutX="13.0" layoutY="392.0" text="Options:" />
+      <Label fx:id="lbTitle" layoutX="110.0" layoutY="52.0" text="Label" />
+      <Label fx:id="lbTopic" layoutX="110.0" layoutY="346.0" text="Label" />
+      <Label fx:id="lbPick" layoutX="110.0" layoutY="369.0" text="Label" />
+      <Label layoutX="13.0" layoutY="79.0" text="Voting period:" />
+      <Label fx:id="lbVotingPeriod" layoutX="110.0" layoutY="79.0" text="Label" />
 
    </children>
 </AnchorPane>
