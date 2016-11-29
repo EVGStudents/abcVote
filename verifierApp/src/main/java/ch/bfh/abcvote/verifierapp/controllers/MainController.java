@@ -6,6 +6,7 @@
 package ch.bfh.abcvote.verifierapp.controllers;
 
 import ch.bfh.abcvote.util.controllers.CommunicationController;
+import ch.bfh.abcvote.util.model.Ballot;
 import ch.bfh.abcvote.util.model.ElectionFilterTyp;
 import ch.bfh.abcvote.util.model.ElectionHeader;
 import ch.bfh.abcvote.util.model.Election;
@@ -147,6 +148,16 @@ public class MainController extends StackPane {
     List<ElectionHeader> getElectionHeaders(ElectionFilterTyp electionFilterTyp) {
         List<ElectionHeader> electionHeadersList = communicationController.getElectionHeaders(electionFilterTyp);
         return electionHeadersList;
+    }
+
+    Election getElectionById(int electionId) {
+        Election election = communicationController.getElectionById(electionId);
+        return election;
+    }
+
+    public List<Ballot>  getBallotsByElection(Election election) {
+        List<Ballot> ballots = communicationController.getBallotsByElection(election);
+        return ballots;
     }
     
 }

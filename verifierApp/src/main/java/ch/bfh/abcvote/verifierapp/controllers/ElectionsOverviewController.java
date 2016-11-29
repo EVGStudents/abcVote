@@ -5,6 +5,7 @@
  */
 package ch.bfh.abcvote.verifierapp.controllers;
 
+import ch.bfh.abcvote.util.model.Ballot;
 import ch.bfh.abcvote.util.model.ElectionFilterTyp;
 import ch.bfh.abcvote.util.model.ElectionHeader;
 import ch.bfh.abcvote.util.model.Election;
@@ -57,7 +58,7 @@ public class ElectionsOverviewController implements Initializable, ControlledScr
     @Override
     public void setScene() {
         //get Election Headers and display them in listView
-        List<ElectionHeader> electionHeadersList = parentController.getElectionHeaders(ElectionFilterTyp.CLOSED);
+        List<ElectionHeader> electionHeadersList = parentController.getElectionHeaders(ElectionFilterTyp.ALL);
         populateElectionHeaderListView(electionHeadersList);
     }
     
@@ -77,7 +78,22 @@ public class ElectionsOverviewController implements Initializable, ControlledScr
 
     @FXML
     private void btNextClicked(ActionEvent event) {
-         parentController.setScreen(VerifierApp.RESULTOVERVIEWSCREENID);
+        // get selected ElectionHeader
+        ObservableList<ElectionHeader> selectedElections;
+        selectedElections = lvElections.getSelectionModel().getSelectedItems();
+        if( !selectedElections.isEmpty()){
+           ElectionHeader selectedElectionHeader = selectedElections.get(0);
+           int electionId = selectedElectionHeader.getId();
+           // getElection
+           Election election = parentController.getElectionById(electionId);           
+           // getBallots
+           List<Ballot> ballots = parentController.getBallotsByElection(election); 
+           // pass election and ballots to Resultscreen
+           parentController.setScreen(VerifierApp.RESULTOVERVIEWSCREENID);
+        }
+        
+  
+        
     }
     
 }
