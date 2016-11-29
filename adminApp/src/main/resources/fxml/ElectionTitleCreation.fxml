@@ -6,10 +6,10 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="800.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="ch.bfh.abcvote.adminapp.controllers.VoteTitleCreationController">
+<AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.bfh.abcvote.adminapp.controllers.ElectionTitleCreationController">
     <children>
       <Button fx:id="btBack" layoutX="14.0" layoutY="561.0" mnemonicParsing="false" onAction="#btBackClicked" text="Back" />
-      <Label layoutX="14.0" layoutY="27.0" text="Please enter the title of the vote:" />
+      <Label layoutX="14.0" layoutY="27.0" text="Please enter the title of the election :" />
       <TextField fx:id="txtTitle" layoutX="14.0" layoutY="44.0" prefHeight="17.0" prefWidth="766.0" />
 
       <Button fx:id="btNext" layoutX="745.0" layoutY="561.0" mnemonicParsing="false" onAction="#btNextClicked" text="Next" />

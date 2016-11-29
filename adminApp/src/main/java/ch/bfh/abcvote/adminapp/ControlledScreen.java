@@ -6,17 +6,17 @@
 package ch.bfh.abcvote.adminapp;
 
 import ch.bfh.abcvote.adminapp.controllers.MainController;
-import ch.bfh.abcvote.util.model.Vote;
+import ch.bfh.abcvote.util.model.Election;
 
 /**
- *  Interface all scene controllers implement in order to create a uniform way to pass them the maincontroller and the vote Object to display 
+ *  Interface all scene controllers implement in order to create a uniform way to pass them the maincontroller and the election Object to display 
  * @author t.buerk
  */
 public interface ControlledScreen {
     
     //This method will allow the injection of the Parent ScreenPane
     public void setScreenParent(MainController screenParent);
-    //This method will allow the maincontroller to pass the controller a vote object to display
-    public void setScene(Vote vote);
+    //This method will allow the maincontroller to pass the controller a election object to display
+    public void setScene(Election election);
 }
 

@@ -8,7 +8,7 @@ package ch.bfh.abcvote.adminapp.controllers;
 import ch.bfh.abcvote.adminapp.AdminApp;
 import ch.bfh.abcvote.adminapp.ControlledScreen;
 import ch.bfh.abcvote.util.model.Parameters;
-import ch.bfh.abcvote.util.model.Vote;
+import ch.bfh.abcvote.util.model.Election;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -24,14 +24,14 @@ import javafx.scene.control.Button;
 public class HomeController implements Initializable, ControlledScreen {
 
     MainController parentController;
+    @FXML
+    private Button btCreateElection;
     
     @Override
     public void setScreenParent(MainController screenParent) {
         parentController = screenParent;
     }
     
-    @FXML
-    private Button btCreateVote;
 
     /**
      * Initializes the controller class.
@@ -40,21 +40,22 @@ public class HomeController implements Initializable, ControlledScreen {
     public void initialize(URL url, ResourceBundle rb) {
         
     }
-    
-    /**
-     * Button press event to create a new vote. Gets the current Parameters of the Bulletin Board and creats a new Vote object.
-     */
-    @FXML
-    private void createNewVote(ActionEvent event) {
-        Parameters params = parentController.getParameters();
-        Vote vote = new Vote(params);
-        //maincontroller gets instructed to change the scene to the voterselection screen and pass the newly created vote
-        parentController.setScreenWithVote(AdminApp.VOTETITLECREATIONSCREENID, vote);
-    }
 
     @Override
-    public void setScene(Vote vote) {
+    public void setScene(Election election) {
         
+    }
+
+        
+    /**
+     * Button press event to create a new election. Gets the current Parameters of the Bulletin Board and creats a new Election object.
+     */
+    @FXML
+    private void btcreateNewElectionClicked(ActionEvent event) {
+        Parameters params = parentController.getParameters();
+        Election election = new Election(params);
+        //maincontroller gets instructed to change the scene to the voterselection screen and pass the newly created election
+        parentController.setScreenWithElection(AdminApp.ELECTIONTITLECREATIONSCREENID, election);
     }
 
 

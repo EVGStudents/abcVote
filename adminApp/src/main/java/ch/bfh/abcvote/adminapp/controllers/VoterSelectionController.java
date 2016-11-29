@@ -7,7 +7,7 @@ package ch.bfh.abcvote.adminapp.controllers;
 
 import ch.bfh.abcvote.adminapp.AdminApp;
 import ch.bfh.abcvote.adminapp.ControlledScreen;
-import ch.bfh.abcvote.util.model.Vote;
+import ch.bfh.abcvote.util.model.Election;
 import ch.bfh.abcvote.util.model.Voter;
 import java.net.URL;
 import java.util.List;
@@ -30,7 +30,7 @@ import javafx.scene.control.SelectionMode;
 public class VoterSelectionController implements Initializable, ControlledScreen {
 
     
-    Vote vote;
+    Election election;
     MainController parentController;
     
     @FXML
@@ -55,11 +55,11 @@ public class VoterSelectionController implements Initializable, ControlledScreen
         // TODO
     }    
 
-    //stores the vote object in a global variable
+    //stores the election object in a global variable
     //and gets a list of all current voters in order to display it
     @Override
-    public void setScene(Vote vote) {
-        this.vote = vote;
+    public void setScene(Election election) {
+        this.election = election;
         
         List<Voter> voterlist = parentController.getAllARegisteredVoters();
         populateVoterListView(voterlist);
@@ -67,15 +67,15 @@ public class VoterSelectionController implements Initializable, ControlledScreen
 
     @FXML
     private void btBackClicked(ActionEvent event) {
-        parentController.setScreen(AdminApp.VOTETITLECREATIONSCREENID);
+        parentController.setScreen(AdminApp.ELECTIONTITLECREATIONSCREENID);
     }
 
     @FXML
     private void btNextClicked(ActionEvent event) {
         ObservableList<Voter> selectedVoters;
         selectedVoters = lvVoters.getSelectionModel().getSelectedItems();
-        vote.setVoterList(selectedVoters);
-        parentController.setScreenWithVote(AdminApp.VOTEOPTIONCREATIONSCREENID, vote);
+        election.setVoterList(selectedVoters);
+        parentController.setScreenWithElection(AdminApp.ELECTIONOPTIONCREATIONSCREENID, election);
     }
     
     //Displays the given list of Voters in the ListView for selection

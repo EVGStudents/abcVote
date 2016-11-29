@@ -10,7 +10,7 @@
    <children>
       <Button fx:id="btBack" layoutX="14.0" layoutY="561.0" mnemonicParsing="false" onAction="#btBackClicked" text="Back" />
       <Button fx:id="btNext" layoutX="745.0" layoutY="561.0" mnemonicParsing="false" onAction="#btNextClicked" text="Next" />
-      <Label fx:id="lbSelectVoters" layoutX="14.0" layoutY="30.0" text="Please choose voters for the vote:" />
+      <Label fx:id="lbSelectVoters" layoutX="14.0" layoutY="30.0" text="Please choose voters for the election :" />
       <ListView fx:id="lvVoters" layoutX="14.0" layoutY="53.0" prefHeight="497.0" prefWidth="770.0" />
    </children>
 </AnchorPane>

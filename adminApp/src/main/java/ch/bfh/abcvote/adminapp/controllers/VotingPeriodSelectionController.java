@@ -7,7 +7,7 @@ package ch.bfh.abcvote.adminapp.controllers;
 
 import ch.bfh.abcvote.adminapp.AdminApp;
 import ch.bfh.abcvote.adminapp.ControlledScreen;
-import ch.bfh.abcvote.util.model.Vote;
+import ch.bfh.abcvote.util.model.Election;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -26,7 +26,7 @@ import javafx.scene.control.DatePicker;
  */
 public class VotingPeriodSelectionController implements Initializable, ControlledScreen {
 
-    Vote vote;
+    Election election;
     MainController parentController;
     @FXML
     private Button btBack;
@@ -51,15 +51,15 @@ public class VotingPeriodSelectionController implements Initializable, Controlle
     }
 
     @Override
-    public void setScene(Vote vote) {
+    public void setScene(Election election) {
         dateStart.setValue(LocalDate.now());
         dateEnd.setValue(LocalDate.now());
-        this.vote = vote;
+        this.election = election;
     }
 
     @FXML
     private void btBackClicked(ActionEvent event) {
-        parentController.setScreen(AdminApp.VOTEOPTIONCREATIONSCREENID);
+        parentController.setScreen(AdminApp.ELECTIONOPTIONCREATIONSCREENID);
     }
 
     @FXML
@@ -68,8 +68,8 @@ public class VotingPeriodSelectionController implements Initializable, Controlle
         LocalDate end = dateEnd.getValue();
         LocalDateTime startDateTime = LocalDateTime.of(start, LocalTime.parse("00:00:00"));
         LocalDateTime endDateTime = LocalDateTime.of(end, LocalTime.parse("00:00:00"));
-        vote.setVotingPeriod(startDateTime, endDateTime);
-        parentController.setScreenWithVote(AdminApp.VOTESUMMARYSCREENID, vote);
+        election.setVotingPeriod(startDateTime, endDateTime);
+        parentController.setScreenWithElection(AdminApp.ELECTIONSUMMARYSCREENID, election);
     }
     
 }

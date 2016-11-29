@@ -7,8 +7,8 @@ package ch.bfh.abcvote.adminapp.controllers;
 
 import ch.bfh.abcvote.adminapp.AdminApp;
 import ch.bfh.abcvote.adminapp.ControlledScreen;
-import ch.bfh.abcvote.util.model.Vote;
-import ch.bfh.abcvote.util.model.VoteTopic;
+import ch.bfh.abcvote.util.model.Election;
+import ch.bfh.abcvote.util.model.ElectionTopic;
 import ch.bfh.abcvote.util.model.Voter;
 import ch.bfh.unicrypt.UniCryptException;
 import java.net.URL;
@@ -28,10 +28,10 @@ import javafx.scene.control.ListView;
  *
  * @author t.buerk
  */
-public class VoteSummaryController implements Initializable, ControlledScreen {
+public class ElectionSummaryController implements Initializable, ControlledScreen {
 
     MainController parentController;
-    Vote vote;
+    Election election;
     
     @FXML
     private Button btBack;
@@ -67,13 +67,13 @@ public class VoteSummaryController implements Initializable, ControlledScreen {
     private void btCreateClicked(ActionEvent event) {
         try {
             //calcualte coefficents from selected voters
-            vote.calculateCoefficients();
-            vote.pickH_Hat();
+            election.calculateCoefficients();
+            election.pickH_Hat();
             
-            parentController.postVote(vote);
+            parentController.postElection(election);
             parentController.setScreen(AdminApp.HOMESCREENID);
         } catch (UniCryptException ex) {
-            System.out.println("Sending vote failed!");
+            System.out.println("Sending election failed!");
         }
     }
 
@@ -83,17 +83,17 @@ public class VoteSummaryController implements Initializable, ControlledScreen {
     }
 
     @Override
-    public void setScene(Vote vote) {
-        this.vote = vote;
-        displayVote(vote);
+    public void setScene(Election election) {
+        this.election = election;
+        displayElection(election);
     }
 
-    private void displayVote(Vote vote) {
-        VoteTopic topic = vote.getTopic();
-        String votingPeriodString = vote.getStartDate().toString() + " - " + vote.getEndDate().toString();
-        lbTitle.setText(vote.getTitle());
+    private void displayElection(Election election) {
+        ElectionTopic topic = election.getTopic();
+        String votingPeriodString = election.getStartDate().toString() + " - " + election.getEndDate().toString();
+        lbTitle.setText(election.getTitle());
         lbVotingPeriod.setText(votingPeriodString);
-        populateVotersListView(vote.getVoterList());
+        populateVotersListView(election.getVoterList());
         lbTopic.setText(topic.getTitle());
         lbPick.setText(String.valueOf(topic.getPick()));
         populateOptionsListView(topic.getOptions());

@@ -7,7 +7,7 @@ package ch.bfh.abcvote.adminapp.controllers;
 
 import ch.bfh.abcvote.adminapp.AdminApp;
 import ch.bfh.abcvote.adminapp.ControlledScreen;
-import ch.bfh.abcvote.util.model.Vote;
+import ch.bfh.abcvote.util.model.Election;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -21,7 +21,7 @@ import javafx.scene.control.TextField;
  *
  * @author t.buerk
  */
-public class VoteTitleCreationController implements Initializable , ControlledScreen  {
+public class ElectionTitleCreationController implements Initializable , ControlledScreen  {
 
     @FXML
     private Button btBack;
@@ -31,7 +31,7 @@ public class VoteTitleCreationController implements Initializable , ControlledSc
     private Button btNext;
 
     MainController parentController;
-    Vote vote;
+    Election election;
     /**
      * Initializes the controller class.
      */
@@ -47,8 +47,8 @@ public class VoteTitleCreationController implements Initializable , ControlledSc
 
     @FXML
     private void btNextClicked(ActionEvent event) {
-        vote.setTitle(txtTitle.getText());
-        parentController.setScreenWithVote(AdminApp.VOTERSELECTIONSCREENID, vote);
+        election.setTitle(txtTitle.getText());
+        parentController.setScreenWithElection(AdminApp.VOTERSELECTIONSCREENID, election);
     }
 
     @Override
@@ -57,9 +57,9 @@ public class VoteTitleCreationController implements Initializable , ControlledSc
     }
 
     @Override
-    public void setScene(Vote vote) {
-        this.vote = vote; 
-        txtTitle.setText(vote.getTitle());
+    public void setScene(Election election) {
+        this.election = election; 
+        txtTitle.setText(election.getTitle());
     }
     
 }

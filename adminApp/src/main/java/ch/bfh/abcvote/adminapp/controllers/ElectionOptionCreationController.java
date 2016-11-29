@@ -7,8 +7,8 @@ package ch.bfh.abcvote.adminapp.controllers;
 
 import ch.bfh.abcvote.adminapp.AdminApp;
 import ch.bfh.abcvote.adminapp.ControlledScreen;
-import ch.bfh.abcvote.util.model.Vote;
-import ch.bfh.abcvote.util.model.VoteTopic;
+import ch.bfh.abcvote.util.model.Election;
+import ch.bfh.abcvote.util.model.ElectionTopic;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -22,10 +22,10 @@ import javafx.scene.control.TextField;
  *
  * @author t.buerk
  */
-public class VoteOptionCreationController implements Initializable, ControlledScreen  {
+public class ElectionOptionCreationController implements Initializable, ControlledScreen  {
 
     MainController parentController;
-    Vote vote;
+    Election election;
     @FXML
     private Button btBack;
     @FXML
@@ -54,8 +54,8 @@ public class VoteOptionCreationController implements Initializable, ControlledSc
 
 
     @Override
-    public void setScene(Vote vote) {
-       this.vote = vote;
+    public void setScene(Election election) {
+       this.election = election;
     }
 
     @FXML
@@ -66,11 +66,11 @@ public class VoteOptionCreationController implements Initializable, ControlledSc
     @FXML
     private void btNextClicked(ActionEvent event) {
         int pick = Integer.parseInt(txtPick.getText());
-        VoteTopic topic = new VoteTopic(txtVotingTopic.getText(), pick);
+        ElectionTopic topic = new ElectionTopic(txtVotingTopic.getText(), pick);
         topic.addOption(txtOption1.getText());
         topic.addOption(txtOption2.getText());
-        vote.setTopic(topic);
-        parentController.setScreenWithVote(AdminApp.VOTEINGPERIODSELECTIONSCREENID, vote);
+        election.setTopic(topic);
+        parentController.setScreenWithElection(AdminApp.VOTEINGPERIODSELECTIONSCREENID, election);
     }
     
 }

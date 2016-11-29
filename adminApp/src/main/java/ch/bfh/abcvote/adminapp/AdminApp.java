@@ -21,27 +21,27 @@ public class AdminApp extends Application {
     //IDs and rescourcefile paths of all Scenes are defined, so all scenecontrollers can refrence other scenes
     public static final String HOMESCREENID = "home";
     public static final String HOMESCREENFILE = "/fxml/Home.fxml";
-    public static final String VOTETITLECREATIONSCREENID = "voteTitleCreation";
-    public static final String VOTETITLECREATIONSCREENFILE = "/fxml/VoteTitleCreation.fxml";
+    public static final String ELECTIONTITLECREATIONSCREENID = "electionTitleCreation";
+    public static final String ELECTIONTITLECREATIONSCREENFILE = "/fxml/ElectionTitleCreation.fxml";
     public static final String VOTERSELECTIONSCREENID = "voterSelection";
     public static final String VOTERSELECTIONSCREENFILE = "/fxml/VoterSelection.fxml";
-    public static final String VOTEOPTIONCREATIONSCREENID = "voteOptionCreation";
-    public static final String VOTEOPTIONCREATIONSCREENFILE = "/fxml/VoteOptionCreation.fxml";
-    public static final String VOTEINGPERIODSELECTIONSCREENID = "voteingPeriodSelection";
+    public static final String ELECTIONOPTIONCREATIONSCREENID = "electionOptionCreation";
+    public static final String ELECTIONOPTIONCREATIONSCREENFILE = "/fxml/ElectionOptionCreation.fxml";
+    public static final String VOTEINGPERIODSELECTIONSCREENID = "votingPeriodSelection";
     public static final String VOTEINGPERIODSELECTIONSCREENFILE = "/fxml/VotingPeriodSelection.fxml";
-    public static final String VOTESUMMARYSCREENID = "voteSummary";
-    public static final String VOTESUMMARYSCREENFILE = "/fxml/VoteSummary.fxml"; 
+    public static final String ELECTIONSUMMARYSCREENID = "electionSummary";
+    public static final String ELECTIONSUMMARYSCREENFILE = "/fxml/ElectionSummary.fxml"; 
     
     @Override
     public void start(Stage mainStage) throws Exception {
         //Maincontroller gets created and all defined Screens are passed to the Maincontroller to initialize and store
         MainController mainController = new MainController();
         mainController.loadScreen(AdminApp.HOMESCREENID, AdminApp.HOMESCREENFILE);
-        mainController.loadScreen(AdminApp.VOTETITLECREATIONSCREENID, AdminApp.VOTETITLECREATIONSCREENFILE);
+        mainController.loadScreen(AdminApp.ELECTIONTITLECREATIONSCREENID, AdminApp.ELECTIONTITLECREATIONSCREENFILE);
         mainController.loadScreen(AdminApp.VOTERSELECTIONSCREENID, AdminApp.VOTERSELECTIONSCREENFILE);
-        mainController.loadScreen(AdminApp.VOTEOPTIONCREATIONSCREENID, AdminApp.VOTEOPTIONCREATIONSCREENFILE);
+        mainController.loadScreen(AdminApp.ELECTIONOPTIONCREATIONSCREENID, AdminApp.ELECTIONOPTIONCREATIONSCREENFILE);
         mainController.loadScreen(AdminApp.VOTEINGPERIODSELECTIONSCREENID, AdminApp.VOTEINGPERIODSELECTIONSCREENFILE);
-        mainController.loadScreen(AdminApp.VOTESUMMARYSCREENID, AdminApp.VOTESUMMARYSCREENFILE);
+        mainController.loadScreen(AdminApp.ELECTIONSUMMARYSCREENID, AdminApp.ELECTIONSUMMARYSCREENFILE);
         mainController.setScreen(AdminApp.HOMESCREENID);
         
         //Maincontroller is defined as root element of the stage
