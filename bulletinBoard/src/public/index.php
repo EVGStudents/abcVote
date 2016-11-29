@@ -98,11 +98,10 @@ $app->post('/elections', function (Request $request, Response $response) {
       }
 
     } catch (Exception $e) {
-      $response = $response->withStatus(400);
-      $response = $response->withHeader('X-Status-Reason', $e->getMessage());
-      return $response;
+      return $response->withStatus(400)
+                      ->withHeader('X-Status-Reason', $e->getMessage());
     }
-  } else {
+  } else { //wrong ContentType
     $response = $response->withStatus(406)
                          ->withHeader('Content-Type', 'text/html')
                          ->write('Wrong header, needs to be application/json!');
@@ -135,22 +134,37 @@ $app->get('/parameters', function (Request $request, Response $response) {
 $app->post('/voters', function (Request $request, Response $response) {
   // if ContentType is JSON, than store entry, else return 406
   if (is_Content_Type_JSON($request, $response) === TRUE) {
-    // if request is not empty, than proceed
-    if (empty($request->getParsedBody()) === FALSE) {
-      try {
-        $jsonBody = $request->getBody();
-        $voterArray = array('jsonData' => $jsonBody);
-        $voter = new VoterEntity($voterArray);
-        $mapper = new VoterMapper($this->db);
-        return $mapper->storeVoter($voter);
-      } catch (Exception $e) {
-        return $response->withStatus(400)
-                        ->withHeader('X-Status-Reason', $e->getMessage());
+    try {
+      $jsonBody = $request->getParsedBody();
+      $jwsSignature = $jsonBody['signature'];
+      $mapper = new VoterMapper($this->db);
+
+      $certMapper = new CertificateMapper($this->db);
+      $certs = $certMapper->getCertificates();
+
+      $email = get_jwsPayload($jwsSignature)['email'];
+      $certificate = "";
+
+      foreach ($certs as $cert) {
+        if ($cert->getEmailAdress() == $email) {
+          $certificate = $cert->getCertificate();
+        }
       }
-    } else { //request was empty
+      if (verify_signature($email, $certificate, $jwsSignature . "") === TRUE) {
+        $payload = get_jwsPayload($jwsSignature);
+        $voterArray = array('jsonData' => json_encode($payload));
+        $voter = new VoterEntity($voterArray);
+        return $mapper->storeVoter($voter);
+      } else {
+        $response = $response->withStatus(401);
+        $response = $response->withHeader('Content-Type', 'text/html')
+                              ->write('Wrong signature!');
+        return $response;
+      }
+
+    } catch (Exception $e) {
       return $response->withStatus(400)
-                      ->withHeader('Content-Type', 'text/html')
-                      ->write('Empty request!');
+                      ->withHeader('X-Status-Reason', $e->getMessage());
     }
   } else { //wrong ContentType
     return $response->withStatus(406)

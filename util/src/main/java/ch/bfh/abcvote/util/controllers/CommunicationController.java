@@ -221,12 +221,22 @@ public class CommunicationController {
         JsonObjectBuilder jBuilder = Json.createObjectBuilder();
         
         jBuilder.add("email", email);
+        //TODO remove standInStignatur
         jBuilder.add("signature", "standInSignatur");
         jBuilder.add("publicCredential", u.convertToString());
         jBuilder.add("appVersion", "1.15");
         
         JsonObject model = jBuilder.build();
+        
+        SignatureController signController = new SignatureController();
+        JsonObject signedModel = null;
                 
+        try {
+            signedModel = signController.signJson(model);   
+        } catch (Exception ex) {
+            Logger.getLogger(CommunicationController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
         //post Voter
         try { 
             boolean requestOK = postJsonStringToURL(bulletinBoardUrl +  "/voters", model.toString());
