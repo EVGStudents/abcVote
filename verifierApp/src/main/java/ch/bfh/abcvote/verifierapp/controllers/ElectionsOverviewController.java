@@ -7,7 +7,7 @@ package ch.bfh.abcvote.verifierapp.controllers;
 
 import ch.bfh.abcvote.util.model.ElectionFilterTyp;
 import ch.bfh.abcvote.util.model.ElectionHeader;
-import ch.bfh.abcvote.util.model.Vote;
+import ch.bfh.abcvote.util.model.Election;
 import ch.bfh.abcvote.verifierapp.ControlledScreen;
 import ch.bfh.abcvote.verifierapp.VerifierApp;
 import java.net.URL;
@@ -50,7 +50,7 @@ public class ElectionsOverviewController implements Initializable, ControlledScr
     }
 
     @Override
-    public void setScene(Vote vote) {
+    public void setScene(Election election) {
         
     }
 

@@ -5,7 +5,7 @@
  */
 package ch.bfh.abcvote.verifierapp;
 
-import ch.bfh.abcvote.util.model.Vote;
+import ch.bfh.abcvote.util.model.Election;
 import ch.bfh.abcvote.verifierapp.controllers.MainController;
 
 /**
@@ -15,8 +15,8 @@ import ch.bfh.abcvote.verifierapp.controllers.MainController;
 public interface ControlledScreen {
     //This method will allow the injection of the Parent ScreenPane
     public void setScreenParent(MainController screenParent);
-    //This method will allow the maincontroller to pass the controller a vote object to display
-    public void setScene(Vote vote);
+    //This method will allow the maincontroller to pass the controller a election object to display
+    public void setScene(Election election);
     
     public void setScene();
 }
