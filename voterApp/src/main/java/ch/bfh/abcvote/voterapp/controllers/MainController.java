@@ -10,7 +10,7 @@ import ch.bfh.abcvote.util.model.Ballot;
 import ch.bfh.abcvote.util.model.ElectionFilterTyp;
 import ch.bfh.abcvote.util.model.ElectionHeader;
 import ch.bfh.abcvote.util.model.PrivateCredentials;
-import ch.bfh.abcvote.util.model.Vote;
+import ch.bfh.abcvote.util.model.Election;
 import ch.bfh.abcvote.voterapp.ControlledScreen;
 import java.util.HashMap;
 import java.util.List;
@@ -140,11 +140,11 @@ public class MainController extends StackPane {
 
     
     //this method changes the current Screen to the given name
-    //and afterwards calls that screens setScene Method to pass the given vote object for display 
-    public boolean setScreenWithVote(String name, Vote vote) {
+    //and afterwards calls that screens setScene Method to pass the given election object for display 
+    public boolean setScreenWithElection(String name, Election election) {
         
         changeScreen(name);
-        screens.get(name).getKey().setScene(vote);
+        screens.get(name).getKey().setScene(election);
         
         return true;
     }
@@ -158,9 +158,9 @@ public class MainController extends StackPane {
         return electionHeadersList;
     }
 
-    Vote getElectionById(int electionId) {
-        Vote vote = communicationController.getElectionById(electionId);
-        return vote;
+    Election getElectionById(int electionId) {
+        Election election = communicationController.getElectionById(electionId);
+        return election;
     }
 
     public boolean setScreenWithBallot(String name, Ballot ballot) {

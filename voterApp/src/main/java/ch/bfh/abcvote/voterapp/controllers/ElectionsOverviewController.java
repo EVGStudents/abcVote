@@ -8,7 +8,7 @@ package ch.bfh.abcvote.voterapp.controllers;
 import ch.bfh.abcvote.util.model.Ballot;
 import ch.bfh.abcvote.util.model.ElectionFilterTyp;
 import ch.bfh.abcvote.util.model.ElectionHeader;
-import ch.bfh.abcvote.util.model.Vote;
+import ch.bfh.abcvote.util.model.Election;
 import ch.bfh.abcvote.voterapp.ControlledScreen;
 import ch.bfh.abcvote.voterapp.VoterApp;
 import java.net.URL;
@@ -58,7 +58,7 @@ public class ElectionsOverviewController implements Initializable,ControlledScre
     }
 
     @Override
-    public void setScene(Vote vote) {
+    public void setScene(Election election) {
         
     }
 
@@ -69,8 +69,8 @@ public class ElectionsOverviewController implements Initializable,ControlledScre
         if( !selectedElections.isEmpty()){
            ElectionHeader selectedElectionHeader = selectedElections.get(0);
            int electionId = selectedElectionHeader.getId();
-           Vote vote = parentController.getElectionById(electionId);
-           parentController.setScreenWithVote(VoterApp.PICKOPTIONSSCREENID, vote);
+           Election election = parentController.getElectionById(electionId);
+           parentController.setScreenWithElection(VoterApp.PICKOPTIONSSCREENID, election);
         }
         
 

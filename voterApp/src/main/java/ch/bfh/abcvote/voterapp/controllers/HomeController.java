@@ -6,7 +6,7 @@
 package ch.bfh.abcvote.voterapp.controllers;
 
 import ch.bfh.abcvote.util.model.Ballot;
-import ch.bfh.abcvote.util.model.Vote;
+import ch.bfh.abcvote.util.model.Election;
 import ch.bfh.abcvote.voterapp.ControlledScreen;
 import ch.bfh.abcvote.voterapp.VoterApp;
 import java.net.URL;
@@ -56,7 +56,7 @@ public class HomeController implements Initializable, ControlledScreen {
     }
 
     @Override
-    public void setScene(Vote vote) {
+    public void setScene(Election election) {
         
     }
     

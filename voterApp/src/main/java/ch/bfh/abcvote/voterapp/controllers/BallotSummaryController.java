@@ -7,7 +7,7 @@ package ch.bfh.abcvote.voterapp.controllers;
 
 import ch.bfh.abcvote.util.model.Ballot;
 import ch.bfh.abcvote.util.model.PrivateCredentials;
-import ch.bfh.abcvote.util.model.Vote;
+import ch.bfh.abcvote.util.model.Election;
 import ch.bfh.abcvote.voterapp.ControlledScreen;
 import ch.bfh.abcvote.voterapp.VoterApp;
 import java.net.URL;
@@ -66,7 +66,7 @@ public class BallotSummaryController implements Initializable,ControlledScreen {
     }
 
     @Override
-    public void setScene(Vote vote) {
+    public void setScene(Election election) {
         
     }
 
@@ -90,10 +90,10 @@ public class BallotSummaryController implements Initializable,ControlledScreen {
     }
 
     private void displayBallot(Ballot ballot) {
-        Vote vote = ballot.getVote();
-        lbElectionTitle.setText(vote.getTitle());
-        lbTopic.setText(vote.getTopic().getTitle());
-        lbPick.setText(String.valueOf(vote.getTopic().getPick()));
+        Election election = ballot.getElection();
+        lbElectionTitle.setText(election.getTitle());
+        lbTopic.setText(election.getTopic().getTitle());
+        lbPick.setText(String.valueOf(election.getTopic().getPick()));
         populateSelectedOptionsListView(ballot.getSelectedOptions());
     }
     

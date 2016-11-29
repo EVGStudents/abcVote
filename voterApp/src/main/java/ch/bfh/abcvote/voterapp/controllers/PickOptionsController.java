@@ -6,8 +6,8 @@
 package ch.bfh.abcvote.voterapp.controllers;
 
 import ch.bfh.abcvote.util.model.Ballot;
-import ch.bfh.abcvote.util.model.Vote;
-import ch.bfh.abcvote.util.model.VoteTopic;
+import ch.bfh.abcvote.util.model.Election;
+import ch.bfh.abcvote.util.model.ElectionTopic;
 import ch.bfh.abcvote.voterapp.ControlledScreen;
 import ch.bfh.abcvote.voterapp.VoterApp;
 import java.net.URL;
@@ -43,7 +43,7 @@ public class PickOptionsController implements Initializable,ControlledScreen {
     @FXML
     private ListView<String> lvOptions;
     
-    private Vote vote;
+    private Election election;
     
     /**
      * Initializes the controller class.
@@ -65,9 +65,9 @@ public class PickOptionsController implements Initializable,ControlledScreen {
     }
 
     @Override
-    public void setScene(Vote vote) {
-        this.vote = vote;
-        VoteTopic topic = vote.getTopic();
+    public void setScene(Election election) {
+        this.election = election;
+        ElectionTopic topic = election.getTopic();
         this.txtPick.setText(String.valueOf(topic.getPick()));
         this.txtTopic.setText(topic.getTitle());
         populateOptionsListView(topic.getOptions());
@@ -78,7 +78,7 @@ public class PickOptionsController implements Initializable,ControlledScreen {
         
         ObservableList<String> selectedOptions;
         selectedOptions = lvOptions.getSelectionModel().getSelectedItems();
-        Ballot ballot = new Ballot(vote,selectedOptions);
+        Ballot ballot = new Ballot(election,selectedOptions);
         parentController.setScreenWithBallot(VoterApp.BALLOTSUMMARYSCREENID, ballot);
 
     }
