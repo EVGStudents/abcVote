@@ -40,6 +40,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.jose4j.lang.JoseException;
 
 
 /**
@@ -207,16 +208,8 @@ public class CommunicationController {
         return responseOK;
     }    
 
-    public void registerNewVoter(String email) {
-        //get Parameters
-        Parameters parameters = getParameters();
+    public boolean registerNewVoter(String email, Parameters parameters, Element u) throws JoseException, Exception{
         
-        //pick private Credentials
-        PrivateCredentials privateCredentials = new PrivateCredentials(parameters);
-        //calculate public credentials
-        Element u = privateCredentials.getU();
-        //Store private Credentials
-        storePrivateCredentials(privateCredentials);
         //create Voter json
         JsonObjectBuilder jBuilder = Json.createObjectBuilder();
         
@@ -242,45 +235,17 @@ public class CommunicationController {
             boolean requestOK = postJsonStringToURL(bulletinBoardUrl +  "/voters", signedModel.toString());
             if (requestOK) {
                 System.out.println("Voter posted!");
+                return true;
             }
             else{
                 System.out.println("Was not able to post Voter!");
+                return false;
             }
         } catch (IOException ex) {
             System.out.println("Was not able to post Voter!");
+            return false;
         }
         
-    }
-
-    private void storePrivateCredentials(PrivateCredentials privateCredentials) {
-
-            //ToDo might need to be moved once Credentials are stored diffrentliy
-            JsonObjectBuilder jBuilder = Json.createObjectBuilder();
-            jBuilder.add("alpha", privateCredentials.getAlpha().convertToString());
-            jBuilder.add("beta", privateCredentials.getBeta().convertToString());
-            JsonObject credentialsJson = jBuilder.build();
-            String path = System.getProperty("user.home") + File.separator + "Documents";
-            path += File.separator + "abcVote";
-            File josnDir = new File(path);
-            if (josnDir.exists()|| josnDir.mkdirs()) {
-                
-                FileWriter file = null;
-                try {
-                    file = new FileWriter(path + File.separator +  "privateCredentials.json");
-                    file.write(credentialsJson.toString());
-                    file.close();
-                    System.out.println("File created");
-                } catch (IOException ex) {
-                    System.out.println("File not created");
-                } finally{
-                    
-                }
-                
-                
-            } else {
-                System.out.println("Directory not created");
-            }
-
     }
 
     public List<ElectionHeader> getElectionHeaders(ElectionFilterTyp filter) {
@@ -406,39 +371,6 @@ public class CommunicationController {
         return election;
     }
 
-    public PrivateCredentials getPrivateCredentials() {
-            //ToDo might need to be moved once Credentials are stored diffrentliy
-            PrivateCredentials privateCredentials = null;
-            String path = System.getProperty("user.home") + File.separator + "Documents";
-            path += File.separator + "abcVote";
-            File josnDir = new File(path);
-            if (josnDir.exists()) {
-                
-                FileReader file = null;
-                try {
-                    file = new FileReader(path + File.separator +  "privateCredentials.json");
-                    JsonReader jsonReader = Json.createReader(file);
-                    JsonObject obj = jsonReader.readObject();
-                    String alphaString = obj.getString("alpha");
-                    String betaString = obj.getString("beta");
-                    file.close();
-                    
-                    Parameters parameters = getParameters();
-                    privateCredentials = new PrivateCredentials(parameters, alphaString, betaString);
-                    
-                } catch (Exception ex) {
-                    System.out.println("File does not exist");
-                } finally{
-                    
-                }
-                
-                
-            } else {
-                System.out.println("Directory not created");
-            }
-            return privateCredentials;
-    }
-
     public void postBallot(Ballot ballot) {
         JsonObjectBuilder jBuilder = Json.createObjectBuilder();
         DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -471,7 +403,53 @@ public class CommunicationController {
         }
     }
 
+    public List<Ballot> getBallotsByElection(Election election) {
+        List<Ballot> ballots = new ArrayList<Ballot>();
+        try {
+
+             URL url = new URL(bulletinBoardUrl + "/elections/" + election.getId() + "/ballots");
+             
+             InputStream urlInputStream = url.openStream();
+             JsonReader jsonReader = Json.createReader(urlInputStream);
+             JsonArray obj = jsonReader.readArray();
+             DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+             
+             for (JsonObject result : obj.getValuesAs(JsonObject.class)) {
+                
+
+
+                int id = Integer.parseInt(result.getString("id")); 
+                LocalDateTime timeStamp = LocalDateTime.parse(result.getString("timestamp"), format);
+                
+                JsonObject jsonData = result.getJsonObject("jsonData");
+                List<String> selectedOptions = new ArrayList<String>();
+                JsonArray optionsArray = jsonData.getJsonArray("e");
+                for(int i = 0; i < optionsArray.size(); i++){
+                   selectedOptions.add(optionsArray.getString(i));
+                }
+                String u_HatString = jsonData.getString("u_Hat");       
+                String cString = jsonData.getString("c");
+                String dString = jsonData.getString("d");
+                String pi1String = jsonData.getString("pi1");
+                String pi2String = jsonData.getString("pi2");
+                String pi3String = jsonData.getString("pi3");
+ 
+                
+                
+                Ballot ballot = new Ballot(id, election, selectedOptions,u_HatString, cString, dString, pi1String, pi2String, pi3String, timeStamp);
+                System.out.println(ballot.isValid());
+                ballots.add(ballot);
+             }
+             
+             
+         } catch (IOException x) {
+             System.err.println(x);
+         }
+        return ballots;
+        
+        
+    }
+
     
        
-    
 }
