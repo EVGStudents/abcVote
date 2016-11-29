@@ -12,8 +12,10 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyFactory;
+import java.security.Principal;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.security.spec.PKCS8EncodedKeySpec;
@@ -70,7 +72,7 @@ public class CertificateController {
         return kf.generatePublic(spec);
     }
     
-    public  PublicKey getPublicKeyFromX509Certificate(String certificateString, String algorithm) throws Exception {
+    public  PublicKey getPublicKeyFromX509Certificate(String certificateString, String algorithm) throws CertificateException {
         InputStream inStream = new ByteArrayInputStream(certificateString.getBytes(StandardCharsets.UTF_8));
 
         CertificateFactory cf = CertificateFactory.getInstance("X.509");
@@ -78,5 +80,20 @@ public class CertificateController {
         PublicKey pk = certificate.getPublicKey();
  
         return pk;
+    }
+    
+    public String getEmailAddressFromX509Certificate(String certificateString) throws CertificateException {
+        InputStream inStream = new ByteArrayInputStream(certificateString.getBytes(StandardCharsets.UTF_8));
+
+        CertificateFactory cf = CertificateFactory.getInstance("X.509");
+        X509Certificate certificate = (X509Certificate)cf.generateCertificate(inStream);
+        
+        Principal principal = certificate.getSubjectDN();
+        String subjectDn = principal.getName();
+        
+        String email = subjectDn.replace("EMAILADDRESS=", "");
+        email = email.replaceAll("\\,.CN=.*", "");        
+                
+       return email;  
     }
 }
