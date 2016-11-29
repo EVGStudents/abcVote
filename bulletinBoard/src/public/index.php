@@ -350,6 +350,60 @@ $app->get('/elections/{id}/ballots', function (Request $request, Response $respo
   }
 });
 
+// POST /elections/{id}/results : receives results for election X with id='id'
+/*
+* UC 4.20: verifierApp sends the results for a specific election
+* Request: Übermittlung des signierten Wahlresultats zur Abstimmung mit ID x
+* Response: Status
+*/
+$app->post('/elections/{id}/results', function (Request $request, Response $response) {
+  // if ContentType is JSON, than store entry, else return 406
+  if (is_Content_Type_JSON($request, $response) === TRUE) {
+    try {
+      $jsonBody = $request->getParsedBody();
+      $jwsSignature = $jsonBody['signature'];
+      $resultMapper = new ResultMapper($this->db);
+
+      $route = $request->getAttribute('route');
+      $electionIdentifier = $route->getArgument('id');
+
+      $certMapper = new CertificateMapper($this->db);
+      $certs = $certMapper->getCertificates();
+
+      $email = get_jwsPayload($jwsSignature)['author'];
+      $certificate = "";
+
+      foreach ($certs as $cert) {
+        if ($cert->getEmailAdress() == $email) {
+          $certificate = $cert->getCertificate();
+        }
+      }
+
+      if (verify_signature($email, $certificate, $jwsSignature . "") === TRUE) {
+        $payload = get_jwsPayload($jwsSignature);
+        $resultArray = array('electionIdentifier' => $electionIdentifier,
+                          'jsonData' => json_encode($payload));
+        $resultEntity = new ResultEntity($resultArray);
+        return $resultMapper->storeResult($resultEntity);
+      } else {
+        $response = $response->withStatus(401);
+        $response = $response->withHeader('Content-Type', 'text/html')
+                              ->write('Wrong signature!');
+        return $response;
+      }
+
+      } catch (Exception $e) {
+      return $response->withStatus(400)
+                      ->withHeader('X-Status-Reason', $e->getMessage());
+      }
+      } else { //wrong ContentType
+      $response = $response->withStatus(406)
+                         ->withHeader('Content-Type', 'text/html')
+                         ->write('Wrong header, needs to be application/json!');
+      return $response;
+      }
+});
+
 // GET /elections : get all elections from bulletin board
 $app->get('/elections', function (Request $request, Response $response) {
   $mapper = new ElectionMapper($this->db);
