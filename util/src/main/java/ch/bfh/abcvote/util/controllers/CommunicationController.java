@@ -239,7 +239,7 @@ public class CommunicationController {
         
         //post Voter
         try { 
-            boolean requestOK = postJsonStringToURL(bulletinBoardUrl +  "/voters", model.toString());
+            boolean requestOK = postJsonStringToURL(bulletinBoardUrl +  "/voters", signedModel.toString());
             if (requestOK) {
                 System.out.println("Voter posted!");
             }
