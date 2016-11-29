@@ -80,17 +80,16 @@ function get_ballots_as_JSON(Array $data){
 }
 
 //function verifies the JWS signature passed in jsonData against the value stored in DB
-function verify_signature($email, $certificate, $jsonData){
-
-  //extract JWS signature from json, remove not needed stuff
-  $matches = array();
-  preg_match('/,"\bsignature\b":"[a-zA-Z0-9.\-_]+"}/', $jsonData, $matches);
-  $signature = substr(substr($matches[0], 14), 0, -2);
-
-  $jws = JWS::load($signature);
+function verify_signature($email, $certificate, $jwsSignature){
+  $jws = JWS::load($jwsSignature);
   $publicKey = openssl_pkey_get_public($certificate);
-
   return $jws->verify($publicKey); // Returns true
+}
+
+//function returns the payload of a given JWS
+function get_jwsPayload($jwsSignature){
+  $jws = JWS::load($jwsSignature);
+  return $jws->getPayload();
 }
 
 ?>

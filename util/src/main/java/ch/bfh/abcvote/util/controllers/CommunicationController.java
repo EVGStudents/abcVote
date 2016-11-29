@@ -119,6 +119,8 @@ public class CommunicationController {
         JsonObjectBuilder jBuilder = Json.createObjectBuilder();
         DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         
+        //TODO get email address from certificate 
+        jBuilder.add("author", "alice@bfh.ch");
         jBuilder.add("electionTitle", vote.getTitle());
         jBuilder.add("beginDate", vote.getStartDate().format(format));
         jBuilder.add("endDate", vote.getEndDate().format(format));
@@ -174,10 +176,10 @@ public class CommunicationController {
                 System.out.println("Vote posted!");
             }
             else{
-                System.out.println("Was not able to post Vote!");
+                System.out.println("Was not able to post Vote! Did not receive expected http 200 status.");
             }
         } catch (IOException ex) {
-            System.out.println("Was not able to post Vote!");
+            System.out.println("Was not able to post Vote! IOException");
         }
 
     }

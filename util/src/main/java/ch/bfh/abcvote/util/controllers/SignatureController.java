@@ -51,10 +51,6 @@ public class SignatureController {
     
         JsonObjectBuilder job = Json.createObjectBuilder();
 
-        for (Entry<String, JsonValue> entry : jsonInput.entrySet()) {
-            job.add(entry.getKey(), entry.getValue());
-        }
-        
         job.add("signature", jwsCompactSerialization);
         JsonObject jsonObject = job.build();
         

@@ -48,9 +48,9 @@ $app->get('/', function (Request $request, Response $response) {
 $app->get('/voters', function (Request $request, Response $response) {
   $mapper = new VoterMapper($this->db);
   $voters = $mapper->getVoters();
-  $response = $response->withHeader('Content-type', 'application/json');
-  $response = $response->withAddedHeader('Content-Disposition', 'attachment; filename=voters.json');
-  $response = $response->write(get_voters_jsonData($voters));
+  $response = $response->withHeader('Content-type', 'application/json')
+                      ->withAddedHeader('Content-Disposition', 'attachment; filename=voters.json')
+                      ->write(get_voters_jsonData($voters));
   return $response;
 });
 
@@ -64,23 +64,14 @@ $app->post('/elections', function (Request $request, Response $response) {
   // if ContentType is JSON, than store entry, else return 406
   if (is_Content_Type_JSON($request, $response) === TRUE) {
     try {
-      $jsonBodyAsArray = json_decode($request->getBody(), true);
-      $jsonBody = $request->getBody();
-      $electionArray = array('jsonData' => $jsonBody,
-                        'electionTitle' => $jsonBodyAsArray['electionTitle'],
-                        'beginDate' => $jsonBodyAsArray['beginDate'],
-                        'endDate' => $jsonBodyAsArray['endDate'],
-                        'coefficients' => $jsonBodyAsArray['coefficients'],
-                        'appVersion' => $jsonBodyAsArray['appVersion']);
-      $election = new ElectionEntity($electionArray);
+      $jsonBody = $request->getParsedBody();
+      $jwsSignature = $jsonBody['signature'];
       $electMapper = new ElectionMapper($this->db);
 
       $certMapper = new CertificateMapper($this->db);
       $certs = $certMapper->getCertificates();
 
-      //TODO implement the email's fetch from jsonData
-      //$email = $jsonBodyAsArray['creator'];
-      $email = "alice@bfh.ch";
+      $email = get_jwsPayload($jwsSignature)['author'];
       $certificate = "";
 
       foreach ($certs as $cert) {
@@ -89,7 +80,15 @@ $app->post('/elections', function (Request $request, Response $response) {
         }
       }
 
-      if (verify_signature($email, $certificate, $jsonBody . "") === TRUE) {
+      if (verify_signature($email, $certificate, $jwsSignature . "") === TRUE) {
+        $payload = get_jwsPayload($jwsSignature);
+        $electionArray = array('jsonData' => json_encode($payload),
+                          'electionTitle' => $payload['electionTitle'],
+                          'beginDate' => $payload['beginDate'],
+                          'endDate' => $payload['endDate'],
+                          'coefficients' => $payload['coefficients'],
+                          'appVersion' => $payload['appVersion']);
+        $election = new ElectionEntity($electionArray);
         return $electMapper->storeElection($election);
       } else {
         $response = $response->withStatus(401);
@@ -121,9 +120,9 @@ $app->post('/elections', function (Request $request, Response $response) {
 $app->get('/parameters', function (Request $request, Response $response) {
   $mapper = new ParameterMapper($this->db);
   $parameters = $mapper->getParameters();
-  $response = $response->withHeader('Content-type', 'application/json');
-  $response = $response->withAddedHeader('Content-Disposition', 'attachment; filename=parameters.json');
-  $response = $response->write(get_parameters_as_JSON($parameters));
+  $response = $response->withHeader('Content-type', 'application/json')
+                      ->withAddedHeader('Content-Disposition', 'attachment; filename=parameters.json')
+                      ->write(get_parameters_as_JSON($parameters));
   return $response;
 });
 
@@ -186,8 +185,8 @@ $app->get('/elections/open', function (Request $request, Response $response) {
                                ->write('No open elections found at the given date!');
         } else { //open elections found, returning them
           $response = $response->withHeader('Content-type', 'application/json')
-                              ->withAddedHeader('Content-Disposition', 'attachment; filename=open-elections.json');
-          $response = get_elections_shortInfo($openElections);
+                              ->withAddedHeader('Content-Disposition', 'attachment; filename=open-elections.json')
+                              ->write(get_elections_shortInfo($openElections));
         }
       return $response;
     } catch (Exception $e) {
@@ -227,8 +226,8 @@ $app->get('/elections/closed', function (Request $request, Response $response) {
                                ->write('No closed elections found before the given date!');
         } else { //closed elections found, returning them
           $response = $response->withHeader('Content-type', 'application/json')
-                              ->withAddedHeader('Content-Disposition', 'attachment; filename=open-elections.json');
-          $response = get_elections_shortInfo($closedElections);
+                              ->withAddedHeader('Content-Disposition', 'attachment; filename=open-elections.json')
+                              ->write(get_elections_shortInfo($closedElections));
         }
       return $response;
     } catch (Exception $e) {
@@ -255,9 +254,9 @@ $app->get('/elections/{id}', function (Request $request, Response $response) {
   $electionIdentifier = $route->getArgument('id');
   foreach ($elections as $election) {
     if ($electionIdentifier == $election->getId()) {
-      $response = $response->withHeader('Content-type', 'application/json');
-      $response = $response->withAddedHeader('Content-Disposition', 'attachment; filename=election-'. $electionIdentifier .'.json');
-      $response = $response->write($election->getJsonData());
+      $response = $response->withHeader('Content-type', 'application/json')
+                          ->withAddedHeader('Content-Disposition', 'attachment; filename=election-'. $electionIdentifier .'.json')
+                          ->write($election->getJsonData());
       return $response;
     }
   }
@@ -327,8 +326,8 @@ $app->get('/elections/{id}/ballots', function (Request $request, Response $respo
                            ->write('No ballots for the given election id!');
     } else { //closed elections found, returning them
       $response = $response->withHeader('Content-type', 'application/json')
-                          ->withAddedHeader('Content-Disposition', 'attachment; filename=ballots_for_election-'. $electionIdentifier . '.json');
-      $response = get_ballots_as_JSON($ballotArray);
+                          ->withAddedHeader('Content-Disposition', 'attachment; filename=ballots_for_election-'. $electionIdentifier . '.json')
+                          ->write(get_ballots_as_JSON($ballotArray));
     }
     return $response;
   } catch (Exception $e) {
@@ -341,9 +340,9 @@ $app->get('/elections/{id}/ballots', function (Request $request, Response $respo
 $app->get('/elections', function (Request $request, Response $response) {
   $mapper = new ElectionMapper($this->db);
   $elections = $mapper->getElections();
-  $response = $response->withHeader('Content-type', 'application/json');
-  $response = $response->withAddedHeader('Content-Disposition', 'attachment; filename=elections.json');
-  $response = $response->write(get_elections_shortInfo($elections));
+  $response = $response->withHeader('Content-type', 'application/json')
+                      ->withAddedHeader('Content-Disposition', 'attachment; filename=elections.json')
+                      ->write(get_elections_shortInfo($elections));
   return $response;
 });
 
