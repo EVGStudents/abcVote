@@ -12,13 +12,13 @@ import java.util.List;
  *
  * @author t.buerk
  */
-public class VoteTopic {
+public class ElectionTopic {
     
     String title;
     List<String> options;
     int pick;
     
-    public VoteTopic(String title, int pick){
+    public ElectionTopic(String title, int pick){
         this.title = title;
         this.pick = pick;
         this.options = new ArrayList<String>();

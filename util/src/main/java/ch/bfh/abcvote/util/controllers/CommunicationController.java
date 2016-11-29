@@ -10,8 +10,8 @@ import ch.bfh.abcvote.util.model.ElectionFilterTyp;
 import ch.bfh.abcvote.util.model.ElectionHeader;
 import ch.bfh.abcvote.util.model.Parameters;
 import ch.bfh.abcvote.util.model.PrivateCredentials;
-import ch.bfh.abcvote.util.model.Vote;
-import ch.bfh.abcvote.util.model.VoteTopic;
+import ch.bfh.abcvote.util.model.Election;
+import ch.bfh.abcvote.util.model.ElectionTopic;
 import ch.bfh.abcvote.util.model.Voter;
 import ch.bfh.unicrypt.math.algebra.general.interfaces.Element;
 import java.io.File;
@@ -75,8 +75,8 @@ public class CommunicationController {
                 String g0String = obj.getString("g0");
                 String g1String = obj.getString("g1");
                    
-                Parameters voteInfo = new Parameters(oString, pString, h0String, h1String, h2String, g0String, g1String);
-                return voteInfo;
+                Parameters parameters = new Parameters(oString, pString, h0String, h1String, h2String, g0String, g1String);
+                return parameters;
          } catch (Exception x) {
              System.err.println(x);
              return null;
@@ -115,30 +115,30 @@ public class CommunicationController {
        return voterlist;
     }
 
-    public void postVote(Vote vote){
+    public void postElection(Election election){
         JsonObjectBuilder jBuilder = Json.createObjectBuilder();
         DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         
         //TODO get email address from certificate 
         jBuilder.add("author", "alice@bfh.ch");
-        jBuilder.add("electionTitle", vote.getTitle());
-        jBuilder.add("beginDate", vote.getStartDate().format(format));
-        jBuilder.add("endDate", vote.getEndDate().format(format));
+        jBuilder.add("electionTitle", election.getTitle());
+        jBuilder.add("beginDate", election.getStartDate().format(format));
+        jBuilder.add("endDate", election.getEndDate().format(format));
         //toDo: get AppVersion dynamically from build 
         jBuilder.add("appVersion", "0.15");
        
         
-        jBuilder.add("coefficients", vote.getCredentialPolynomialString());
+        jBuilder.add("coefficients", election.getCredentialPolynomialString());
 
-        //toDo: get vote generator Dynamically from vote object
-        jBuilder.add("electionGenerator", vote.getH_HatString());
+        //toDo: get election generator Dynamically from election object
+        jBuilder.add("electionGenerator", election.getH_HatString());
         
         JsonObjectBuilder votingTopicBuilder = Json.createObjectBuilder();
-        votingTopicBuilder.add("topic", vote.getTopic().getTitle());
-        votingTopicBuilder.add("pick", vote.getTopic().getPick());
+        votingTopicBuilder.add("topic", election.getTopic().getTitle());
+        votingTopicBuilder.add("pick", election.getTopic().getPick());
         
         JsonArrayBuilder optionsBuilder = Json.createArrayBuilder();
-        for (String option : vote.getTopic().getOptions()) {
+        for (String option : election.getTopic().getOptions()) {
                 optionsBuilder.add(option);
         }
         votingTopicBuilder.add("options", optionsBuilder);
@@ -147,7 +147,7 @@ public class CommunicationController {
         
         JsonArrayBuilder votersBuilder = Json.createArrayBuilder();
         
-        for (Voter voter : vote.getVoterList()){
+        for (Voter voter : election.getVoterList()){
             JsonObjectBuilder voterBuilder = Json.createObjectBuilder();
             voterBuilder.add("email", voter.getEmail());
             voterBuilder.add("signature", voter.getSignature());
@@ -173,13 +173,13 @@ public class CommunicationController {
         try { 
             boolean requestOK = postJsonStringToURL(bulletinBoardUrl +  "/elections", signedModel.toString());
             if (requestOK) {
-                System.out.println("Vote posted!");
+                System.out.println("Election posted!");
             }
             else{
-                System.out.println("Was not able to post Vote! Did not receive expected http 200 status.");
+                System.out.println("Was not able to post Election! Did not receive expected http 200 status.");
             }
         } catch (IOException ex) {
-            System.out.println("Was not able to post Vote! IOException");
+            System.out.println("Was not able to post Election! IOException");
         }
 
     }
@@ -354,8 +354,8 @@ public class CommunicationController {
        return electionHeaderlist;
     }
 
-    public Vote getElectionById(int electionId) {
-        Vote vote = null;
+    public Election getElectionById(int electionId) {
+        Election election = null;
         try {
 
              URL url = new URL(bulletinBoardUrl + "/elections/" + electionId);
@@ -386,24 +386,24 @@ public class CommunicationController {
                 voterlist.add(voter);
              }
              //get votingTopic
-             JsonObject voteTopicObj = obj.getJsonObject("votingTopic");
+             JsonObject electionTopicObj = obj.getJsonObject("votingTopic");
              
-             String topic = voteTopicObj.getString("topic");
-             int pick = voteTopicObj.getInt("pick");
+             String topic = electionTopicObj.getString("topic");
+             int pick = electionTopicObj.getInt("pick");
              
-             VoteTopic voteTopic = new VoteTopic(topic, pick);
-             JsonArray optionsArray = voteTopicObj.getJsonArray("options");
+             ElectionTopic electionTopic = new ElectionTopic(topic, pick);
+             JsonArray optionsArray = electionTopicObj.getJsonArray("options");
              for(int i = 0; i < optionsArray.size(); i++){
-                   voteTopic.addOption(optionsArray.getString(i));
+                   electionTopic.addOption(optionsArray.getString(i));
              }
                
              
-             vote = new Vote(electionId, title, voterlist, parameters, beginDate, endDate, voteTopic, appVersion, h_HatString, coefficientsString); 
+             election = new Election(electionId, title, voterlist, parameters, beginDate, endDate, electionTopic, appVersion, h_HatString, coefficientsString); 
              
          } catch (IOException x) {
              System.err.println(x);
          }
-        return vote;
+        return election;
     }
 
     public PrivateCredentials getPrivateCredentials() {
@@ -459,7 +459,7 @@ public class CommunicationController {
         
 
         try { 
-            boolean requestOK = postJsonStringToURL(bulletinBoardUrl +  "/elections/" + ballot.getVote().getId() + "/ballots", model.toString());
+            boolean requestOK = postJsonStringToURL(bulletinBoardUrl +  "/elections/" + ballot.getElection().getId() + "/ballots", model.toString());
             if (requestOK) {
                 System.out.println("Ballot posted!");
             }

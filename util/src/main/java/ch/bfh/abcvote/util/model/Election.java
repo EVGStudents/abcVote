@@ -22,13 +22,13 @@ import java.util.List;
  *
  * @author t.buerk
  */
-public class Vote {
+public class Election {
     
     private int id;
     private String title;
     private List<Voter> voterList;
     private Parameters generators;
-    private VoteTopic topic;
+    private ElectionTopic topic;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private Element h_Hat;
@@ -36,11 +36,11 @@ public class Vote {
     
     PolynomialElement credentialPolynomial;
     
-    public Vote(Parameters generators){
+    public Election(Parameters generators){
         this.generators = generators;
     }
 
-    public Vote(int id, String title, List<Voter> voterList, Parameters generators, LocalDateTime startDate, LocalDateTime endDate, VoteTopic topic, String appVersion, String h_HatString, String credentialPolynomialString) {
+    public Election(int id, String title, List<Voter> voterList, Parameters generators, LocalDateTime startDate, LocalDateTime endDate, ElectionTopic topic, String appVersion, String h_HatString, String credentialPolynomialString) {
         this.id = id;
         this.title = title;
         this.voterList = voterList;
@@ -74,11 +74,11 @@ public class Vote {
         return generators;
     }
 
-    public VoteTopic getTopic() {
+    public ElectionTopic getTopic() {
         return topic;
     }
 
-    public void setTopic(VoteTopic topic) {
+    public void setTopic(ElectionTopic topic) {
         this.topic = topic;
     }
 

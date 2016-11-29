@@ -24,7 +24,7 @@ import java.util.List;
  */
 public class Ballot {
     
-    Vote vote;
+    Election election;
     List<String> selectedOptions;
     Element c;
     Element d;
@@ -34,13 +34,13 @@ public class Ballot {
     Tuple pi2;
     Tuple pi3;
 
-    public Ballot(Vote vote, List<String> selectedOptions) {
-        this.vote = vote;
+    public Ballot(Election election, List<String> selectedOptions) {
+        this.election = election;
         this.selectedOptions = selectedOptions;
     }
 
-    public Vote getVote() {
-        return vote;
+    public Election getElection() {
+        return election;
     }
 
     public List<String> getSelectedOptions() {
@@ -48,7 +48,7 @@ public class Ballot {
     }
 
     public void calculateProves(PrivateCredentials privatCredentials) {
-        Parameters parameters = vote.getGenerators();
+        Parameters parameters = election.getGenerators();
         Element alpha =privatCredentials.getAlpha();
         Element beta =privatCredentials.getBeta();
         Element u = parameters.getZ_p().getElement(privatCredentials.getU().convertToBigInteger());
@@ -61,11 +61,11 @@ public class Ballot {
         Element s = parameters.getZ_q().getRandomElement();
         d = parameters.getCommitmentSchemeQ().commit(messageElements, s);
         //u_Hat
-        DiscreteLogarithmCommitmentScheme discreteLogCommitmentScheme = DiscreteLogarithmCommitmentScheme.getInstance(vote.getH_Hat());
+        DiscreteLogarithmCommitmentScheme discreteLogCommitmentScheme = DiscreteLogarithmCommitmentScheme.getInstance(election.getH_Hat());
         u_Hat = discreteLogCommitmentScheme.commit(beta);
         
         //P1
-	PolynomialMembershipProofSystem pmps = PolynomialMembershipProofSystem.getInstance(vote.getCredentialPolynomial(), parameters.getCommitmentSchemeP());
+	PolynomialMembershipProofSystem pmps = PolynomialMembershipProofSystem.getInstance(election.getCredentialPolynomial(), parameters.getCommitmentSchemeP());
 	pi1 = pmps.generate(Pair.getInstance(u, r), c);
         
         //P2
