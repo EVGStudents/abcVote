@@ -58,7 +58,7 @@ public class VoterRegistrationController implements Initializable, ControlledScr
     }
 
     @FXML
-    private void btRegisterClicked(ActionEvent event) {
+    private void btRegisterClicked(ActionEvent event) throws Exception {
         String email = txtEmailAdress.getText();
         parentController.registerNewVoter(email);
         parentController.setScreen(VoterApp.HOMESCREENID);

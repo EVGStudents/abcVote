@@ -6,12 +6,17 @@
 package ch.bfh.abcvote.voterapp.controllers;
 
 import ch.bfh.abcvote.util.controllers.CommunicationController;
+import ch.bfh.abcvote.util.controllers.KeyStoreController;
 import ch.bfh.abcvote.util.model.Ballot;
 import ch.bfh.abcvote.util.model.ElectionFilterTyp;
 import ch.bfh.abcvote.util.model.ElectionHeader;
 import ch.bfh.abcvote.util.model.PrivateCredentials;
 import ch.bfh.abcvote.util.model.Election;
+import ch.bfh.abcvote.util.model.Parameters;
 import ch.bfh.abcvote.voterapp.ControlledScreen;
+import ch.bfh.unicrypt.math.algebra.general.interfaces.Element;
+import java.io.File;
+import java.security.KeyStore;
 import java.util.HashMap;
 import java.util.List;
 import javafx.animation.KeyFrame;
@@ -41,6 +46,10 @@ public class MainController extends StackPane {
     //Hashmap that holds all the registred Controllers and thie Screens
     private HashMap<String, Pair<ControlledScreen,Node>> screens = new HashMap<>();
     private CommunicationController communicationController;
+    
+    private final String pathToKeyStore = System.getProperty("user.home") + File.separator + "Documents" + File.separator + "abcVote" + File.separator + "test.jks";
+    private final String keyStorePassword = "Bern2016";
+    private final String stringPassword = "Bern2016";
     
     public MainController(){
         super();
@@ -149,8 +158,20 @@ public class MainController extends StackPane {
         return true;
     }
 
-    public void registerNewVoter(String email) {
-        communicationController.registerNewVoter(email);
+    public void registerNewVoter(String email) throws Exception {
+        //get Parameters
+        Parameters parameters = communicationController.getParameters();
+        
+        //pick private Credentials
+        PrivateCredentials privateCredentials = new PrivateCredentials(parameters);
+        //calculate public credentials
+        Element u = privateCredentials.getU();
+        
+        if (communicationController.registerNewVoter(email, parameters, u)) {
+            storePrivateCredentials(privateCredentials);
+        } else {
+            System.out.println("New Voter couldn't be registered.");
+        };
     }
     
     public List<ElectionHeader> getElectionHeaders(ElectionFilterTyp filter) {
@@ -169,9 +190,17 @@ public class MainController extends StackPane {
         return true;
     }
 
-    PrivateCredentials getPrivateCredentials() {
-       PrivateCredentials privateCredentials =  communicationController.getPrivateCredentials();
-       return privateCredentials;
+    public PrivateCredentials getPrivateCredentials() throws Exception {
+        Parameters parameters = communicationController.getParameters();
+        KeyStore keyStore = KeyStoreController.loadKeyStoreFromFile(pathToKeyStore, keyStorePassword);
+        PrivateCredentials privateCredentials = new PrivateCredentials(parameters, KeyStoreController.readStringFromKeyStore(keyStore, keyStorePassword, stringPassword, "alpha"), KeyStoreController.readStringFromKeyStore(keyStore, keyStorePassword, stringPassword, "beta"));
+        return privateCredentials;
+    }
+    
+    public void storePrivateCredentials(PrivateCredentials privateCredentials) throws Exception{
+        //Store private Credentials
+        KeyStoreController.writeStringToKeyStore(pathToKeyStore, keyStorePassword, stringPassword, "alpha", privateCredentials.getAlpha().convertToString());
+        KeyStoreController.writeStringToKeyStore(pathToKeyStore, keyStorePassword, stringPassword, "beta", privateCredentials.getBeta().convertToString());
     }
 
     void postBallot(Ballot ballot) {
