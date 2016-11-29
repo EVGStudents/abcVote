@@ -26,13 +26,12 @@ import javax.crypto.spec.PBEKeySpec;
  */
 public class KeyStoreController {
     
-    public static FileInputStream getFileInputStreamFromArg(String filePath) throws FileNotFoundException {
+    private static FileInputStream getFileInputStreamFromArg(String filePath) throws FileNotFoundException {
         File file = new File(filePath);
         return new FileInputStream(file);
     }
     
-    public static KeyStore loadKeyStoreFromFile(String pathToFile, String keystorePassword)
-            throws Exception {
+    public static KeyStore loadKeyStoreFromFile(String pathToFile, String keystorePassword) throws Exception {
         KeyStore keyStore = KeyStore.getInstance("JCEKS");
         keyStore.load(getFileInputStreamFromArg(pathToFile), keystorePassword.toCharArray());
         return keyStore;

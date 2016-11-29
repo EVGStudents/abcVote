@@ -71,9 +71,9 @@ public class BallotSummaryController implements Initializable,ControlledScreen {
     }
 
     @FXML
-    private void btNextClicked(ActionEvent event) {
-        PrivateCredentials privatCredentials = parentController.getPrivateCredentials();
-        ballot.calculateProves(privatCredentials);
+    private void btNextClicked(ActionEvent event) throws Exception {
+        PrivateCredentials privateCredentials = parentController.getPrivateCredentials();
+        ballot.calculateProves(privateCredentials);
         parentController.postBallot(ballot);
         parentController.setScreen(VoterApp.HOMESCREENID);
     }
