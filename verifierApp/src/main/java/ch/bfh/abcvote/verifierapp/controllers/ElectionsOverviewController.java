@@ -9,6 +9,7 @@ import ch.bfh.abcvote.util.model.Ballot;
 import ch.bfh.abcvote.util.model.ElectionFilterTyp;
 import ch.bfh.abcvote.util.model.ElectionHeader;
 import ch.bfh.abcvote.util.model.Election;
+import ch.bfh.abcvote.util.model.ElectionResult;
 import ch.bfh.abcvote.verifierapp.ControlledScreen;
 import ch.bfh.abcvote.verifierapp.VerifierApp;
 import java.net.URL;
@@ -87,12 +88,19 @@ public class ElectionsOverviewController implements Initializable, ControlledScr
            // getElection
            Election election = parentController.getElectionById(electionId);           
            // getBallots
-           List<Ballot> ballots = parentController.getBallotsByElection(election); 
+           List<Ballot> ballots = parentController.getBallotsByElection(election);
+           //Calculate results
+           ElectionResult result = parentController.calculateElectionResult(election, ballots);
            // pass election and ballots to Resultscreen
-           parentController.setScreen(VerifierApp.RESULTOVERVIEWSCREENID);
+           parentController.setScreenWithResult(VerifierApp.RESULTOVERVIEWSCREENID, result);
         }
         
   
+        
+    }
+
+    @Override
+    public void setScene(ElectionResult result) {
         
     }
     
