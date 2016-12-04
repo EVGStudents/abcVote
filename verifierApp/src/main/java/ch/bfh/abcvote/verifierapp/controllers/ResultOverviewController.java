@@ -77,6 +77,7 @@ public class ResultOverviewController implements Initializable, ControlledScreen
 
     @FXML
     private void btPublishClicked(ActionEvent event) {
+        parentController.postResult(result);
         parentController.setScreen(VerifierApp.HOMESCREENID);
     }
 

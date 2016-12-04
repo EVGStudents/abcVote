@@ -306,6 +306,10 @@ public class MainController extends StackPane {
         
         return true;
     }
+
+    public void postResult(ElectionResult result) {
+        communicationController.postResult(result);
+    }
     
     
 }
