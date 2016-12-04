@@ -10,18 +10,21 @@ import ch.bfh.abcvote.util.model.ElectionFilterTyp;
 import ch.bfh.abcvote.util.model.ElectionHeader;
 import ch.bfh.abcvote.util.model.Parameters;
 import ch.bfh.abcvote.util.model.Election;
+import ch.bfh.abcvote.util.model.ElectionResult;
 import ch.bfh.abcvote.util.model.ElectionTopic;
 import ch.bfh.abcvote.util.model.Voter;
 import ch.bfh.unicrypt.math.algebra.general.interfaces.Element;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -444,6 +447,62 @@ public class CommunicationController {
         return ballots;
         
         
+    }
+
+    public void postResult(ElectionResult result) {
+        Election election = result.getElection();
+        ElectionTopic topic = election.getTopic();
+        HashMap<String, Integer> optionResults = result.getOptionCount();
+        JsonObjectBuilder jBuilder = Json.createObjectBuilder();
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        
+        //TODO get email address from certificate 
+        jBuilder.add("author", "alice@bfh.ch");
+        
+        JsonArrayBuilder resultBuilder = Json.createArrayBuilder();
+        
+        JsonObjectBuilder topicBuilder = Json.createObjectBuilder();
+        
+        topicBuilder.add("topic", topic.getTitle());
+        topicBuilder.add("pick", topic.getPick());
+        
+        JsonArrayBuilder optionsBuilder = Json.createArrayBuilder();
+        
+        for (String option : topic.getOptions()){
+           JsonObjectBuilder optionBuilder = Json.createObjectBuilder(); 
+            optionBuilder.add("optTitle", option);
+            optionBuilder.add("count", optionResults.get(option));
+            optionsBuilder.add(optionBuilder);
+        }
+        topicBuilder.add("options", optionsBuilder);
+        
+        resultBuilder.add(topicBuilder);
+        
+        jBuilder.add("result", resultBuilder);
+        
+        JsonObject model = jBuilder.build();
+        
+        SignatureController signController = new SignatureController();
+        JsonObject signedModel = null;
+                
+        try {
+            signedModel = signController.signJson(model);   
+        } catch (Exception ex) {
+            Logger.getLogger(CommunicationController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        try { 
+            boolean requestOK = postJsonStringToURL(bulletinBoardUrl +  "/elections/" + election.getId() + "/results", signedModel.toString());
+            if (requestOK) {
+                System.out.println("Results posted!");
+            }
+            else{
+                System.out.println("Was not able to post Results! Did not receive expected http 200 status.");
+            }
+        } catch (IOException ex) {
+            System.out.println("Was not able to post Results! IOException");
+        }
+
     }
 
     
