@@ -240,7 +240,7 @@ $app->get('/elections/closed', function (Request $request, Response $response) {
                                ->write('No closed elections found before the given date!');
         } else { //closed elections found, returning them
           $response = $response->withHeader('Content-type', 'application/json')
-                              ->withAddedHeader('Content-Disposition', 'attachment; filename=open-elections.json')
+                              ->withAddedHeader('Content-Disposition', 'attachment; filename=closed-elections.json')
                               ->write(get_elections_shortInfo($closedElections));
         }
       return $response;
