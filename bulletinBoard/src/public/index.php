@@ -446,5 +446,13 @@ $app->get('/view/ballots', function (Request $request, Response $response) {
   return $response;
 });
 
+// GET /view/results: generates a html page which show the tbl_results' content
+$app->get('/view/results', function (Request $request, Response $response) {
+  $mapper = new ResultMapper($this->db);
+  $results = $mapper->getResults();
+  $response = $this->view->render($response, "results.phtml", ["results" => $results]);
+  return $response;
+});
+
 // Run App
 $app->run();

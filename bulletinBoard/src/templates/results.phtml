@@ -1,0 +1,27 @@
+<html>
+  <head>
+      <title>/view/results</title>
+      <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css">
+  </head>
+  <body>
+    <h1>Information stored in tbl_results</h1>
+
+    <table class="pure-table">
+        <tr>
+            <th>id</th>
+            <th>electionIdentifier</th>
+            <th>jsonData</th>
+        </tr>
+
+    <?php foreach($data['results'] as $result): ?>
+
+        <tr>
+            <td><?=$result->getId() ?></td>
+            <td><?=$result->getElectionIdentifier() ?></td>
+            <td><?=$result->getJsonData() ?></td>
+        </tr>
+
+    <?php endforeach; ?>
+    </table>
+  </body>
+</html>
