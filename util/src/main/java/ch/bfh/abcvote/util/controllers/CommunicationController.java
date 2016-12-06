@@ -252,12 +252,7 @@ public class CommunicationController {
         
         DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime actualDateTime = LocalDateTime.now();
-        String dateTimeString = actualDateTime.getYear() + "-" 
-                + actualDateTime.getMonthValue() + "-"
-                + actualDateTime.getDayOfMonth() + " "
-                + actualDateTime.getHour() + ":"
-                + actualDateTime.getMinute() + ":"
-                + actualDateTime.getSecond();
+        String dateTimeString = actualDateTime.format(format);
         
         URL url = null;
         
