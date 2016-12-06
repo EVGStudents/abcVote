@@ -192,7 +192,7 @@ public class MainController extends StackPane {
         ZMod Z_p = parameters.getZ_p();
         PolynomialElement credentialPolynomial = calculateCredentialPolynomial(Z_p, voters);  
         //P1 Proofsystem
-        PolynomialMembershipProofSystem pmps = PolynomialMembershipProofSystem.getInstance(election.getCredentialPolynomial(), parameters.getCommitmentSchemeP());
+        PolynomialMembershipProofSystem pmps = PolynomialMembershipProofSystem.getInstance(credentialPolynomial, parameters.getCommitmentSchemeP());
         //P2 Proofsystem
         DoubleDiscreteLogProofSystem ddlps = DoubleDiscreteLogProofSystem.getInstance(parameters.getCommitmentSchemeP(), parameters.getCommitmentSchemeQ(), parameters.getSECURITY_FACTOR());
         //P3
