@@ -15,11 +15,15 @@ import ch.bfh.abcvote.util.model.Parameters;
 import ch.bfh.abcvote.util.model.Voter;
 import ch.bfh.abcvote.verifierapp.ControlledScreen;
 import ch.bfh.unicrypt.UniCryptException;
+import ch.bfh.unicrypt.crypto.proofsystem.challengegenerator.classes.FiatShamirSigmaChallengeGenerator;
+import ch.bfh.unicrypt.crypto.proofsystem.challengegenerator.interfaces.SigmaChallengeGenerator;
 import ch.bfh.unicrypt.crypto.proofsystem.classes.DoubleDiscreteLogProofSystem;
 import ch.bfh.unicrypt.crypto.proofsystem.classes.EqualityPreimageProofSystem;
 import ch.bfh.unicrypt.crypto.proofsystem.classes.PolynomialMembershipProofSystem;
 import ch.bfh.unicrypt.crypto.schemes.commitment.classes.DiscreteLogarithmCommitmentScheme;
+import ch.bfh.unicrypt.helper.math.Alphabet;
 import ch.bfh.unicrypt.helper.math.Polynomial;
+import ch.bfh.unicrypt.math.algebra.concatenative.classes.StringMonoid;
 import ch.bfh.unicrypt.math.algebra.dualistic.classes.PolynomialElement;
 import ch.bfh.unicrypt.math.algebra.dualistic.classes.PolynomialSemiRing;
 import ch.bfh.unicrypt.math.algebra.dualistic.classes.ZMod;
@@ -190,12 +194,11 @@ public class MainController extends StackPane {
         List<Voter> voters = election.getVoterList();
         Parameters parameters = election.getGenerators();
         ZMod Z_p = parameters.getZ_p();
-        PolynomialElement credentialPolynomial = calculateCredentialPolynomial(Z_p, voters);  
-        //P1 Proofsystem
-        PolynomialMembershipProofSystem pmps = PolynomialMembershipProofSystem.getInstance(credentialPolynomial, parameters.getCommitmentSchemeP());
-        //P2 Proofsystem
-        DoubleDiscreteLogProofSystem ddlps = DoubleDiscreteLogProofSystem.getInstance(parameters.getCommitmentSchemeP(), parameters.getCommitmentSchemeQ(), parameters.getSECURITY_FACTOR());
-        //P3
+        PolynomialElement credentialPolynomial = calculateCredentialPolynomial(Z_p, voters); 
+        
+        HashMap<String, Pair<SigmaChallengeGenerator,SigmaChallengeGenerator>> challengeGenerators = new HashMap<>();
+        
+        //pereparation for Pi3
         DiscreteLogarithmCommitmentScheme discreteLogCommitmentScheme = DiscreteLogarithmCommitmentScheme.getInstance(election.getH_Hat());
         //Extract DicreteLogFunction
         Function discreteLogFunction = discreteLogCommitmentScheme.getCommitmentFunction();
@@ -208,10 +211,8 @@ public class MainController extends StackPane {
         Function adapterFunction = SelectionFunction.getInstance(space, 0,1); //0,1 : Pfad für selektiertes Element 0 für MessageElements -> 1 für Beta
         // We chain the selection Function and the discreteLogFunction together. So the output of the selection function acts as input for the discreteLogFunction
         Function adaptedDiscreteLogFunction = CompositeFunction.getInstance(adapterFunction,discreteLogFunction);
-
-        //Create a EqualityPreimageProofSystem with the PedersenCommitmentFunction and the adapted DicreteLogFunction
-        EqualityPreimageProofSystem epps = EqualityPreimageProofSystem.getInstance(pedersenFunction, adaptedDiscreteLogFunction);
-            
+        
+  
         //check if ballot was posted druing voting period
         for(Ballot ballot: ballots){
             if (!ballot.isValid()){
@@ -222,23 +223,51 @@ public class MainController extends StackPane {
             LocalDateTime ballotTimeStamp = ballot.getTimeStamp();
             if (!(startDate.compareTo(ballotTimeStamp) < 0 && endDate.compareTo(ballotTimeStamp) > 0)){
                 ballot.setValid(false);
+                System.out.println("Rejected! Reason: not in voting period ID: " + ballot.getId());
             }  
         }
+        
+        //generate ChallengeGenerators for all valid Ballots
+        for(Ballot ballot: ballots){
+            if (!ballot.isValid()){
+                continue;
+            }
+            if (!challengeGenerators.containsKey(ballot.getSelectedOptionsString())){
+                Element e = StringMonoid.getInstance(Alphabet.ALPHANUMERIC).getElement(ballot.getSelectedOptionsString());
+                SigmaChallengeGenerator fsscg = FiatShamirSigmaChallengeGenerator.getInstance(parameters.getCommitmentSchemeP().getMessageSpace(), e);
+                SigmaChallengeGenerator fsscg2 = FiatShamirSigmaChallengeGenerator.getInstance(parameters.getZ_q(), e);
+                challengeGenerators.put(ballot.getSelectedOptionsString(), new Pair(fsscg,fsscg2));
+            }
+ 
+        }
+        
         //check if proves are valid     
         for(Ballot ballot: ballots){
             if (!ballot.isValid()){
                 continue;
             }
+            SigmaChallengeGenerator fsscg = challengeGenerators.get(ballot.getSelectedOptionsString()).getKey();
+            SigmaChallengeGenerator fsscg2 = challengeGenerators.get(ballot.getSelectedOptionsString()).getValue();
+            //P1 Proofsystem
+            PolynomialMembershipProofSystem pmps = PolynomialMembershipProofSystem.getInstance(fsscg,credentialPolynomial, parameters.getCommitmentSchemeP());
             if(!pmps.verify(ballot.getPi1(), ballot.getC())){
                ballot.setValid(false);
+                System.out.println("Rejected! Reason: PI1-Proof failed: " + ballot.getId());
                continue;
             }
+            //P2 Proofsystem
+            DoubleDiscreteLogProofSystem ddlps = DoubleDiscreteLogProofSystem.getInstance(fsscg, parameters.getCommitmentSchemeP(), parameters.getCommitmentSchemeQ(), parameters.getSECURITY_FACTOR());
             if(!ddlps.verify(ballot.getPi2(), Tuple.getInstance(ballot.getC(), ballot.getD()))){
                ballot.setValid(false);
+               System.out.println("Rejected! Reason: PI2-Proof failed: " + ballot.getId());
                continue;
             }
+            //P3
+            //Create a EqualityPreimageProofSystem with the PedersenCommitmentFunction and the adapted DicreteLogFunction
+            EqualityPreimageProofSystem epps = EqualityPreimageProofSystem.getInstance(fsscg2, pedersenFunction, adaptedDiscreteLogFunction);
             if(!epps.verify(ballot.getPi3(), Tuple.getInstance(ballot.getD(), ballot.getU_Hat()))){
                ballot.setValid(false);
+               System.out.println("Rejected! Reason: PI3-Proof failed: " + ballot.getId());
                continue; 
             }
         }
@@ -252,6 +281,7 @@ public class MainController extends StackPane {
             }
             if (usedU_Hats.contains(ballot.getU_Hat())){
                 ballot.setValid(false);
+                System.out.println("Rejected! Reason: Already selected another vote: " + ballot.getId());
             }
             else{
                 usedU_Hats.add(ballot.getU_Hat());
@@ -285,6 +315,7 @@ public class MainController extends StackPane {
                 u = Z_p.getElementFrom(voter.getPublicCredential());
             } catch (UniCryptException ex) {
                 Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("could not convert u");
                 continue;
             }
             Polynomial newRoot = Polynomial.getInstance(new DualisticElement[]{(DualisticElement) u.invert(), one}, zero, one);
