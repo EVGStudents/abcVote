@@ -6,10 +6,14 @@
 package ch.bfh.abcvote.util.model;
 
 import ch.bfh.unicrypt.UniCryptException;
+import ch.bfh.unicrypt.crypto.proofsystem.challengegenerator.classes.FiatShamirSigmaChallengeGenerator;
+import ch.bfh.unicrypt.crypto.proofsystem.challengegenerator.interfaces.SigmaChallengeGenerator;
 import ch.bfh.unicrypt.crypto.proofsystem.classes.DoubleDiscreteLogProofSystem;
 import ch.bfh.unicrypt.crypto.proofsystem.classes.EqualityPreimageProofSystem;
 import ch.bfh.unicrypt.crypto.proofsystem.classes.PolynomialMembershipProofSystem;
 import ch.bfh.unicrypt.crypto.schemes.commitment.classes.DiscreteLogarithmCommitmentScheme;
+import ch.bfh.unicrypt.helper.math.Alphabet;
+import ch.bfh.unicrypt.math.algebra.concatenative.classes.StringMonoid;
 import ch.bfh.unicrypt.math.algebra.general.classes.Pair;
 import ch.bfh.unicrypt.math.algebra.general.classes.ProductSet;
 import ch.bfh.unicrypt.math.algebra.general.classes.Tuple;
@@ -18,6 +22,7 @@ import ch.bfh.unicrypt.math.function.classes.CompositeFunction;
 import ch.bfh.unicrypt.math.function.classes.SelectionFunction;
 import ch.bfh.unicrypt.math.function.interfaces.Function;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -64,13 +69,18 @@ public class Ballot {
             c = parameters.getG_p().getElementFrom(cString);
             d = parameters.getG_q().getElementFrom(dString);
             u_Hat = parameters.getG_q().getElementFrom(u_HatString);
+            Element e = StringMonoid.getInstance(Alphabet.ALPHANUMERIC).getElement(getSelectedOptionsString());
+            
+            //ChallengeGenerators
+            SigmaChallengeGenerator fsscg = FiatShamirSigmaChallengeGenerator.getInstance(parameters.getCommitmentSchemeP().getMessageSpace(), e);
+            SigmaChallengeGenerator fsscg2 = FiatShamirSigmaChallengeGenerator.getInstance(parameters.getZ_q(), e);
             
             //P1
-            PolynomialMembershipProofSystem pmps = PolynomialMembershipProofSystem.getInstance(election.getCredentialPolynomial(), parameters.getCommitmentSchemeP());
+            PolynomialMembershipProofSystem pmps = PolynomialMembershipProofSystem.getInstance(fsscg, election.getCredentialPolynomial(), parameters.getCommitmentSchemeP());
             pi1 = pmps.getProofSpace().getElementFrom(pi1String);
             
             //P2
-            DoubleDiscreteLogProofSystem ddlps = DoubleDiscreteLogProofSystem.getInstance(parameters.getCommitmentSchemeP(), parameters.getCommitmentSchemeQ(), parameters.getSECURITY_FACTOR());
+            DoubleDiscreteLogProofSystem ddlps = DoubleDiscreteLogProofSystem.getInstance(fsscg, parameters.getCommitmentSchemeP(), parameters.getCommitmentSchemeQ(), parameters.getSECURITY_FACTOR());
             pi2 = ddlps.getProofSpace().getElementFrom(pi2String);
             
             //P3
@@ -88,7 +98,7 @@ public class Ballot {
             Function adaptedDiscreteLogFunction = CompositeFunction.getInstance(adapterFunction,discreteLogFunction);
 
             //Create a EqualityPreimageProofSystem with the PedersenCommitmentFunction and the adapted DicreteLogFunction
-            EqualityPreimageProofSystem epps = EqualityPreimageProofSystem.getInstance(pedersenFunction, adaptedDiscreteLogFunction);
+            EqualityPreimageProofSystem epps = EqualityPreimageProofSystem.getInstance(fsscg2, pedersenFunction, adaptedDiscreteLogFunction);
             pi3 = epps.getProofSpace().getElementFrom(pi3String);
             
         } catch (UniCryptException ex) {
@@ -111,6 +121,7 @@ public class Ballot {
         Element alpha =privatCredentials.getAlpha();
         Element beta =privatCredentials.getBeta();
         Element u = parameters.getZ_p().getElement(privatCredentials.getU().convertToBigInteger());
+        Element e = StringMonoid.getInstance(Alphabet.ALPHANUMERIC).getElement(getSelectedOptionsString());
         
         //Commitment p
         Element r = parameters.getZ_p().getRandomElement();
@@ -123,12 +134,16 @@ public class Ballot {
         DiscreteLogarithmCommitmentScheme discreteLogCommitmentScheme = DiscreteLogarithmCommitmentScheme.getInstance(election.getH_Hat());
         u_Hat = discreteLogCommitmentScheme.commit(beta);
         
+        //ChallengeGenerators
+        SigmaChallengeGenerator fsscg = FiatShamirSigmaChallengeGenerator.getInstance(parameters.getCommitmentSchemeP().getMessageSpace(), e);
+        SigmaChallengeGenerator fsscg2 = FiatShamirSigmaChallengeGenerator.getInstance(parameters.getZ_q(), e);
+        
         //P1
-	PolynomialMembershipProofSystem pmps = PolynomialMembershipProofSystem.getInstance(election.getCredentialPolynomial(), parameters.getCommitmentSchemeP());
+	PolynomialMembershipProofSystem pmps = PolynomialMembershipProofSystem.getInstance(fsscg, election.getCredentialPolynomial(), parameters.getCommitmentSchemeP());
 	pi1 = pmps.generate(Pair.getInstance(u, r), c);
         
         //P2
-        DoubleDiscreteLogProofSystem ddlps = DoubleDiscreteLogProofSystem.getInstance(parameters.getCommitmentSchemeP(), parameters.getCommitmentSchemeQ(), parameters.getSECURITY_FACTOR());
+        DoubleDiscreteLogProofSystem ddlps = DoubleDiscreteLogProofSystem.getInstance(fsscg, parameters.getCommitmentSchemeP(), parameters.getCommitmentSchemeQ(), parameters.getSECURITY_FACTOR());
 	pi2 = ddlps.generate(Tuple.getInstance(u, r, s, messageElements), Pair.getInstance(c, d));
         
         //P3
@@ -145,16 +160,14 @@ public class Ballot {
 	Function adaptedDiscreteLogFunction = CompositeFunction.getInstance(adapterFunction,discreteLogFunction);
 
 	//Create a EqualityPreimageProofSystem with the PedersenCommitmentFunction and the adapted DicreteLogFunction
-        EqualityPreimageProofSystem epps = EqualityPreimageProofSystem.getInstance(pedersenFunction, adaptedDiscreteLogFunction);
+        EqualityPreimageProofSystem epps = EqualityPreimageProofSystem.getInstance(fsscg2, pedersenFunction, adaptedDiscreteLogFunction);
         pi3 = epps.generate(Tuple.getInstance(Pair.getInstance(alpha, beta), s), Pair.getInstance(d, u_Hat));
 
     }
 
     public int getId() {
         return id;
-    }
-
-    
+    }  
     
     public Element getC() {
         return c;
@@ -216,6 +229,20 @@ public class Ballot {
         return timeStamp;
     }
     
-    
+    public String getSelectedOptionsString(){
+        String result = "";
+        //Collections.sort(selectedOptions);
+        
+        for (String option : selectedOptions){
+            if (result == ""){
+                result = option;
+            }
+            else{
+                result += "," + option;
+            }
+        }
+        
+        return result;
+    }
     
 }
