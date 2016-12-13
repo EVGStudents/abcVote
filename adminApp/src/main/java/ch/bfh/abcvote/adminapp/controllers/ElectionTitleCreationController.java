@@ -18,11 +18,14 @@ import javafx.scene.control.TextField;
 
 /**
  * FXML Controller class
- *
+ * Controller of the ElectionTitleCreation.fxml view
  * @author t.buerk
  */
 public class ElectionTitleCreationController implements Initializable , ControlledScreen  {
 
+    MainController parentController;
+    Election election;
+    
     @FXML
     private Button btBack;
     @FXML
@@ -30,36 +33,50 @@ public class ElectionTitleCreationController implements Initializable , Controll
     @FXML
     private Button btNext;
 
-    MainController parentController;
-    Election election;
+
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        
     }    
 
+    /** Sets the parentController for the communication with other controllers
+     * @param screenParent 
+     */
+    @Override
+    public void setScreenParent(MainController screenParent) {
+        parentController = screenParent;
+    }
+    /**
+     * Takes the passes election and safes it in a global variabel and displays the title of the election
+     * @param election 
+     */
+    @Override
+    public void setScene(Election election) {
+        this.election = election; 
+        txtTitle.setText(election.getTitle());
+    }
+    
+    /**
+     * btBack-Button Click-Event: send the user back to the Home screen
+     * @param event 
+     */
     @FXML
     private void btBackClicked(ActionEvent event) {
         parentController.setScreen(AdminApp.HOMESCREENID);
     }
 
+    /**
+     * btNext-Button Click-Event: Saves the election title entered by the user in the election object
+     * and passes the election to the VoterSelection screen using the Maincontroller
+     * @param event 
+     */
     @FXML
     private void btNextClicked(ActionEvent event) {
         election.setTitle(txtTitle.getText());
         parentController.setScreenWithElection(AdminApp.VOTERSELECTIONSCREENID, election);
-    }
-
-    @Override
-    public void setScreenParent(MainController screenParent) {
-        parentController = screenParent;
-    }
-
-    @Override
-    public void setScene(Election election) {
-        this.election = election; 
-        txtTitle.setText(election.getTitle());
     }
     
 }

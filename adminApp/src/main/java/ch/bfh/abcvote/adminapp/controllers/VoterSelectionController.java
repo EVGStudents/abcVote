@@ -24,11 +24,10 @@ import javafx.scene.control.SelectionMode;
 
 /**
  * FXML Controller class
- *
+ * Controller of the VoterSelection.fxml view
  * @author t.buerk
  */
 public class VoterSelectionController implements Initializable, ControlledScreen {
-
     
     Election election;
     MainController parentController;
@@ -39,37 +38,51 @@ public class VoterSelectionController implements Initializable, ControlledScreen
     private Label lbSelectVoters;
     @FXML
     private ListView<Voter> lvVoters;
-        @FXML
+    @FXML
     private Button btBack;
+      
+    /**
+     * Initializes the controller class.
+     */
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
         
+    }      
+    
+    /** Sets the parentController for the communication with other controllers
+     * @param screenParent 
+     */
     @Override
     public void setScreenParent(MainController screenParent) {
         parentController = screenParent;
     }
     
     /**
-     * Initializes the controller class.
+     * stores the election object in a global variable
+     * and gets a list of all current voters in order to display it
+     * @param election 
      */
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-    }    
-
-    //stores the election object in a global variable
-    //and gets a list of all current voters in order to display it
-    @Override
     public void setScene(Election election) {
-        this.election = election;
-        
+        this.election = election;       
         List<Voter> voterlist = parentController.getAllARegisteredVoters();
         populateVoterListView(voterlist);
     }
 
+    /**
+     * btBack-Button Click-Event: sends the user back to the ElectionTitleCreation Screen
+     * @param event 
+     */
     @FXML
     private void btBackClicked(ActionEvent event) {
         parentController.setScreen(AdminApp.ELECTIONTITLECREATIONSCREENID);
     }
 
+    /**
+     * btNext-Button Click-Event: gets all selected voters form the lvVoters listview and stores them in the election object.
+     * afterward the election object gets passed to the ElectionOptionCreation Screen via the mainController
+     * @param event 
+     */
     @FXML
     private void btNextClicked(ActionEvent event) {
         ObservableList<Voter> selectedVoters;
@@ -78,7 +91,10 @@ public class VoterSelectionController implements Initializable, ControlledScreen
         parentController.setScreenWithElection(AdminApp.ELECTIONOPTIONCREATIONSCREENID, election);
     }
     
-    //Displays the given list of Voters in the ListView for selection
+    /**
+     * Displays the given list of Voters in the lvVoters ListView for selection
+     * @param voterlist 
+     */
     private void populateVoterListView(List<Voter> voterlist) {
         
         ObservableList<Voter> listViewList = FXCollections.observableArrayList(voterlist);

@@ -21,13 +21,14 @@ import javafx.scene.control.DatePicker;
 
 /**
  * FXML Controller class
- *
+ * Controller of the VotingPeriodSelection.fxml view
  * @author t.buerk
  */
 public class VotingPeriodSelectionController implements Initializable, ControlledScreen {
 
     Election election;
     MainController parentController;
+    
     @FXML
     private Button btBack;
     @FXML
@@ -42,30 +43,48 @@ public class VotingPeriodSelectionController implements Initializable, Controlle
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        
     }    
 
+    /** Sets the parentController for the communication with other controllers
+     * @param screenParent 
+     */
     @Override
     public void setScreenParent(MainController screenParent) {
         parentController = screenParent;
     }
 
+    /**
+     * stores the election object in a global variable
+     * and sets the DatePicker-Controls to the current Date 
+     * @param election 
+     */
     @Override
     public void setScene(Election election) {
+        this.election = election;
         dateStart.setValue(LocalDate.now());
         dateEnd.setValue(LocalDate.now());
-        this.election = election;
     }
 
+    /**
+     *  btBack-Button Click-Event: sends the user back to the ElectionOptionCreation Screen
+     * @param event 
+     */
     @FXML
     private void btBackClicked(ActionEvent event) {
         parentController.setScreen(AdminApp.ELECTIONOPTIONCREATIONSCREENID);
     }
-
+    
+    /**
+     * btNext-Button Click-Event: Stores the entered VotingPeriod in the election object and 
+     * passes it to the ElectionSummary Screen via the mainController
+     * @param event 
+     */
     @FXML
     private void btNextClicked(ActionEvent event) {
         LocalDate start = dateStart.getValue();
         LocalDate end = dateEnd.getValue();
+        //parse LocalDate objects to  LocalDateTime objects
         LocalDateTime startDateTime = LocalDateTime.of(start, LocalTime.parse("00:00:00"));
         LocalDateTime endDateTime = LocalDateTime.of(end, LocalTime.parse("00:00:00"));
         election.setVotingPeriod(startDateTime, endDateTime);

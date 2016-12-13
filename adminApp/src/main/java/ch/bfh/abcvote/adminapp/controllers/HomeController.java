@@ -24,15 +24,10 @@ import javafx.scene.control.Button;
 public class HomeController implements Initializable, ControlledScreen {
 
     MainController parentController;
+    
     @FXML
     private Button btCreateElection;
     
-    @Override
-    public void setScreenParent(MainController screenParent) {
-        parentController = screenParent;
-    }
-    
-
     /**
      * Initializes the controller class.
      */
@@ -41,6 +36,18 @@ public class HomeController implements Initializable, ControlledScreen {
         
     }
 
+    /** Sets the parentController for the communication with other controllers
+     * @param screenParent 
+     */
+    @Override
+    public void setScreenParent(MainController screenParent) {
+        parentController = screenParent;
+    }
+    
+    /**
+     * This interface method is not used by the HomeController
+     * @param election 
+     */
     @Override
     public void setScene(Election election) {
         
@@ -48,7 +55,9 @@ public class HomeController implements Initializable, ControlledScreen {
 
         
     /**
-     * Button press event to create a new election. Gets the current Parameters of the Bulletin Board and creats a new Election object.
+     * btCreateNew-Button Click-Event: Event to create a new election.
+     * Gets the current Parameters of the Bulletin Board and creates a new Election object.
+     * Afterwards newly created election gets passed to the ElectionTitleCreation Screen via MainController 
      */
     @FXML
     private void btcreateNewElectionClicked(ActionEvent event) {

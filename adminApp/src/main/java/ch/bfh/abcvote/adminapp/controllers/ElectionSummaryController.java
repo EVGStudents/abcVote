@@ -25,7 +25,7 @@ import javafx.scene.control.ListView;
 
 /**
  * FXML Controller class
- *
+ * Controller of the ElectionSummary.fxml view
  * @author t.buerk
  */
 public class ElectionSummaryController implements Initializable, ControlledScreen {
@@ -55,61 +55,90 @@ public class ElectionSummaryController implements Initializable, ControlledScree
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        
     }    
-
+    
+    /** Sets the parentController for the communication with other controllers
+     * @param screenParent 
+     */
+    @Override
+    public void setScreenParent(MainController screenParent) {
+        parentController = screenParent;
+    }
+    
+    /**
+     * Takes the passes election and safes it in a global variabel and displays the election
+     * @param election 
+     */
+    @Override
+    public void setScene(Election election) {
+        this.election = election;
+        displayElection(election);
+    }
+    
+    /**
+     * btBack-Button Click-Event: sends the user back to the VotingperiodSelection-Screen
+     * @param event 
+     */
     @FXML
     private void btBackClicked(ActionEvent event) {
         parentController.setScreen(AdminApp.VOTEINGPERIODSELECTIONSCREENID);
     }
-
+    
+    /**
+     * btNext-Button Click Event: orders the election to calculate the oefficients and pick a election generator.
+     * Afterwards the election object gets passed to the maincontroller in order to post it to the bulletin board
+     * @param event 
+     */
     @FXML
     private void btCreateClicked(ActionEvent event) {
         try {
             //calcualte coefficents from selected voters
             election.calculateCoefficients();
             election.pickH_Hat();
-            
+            //pass election to maincontroller and go back to HomeScreen if successful 
             parentController.postElection(election);
             parentController.setScreen(AdminApp.HOMESCREENID);
         } catch (UniCryptException ex) {
             System.out.println("Sending election failed!");
         }
     }
-
-    @Override
-    public void setScreenParent(MainController screenParent) {
-        parentController = screenParent;
-    }
-
-    @Override
-    public void setScene(Election election) {
-        this.election = election;
-        displayElection(election);
-    }
-
+    
+    /**
+     * Displays the passed election in the Summary Screen 
+     * @param election 
+     */
     private void displayElection(Election election) {
         ElectionTopic topic = election.getTopic();
         String votingPeriodString = election.getStartDate().toString() + " - " + election.getEndDate().toString();
+        //display header Data
         lbTitle.setText(election.getTitle());
         lbVotingPeriod.setText(votingPeriodString);
+        //Display voterlist
         populateVotersListView(election.getVoterList());
+        //display votingtopic Data
         lbTopic.setText(topic.getTitle());
         lbPick.setText(String.valueOf(topic.getPick()));
         populateOptionsListView(topic.getOptions());
     }
     
+    /**
+     * Takes a List of Voter obejcts and displays it in the lvVoters listview
+     * @param votersList 
+     */
+    private void populateVotersListView(List<Voter> votersList) {     
+        ObservableList<Voter> listViewList = FXCollections.observableArrayList(votersList);
+        lvVoters.setItems(listViewList);     
+    }
+    
+     /**
+     * Takes a List of Strings and displays them in the lvOptions listview
+     * @param optionsList 
+     */
     private void populateOptionsListView(List<String> optionsList) {
         
         ObservableList<String> listViewList = FXCollections.observableArrayList(optionsList);
         lvOptions.setItems(listViewList);
-        
-    }
-    
-    private void populateVotersListView(List<Voter> votersList) {
-        
-        ObservableList<Voter> listViewList = FXCollections.observableArrayList(votersList);
-        lvVoters.setItems(listViewList);
         
     }
     

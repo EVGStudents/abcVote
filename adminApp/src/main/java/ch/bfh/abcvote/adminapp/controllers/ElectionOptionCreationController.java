@@ -19,13 +19,14 @@ import javafx.scene.control.TextField;
 
 /**
  * FXML Controller class
- *
+ * Controller of the ElectionOptionCreation.fxml view
  * @author t.buerk
  */
 public class ElectionOptionCreationController implements Initializable, ControlledScreen  {
 
     MainController parentController;
     Election election;
+    
     @FXML
     private Button btBack;
     @FXML
@@ -39,30 +40,47 @@ public class ElectionOptionCreationController implements Initializable, Controll
     @FXML
     private TextField txtPick;
     
-        @Override
+    
+     /**
+     * Initializes the controller class.
+     */
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        
+    }  
+    
+    /**
+     * Sets the parentController for the communication with other controllers
+     * @param screenParent 
+     */
+    @Override
     public void setScreenParent(MainController screenParent) {
         parentController = screenParent;
     }
     
     /**
-     * Initializes the controller class.
+     * Takes the passed election Object and safes it in a global variabel
+     * @param election 
      */
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-    }    
-
-
     @Override
     public void setScene(Election election) {
        this.election = election;
     }
-
+    
+    /**
+    *btBack-Button Click-Event: sends user back to the VoterSelction-Screen
+    * @param event 
+    */
     @FXML
     private void btBackClicked(ActionEvent event) {
          parentController.setScreen(AdminApp.VOTERSELECTIONSCREENID);
     }
-
+    
+    /**
+     * btNext-Button Click-Event: takes the user input from the UI and creates a new ElectionTopic object and adds it to the current election.
+     * Afterwards the election object gets passed to the Votingperiodselection Screen.
+     * @param event 
+     */
     @FXML
     private void btNextClicked(ActionEvent event) {
         int pick = Integer.parseInt(txtPick.getText());

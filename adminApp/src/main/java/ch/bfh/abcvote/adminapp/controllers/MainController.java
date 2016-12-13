@@ -28,33 +28,52 @@ import javafx.util.Pair;
 /**
  * The MainController Class acts as the root element of the Stage.
  * It acts as a hub for the communication between the diffrent Screencontrollers
- * and between the Screencontrollers and the CommunicationController
+ * and between the Screencontrollers and the other Controller-Classes
  * @author t.buerk
  */
-
 public class MainController extends StackPane {
     
-    //Hashmap that holds all the registred Controllers and thie Screens
+    //Hashmap that holds all the registred Controllers and thier Screens
     private HashMap<String, Pair<ControlledScreen,Node>> screens = new HashMap<>();
     private CommunicationController communicationController;
     
     public MainController(){
         super();
+        //new CommunicationController is created with the url of the bulletin board
         communicationController = new CommunicationController("http://abc.2488.ch/");   
     }
     
-    //Adds a new a new Controller and Screen Pair to the Hashmap
+    
+    /**
+     * Adds a new Controller and Screen Pair to the Hashmap
+     * @param name 
+     * key value to store the screenPair in the hashmap
+     * @param screenPair 
+     * Pair<ControlledScreen,Node> containing the Controller and the corepsonding Screen 
+     */
     public void addScreen(String name, Pair<ControlledScreen,Node> screenPair){
         screens.put(name, screenPair);
     }
     
-    //Returns the Controller and Screen Pair for the given name
+    /**
+     * Returns the Controller and Screen Pair for the given name
+     * @param name
+     * key value to reference the element to be return from the hashmap
+     * @return 
+     */
     public Pair<ControlledScreen,Node> getScreen(String name) {
-        return screens.get(name);
-        
+        return screens.get(name);       
     }
     
-    //load the fxml file, and add its Controller and Screen Pair to the Hashmap for further refrence
+    
+    /**
+     * Loads the fxml file and add its Controller and Screen Pair and stores it with the key name in the Hashmap for further reference
+     * @param name
+     * key value under which the created Controller and Screen Pair gets stored
+     * @param rescource
+     * contains path of the referenced fxml file
+     * @return 
+     */
     public boolean loadScreen(String name, String rescource){
         try{
             FXMLLoader loader = new FXMLLoader(getClass().getResource(rescource));
@@ -71,7 +90,11 @@ public class MainController extends StackPane {
         }
     }
     
-    //This method exchanges the current Screen with the new Screen given by the name  
+    /**
+     * This method exchanges the current Screen with the new Screen given by the name  
+     * @param name
+     * @return 
+     */
     public boolean setScreen(final String name){
         //Checks if there is a Stored Screnn for the given name
         if (screens.get(name) != null){
@@ -116,7 +139,11 @@ public class MainController extends StackPane {
 
     }
     
-    //This method will remove the Controller and screen  pair with the given name from the collection of Pairs
+    /**
+     * This method will remove the Controller and screen  pair with the given name from the collection of Pairs
+     * @param name
+     * @return 
+     */
     public boolean unloadScreen(String name) {
         if (screens.remove(name) == null){
             System.out.println("Screen didn't exist");
@@ -127,8 +154,16 @@ public class MainController extends StackPane {
         }
     }
 
-    //this method changes the current Screen to the given name
-    //and afterwards calls that screens setScene Method to pass the given election object for display 
+    
+    /**
+     * this method changes the current Screen to the Screen which is stored under given name
+     * and afterwards calls that screens setScene method to pass the given election object
+     * @param name
+     * reference to the new screen to be displayed
+     * @param election
+     * election object gets passed to the new screens controller
+     * @return 
+     */
     public boolean setScreenWithElection(String name, Election election) {
         
         setScreen(name);
@@ -137,15 +172,27 @@ public class MainController extends StackPane {
         return true;
     }
 
-    
+    /**
+     * Gets the parameters from the communicationcontroller and returns them 
+     * @return 
+     */
     public Parameters getParameters() {
         return communicationController.getParameters();
     }
 
+    /**
+     * gets a list of all currently registred voters from the communicationcontroller and returns it
+     * @return 
+     */
     List<Voter> getAllARegisteredVoters() {
         return communicationController.getAllARegisteredVoters();
     }
 
+    /**
+     * Passes the given election object to the communicationcontroller to post it to the bulletin board
+     * @param election 
+     * election to be posted
+     */
     void postElection(Election election) {
         communicationController.postElection(election);
     }
