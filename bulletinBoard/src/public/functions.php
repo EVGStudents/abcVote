@@ -1,5 +1,15 @@
 <?php
 
+/**
+ *
+ * abcVote (https://github.com/EVGStudents/abcVote)
+ * Bulletin-Board for abcVote's e-voting applications
+ *
+ * functions.php: Bulletin-Board's functions
+ *
+ * @author Sebastian Nellen <sebastian at nellen.it>
+ */
+
 use Namshi\JOSE\SimpleJWS;
 use Namshi\JOSE\JWS;
 use Namshi\JOSE\Base64\Base64UrlSafeEncoder;

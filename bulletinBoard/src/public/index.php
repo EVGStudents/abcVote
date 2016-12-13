@@ -1,4 +1,15 @@
 <?php
+
+/**
+ *
+ * abcVote (https://github.com/EVGStudents/abcVote)
+ * Bulletin-Board for abcVote's e-voting applications
+ *
+ * index.php: Bulletin-Board start's here
+ *
+ * @author Sebastian Nellen <sebastian at nellen.it>
+ */
+
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
@@ -13,8 +24,10 @@ spl_autoload_register(function ($classname) {
 $app = new \Slim\App(["settings" => $config]);
 $container = $app->getContainer();
 
+// define where the view templates are stored
 $container['view'] = new \Slim\Views\PhpRenderer("../templates/");
 
+// set up DB connection
 $container['db'] = function ($c) {
     $db = $c['settings']['db'];
     $pdo = new PDO("mysql:host=" . $db['host'] . ";dbname=" . $db['dbname'] .
@@ -25,6 +38,7 @@ $container['db'] = function ($c) {
     return $pdo;
 };
 
+// set up errorHandler for this App
 $container['errorHandler'] = function ($c) {
     return function ($request, $response, $exception) use ($c) {
         return $c['response']->withStatus(500)
