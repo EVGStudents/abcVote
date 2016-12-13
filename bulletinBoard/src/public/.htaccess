@@ -1,3 +1,13 @@
+
+#
+# abcVote (https://github.com/EVGStudents/abcVote)
+# Bulletin-Board for abcVote's e-voting applications
+#
+# .htaccess: basic settings for rewriting
+#
+# @author Sebastian Nellen <sebastian at nellen.it>
+#
+
 RewriteEngine on
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f

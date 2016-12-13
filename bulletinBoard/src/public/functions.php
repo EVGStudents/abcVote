@@ -1,5 +1,15 @@
 <?php
 
+/**
+ *
+ * abcVote (https://github.com/EVGStudents/abcVote)
+ * Bulletin-Board for abcVote's e-voting applications
+ *
+ * functions.php: Bulletin-Board's functions
+ *
+ * @author Sebastian Nellen <sebastian at nellen.it>
+ */
+
 use Namshi\JOSE\SimpleJWS;
 use Namshi\JOSE\JWS;
 use Namshi\JOSE\Base64\Base64UrlSafeEncoder;
@@ -90,6 +100,18 @@ function verify_signature($email, $certificate, $jwsSignature){
 function get_jwsPayload($jwsSignature){
   $jws = JWS::load($jwsSignature);
   return $jws->getPayload();
+}
+
+//function returns certificates as array
+function get_certificates_as_JSON(Array $data){
+  $returnString = "";
+  foreach ($data as $value) {
+    $returnString .= $returnString ? ',' : '';
+    $returnString .= '{"email":"' . $value->getEmailAdress() . '",';
+    $returnString .= '"certificate":"' . $value->getCertificate() . '"}';
+  }
+  $returnString = "[" . $returnString . "]";
+  return $returnString;
 }
 
 ?>

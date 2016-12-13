@@ -1,4 +1,15 @@
 <?php
+
+/**
+ *
+ * abcVote (https://github.com/EVGStudents/abcVote)
+ * Bulletin-Board for abcVote's e-voting applications
+ *
+ * index.php: Bulletin-Board start's here
+ *
+ * @author Sebastian Nellen <sebastian at nellen.it>
+ */
+
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
@@ -13,8 +24,10 @@ spl_autoload_register(function ($classname) {
 $app = new \Slim\App(["settings" => $config]);
 $container = $app->getContainer();
 
+// define where the view templates are stored
 $container['view'] = new \Slim\Views\PhpRenderer("../templates/");
 
+// set up DB connection
 $container['db'] = function ($c) {
     $db = $c['settings']['db'];
     $pdo = new PDO("mysql:host=" . $db['host'] . ";dbname=" . $db['dbname'] .
@@ -25,6 +38,7 @@ $container['db'] = function ($c) {
     return $pdo;
 };
 
+// set up errorHandler for this App
 $container['errorHandler'] = function ($c) {
     return function ($request, $response, $exception) use ($c) {
         return $c['response']->withStatus(500)
@@ -413,6 +427,46 @@ $app->get('/elections', function (Request $request, Response $response) {
                       ->write(get_elections_shortInfo($elections));
   return $response;
 });
+
+// GET /certificates : get all certificates stored in bulletin board
+$app->get('/certificates', function (Request $request, Response $response) {
+  $mapper = new CertificateMapper($this->db);
+  $certificates = $mapper->getCertificates();
+  $response = $response->withHeader('Content-type', 'application/json')
+                      ->withAddedHeader('Content-Disposition', 'attachment; filename=certificates.json')
+                      ->write(get_certificates_as_JSON($certificates));
+  return $response;
+});
+
+// GET /certificates/{email} : returns the certificate for a given email address
+$app->get('/certificates/{email}', function (Request $request, Response $response) {
+  try {
+    $mapper = new CertificateMapper($this->db);
+    $certificates = $mapper->getCertificates();
+    $certificateArray = array();
+    $route = $request->getAttribute('route');
+    $email = $route->getArgument('email');
+    foreach ($certificates as $certificate) {
+      if ($email == $certificate->getEmailAdress()) {
+        array_push($certificateArray, $certificate);
+      }
+    }
+    if (empty($certificateArray)) { //no certificates found...
+      $response = $response->withStatus(404)
+                           ->withHeader('Content-Type', 'text/html')
+                           ->write('No certificates for the given email address found!');
+    } else { //certificates found, returning them
+      $response = $response->withHeader('Content-type', 'application/json')
+                          ->withAddedHeader('Content-Disposition', 'attachment; filename=selected-certificates.json')
+                          ->write(get_certificates_as_JSON($certificateArray));
+    }
+    return $response;
+  } catch (Exception $e) {
+    return $response->withStatus(400)
+                    ->withHeader('X-Status-Reason', $e->getMessage());
+  }
+});
+
 
 // GET /view/voters: generates a html page which show the tbl_voters' content
 $app->get('/view/voters', function (Request $request, Response $response) {
