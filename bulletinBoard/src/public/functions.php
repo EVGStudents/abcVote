@@ -102,4 +102,16 @@ function get_jwsPayload($jwsSignature){
   return $jws->getPayload();
 }
 
+//function returns certificates as array
+function get_certificates_as_JSON(Array $data){
+  $returnString = "";
+  foreach ($data as $value) {
+    $returnString .= $returnString ? ',' : '';
+    $returnString .= '{"email":"' . $value->getEmailAdress() . '",';
+    $returnString .= '"certificate":"' . $value->getCertificate() . '"}';
+  }
+  $returnString = "[" . $returnString . "]";
+  return $returnString;
+}
+
 ?>
