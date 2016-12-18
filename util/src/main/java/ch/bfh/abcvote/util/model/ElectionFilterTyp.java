@@ -6,7 +6,7 @@
 package ch.bfh.abcvote.util.model;
 
 /**
- *
+ * Enumeration for the filter options when getting the ElectionHeaders
  * @author t.buerk
  */
 public enum ElectionFilterTyp {

@@ -17,7 +17,6 @@ import ch.bfh.unicrypt.math.algebra.general.interfaces.Element;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -52,21 +51,28 @@ public class CommunicationController {
 
     String bulletinBoardUrl;
     
+    /**
+     * Creates a new CommunicationController Object with the given bulletinBoardUrl.
+     * The bulletinBoardUrl is stored in a global variable and used as the baseUrl for every conntction with the bulletin board
+     * @param bulletinBoardUrl 
+     */
     public CommunicationController(String bulletinBoardUrl){
         this.bulletinBoardUrl = bulletinBoardUrl;
     }
     
+    /**
+     * Gets the parameters of the bulletin board from the bulletin board and converts the recieved Json in a Parameters object and returns it
+     * @return 
+     */
     public Parameters getParameters() {
         try {
-             //At the moment the method gets the json containing the voters from a rescource file until bulletin board is available
-             
+             //Get parameters json with a get request 
              URL url = new URL(bulletinBoardUrl + "/parameters");
-             //URL url = getClass().getResource("/JSONFiles/parameters.json");
              
              InputStream urlInputStream = url.openStream();
              JsonReader jsonReader = Json.createReader(urlInputStream);
              JsonObject obj = jsonReader.readObject();
-                
+                //Json contains String representations of the parameter elements
                 String oString = obj.getString("o");
                 String pString = obj.getString("p");
                 String h0String = obj.getString("h0");
@@ -74,7 +80,8 @@ public class CommunicationController {
                 String h2String = obj.getString("h2");
                 String g0String = obj.getString("g0");
                 String g1String = obj.getString("g1");
-                   
+                
+                //Converting the parameter Element Strings into Parameters Object containing the restored Parameter Elements
                 Parameters parameters = new Parameters(oString, pString, h0String, h1String, h2String, g0String, g1String);
                 return parameters;
          } catch (Exception x) {
@@ -85,26 +92,27 @@ public class CommunicationController {
         
     }
 
-    //gets the all registered voters from the bulletin board and returns them as al List of Voter objects
+    /**
+     * gets the all registered voters from the bulletin board and returns them as a List of Voter objects
+     * @return 
+     */
     public List<Voter> getAllARegisteredVoters() {
        List<Voter> voterlist = new ArrayList<Voter>(); 
         	
          try {
-             //At the moment the method gets the json containing the voters from a rescource file until bulletin board is available
-             
              URL url = new URL(bulletinBoardUrl + "/voters");
-             //URL url = getClass().getResource("/JSONFiles/voters.json");
              
              InputStream urlInputStream = url.openStream();
              JsonReader jsonReader = Json.createReader(urlInputStream);
              JsonArray obj = jsonReader.readArray();
+             //For each Voter-Json in the Json Array
              for (JsonObject result : obj.getValuesAs(JsonObject.class)) {
-                   
+                 //JsonData converted into Voter Object and added to the list  
                 String email = result.getString("email");       
                 String signature = result.getString("signature");
                 String publicCredential = result.getString("publicCredential");
                 String appVersion = result.getString("appVersion");
-                   
+                
                 Voter voter = new Voter(email, signature, publicCredential, appVersion);
                 voterlist.add(voter);
              }
@@ -115,10 +123,17 @@ public class CommunicationController {
        return voterlist;
     }
 
+    /**
+     * Converts the given election object to a Json String. The Json string is then signed.
+     * The resulting JWS gets posted to the bulletin board
+     * @param election
+     * election object to be posted to the bulletin board
+     */
     public void postElection(Election election){
         JsonObjectBuilder jBuilder = Json.createObjectBuilder();
         DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         
+        //Add Header information to the json object
         //TODO get email address from certificate 
         jBuilder.add("author", "alice@bfh.ch");
         jBuilder.add("electionTitle", election.getTitle());
@@ -126,13 +141,11 @@ public class CommunicationController {
         jBuilder.add("endDate", election.getEndDate().format(format));
         //toDo: get AppVersion dynamically from build 
         jBuilder.add("appVersion", "0.15");
-       
-        
+             
         jBuilder.add("coefficients", election.getCredentialPolynomialString());
-
-        //toDo: get election generator Dynamically from election object
         jBuilder.add("electionGenerator", election.getH_HatString());
         
+        //Add votingTopic to the Json Object
         JsonObjectBuilder votingTopicBuilder = Json.createObjectBuilder();
         votingTopicBuilder.add("topic", election.getTopic().getTitle());
         votingTopicBuilder.add("pick", election.getTopic().getPick());
@@ -145,6 +158,7 @@ public class CommunicationController {
         
         jBuilder.add("votingTopic", votingTopicBuilder);
         
+        //Add the list of selected Voters to the Json object
         JsonArrayBuilder votersBuilder = Json.createArrayBuilder();
         
         for (Voter voter : election.getVoterList()){
@@ -160,7 +174,7 @@ public class CommunicationController {
         jBuilder.add("voters", votersBuilder);
         
         JsonObject model = jBuilder.build();
-        
+        //finished Json gets singed
         SignatureController signController = new SignatureController();
         JsonObject signedModel = null;
                 
@@ -170,6 +184,7 @@ public class CommunicationController {
             Logger.getLogger(CommunicationController.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+        //JWS gets posted to the bulletin board
         try { 
             boolean requestOK = postJsonStringToURL(bulletinBoardUrl +  "/elections", signedModel.toString());
             if (requestOK) {
@@ -183,16 +198,29 @@ public class CommunicationController {
         }
 
     }
+    
+    /**
+     * Helper method which posts the given json-string json to the given url 
+     * @param url
+     * Exact url where the jsonData should get posted to
+     * @param json
+     * String of the JsonData which should be posted to the bulletin board
+     * @return
+     * retruns whether or not the data was sucessfully posted
+     * @throws IOException 
+     */
     public boolean postJsonStringToURL(String url, String json) throws IOException{
         boolean responseOK = true;
         CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-
+        
         try {
+            //prepare the post request
             HttpPost request = new HttpPost(url);
             StringEntity params = new StringEntity(json);
             request.addHeader("content-type", "application/json");
             request.setEntity(params);
             
+            //sending post request and checking response
             HttpResponse  response = httpClient.execute(request);
             if (response.getStatusLine().getStatusCode() != 200){
                 responseOK = false;
@@ -207,6 +235,18 @@ public class CommunicationController {
         return responseOK;
     }    
 
+    /**
+     * Registers a new voter with the given email address and the given public credentials u on the bulletin board
+     * @param email
+     * email address under which the new voter should be registered
+     * @param parameters
+     * parameters used by the bulletin board
+     * @param u
+     * @return
+     * @throws JoseException
+     * @throws Exception 
+     */
+    //TODO check if parameters are still needed
     public boolean registerNewVoter(String email, Parameters parameters, Element u) throws JoseException, Exception{
         
         //create Voter json
@@ -247,6 +287,12 @@ public class CommunicationController {
         
     }
 
+    /**
+     * Gets a List of ElectionHeaders from the Bulletin Board and returns it. Fetched list depends on the given ElectionFilterTyp
+     * @param filter
+     * The filter can be set to All, Open or Closed
+     * @return 
+     */
     public List<ElectionHeader> getElectionHeaders(ElectionFilterTyp filter) {
         List<ElectionHeader> electionHeaderlist = new ArrayList<ElectionHeader>(); 
         
@@ -255,9 +301,9 @@ public class CommunicationController {
         String dateTimeString = actualDateTime.format(format);
         
         URL url = null;
-        
+        //depending on the filter a different request is sent to the bulletin board
         switch (filter) {
-            
+            // if the filter is set to ALL, all the electionheaders on the bulletin board are requested
             case ALL: 
                 {
                     try {
@@ -267,7 +313,8 @@ public class CommunicationController {
                     }
                 }  
                 break; 
-             
+            
+                // if the filter is set to OPEN only ElectionHeaders where the VotingPeriod is still going are requested from the bulletin board
             case OPEN:
                 {
                     try {
@@ -277,7 +324,7 @@ public class CommunicationController {
                     }
                 }
                 break; 
-                
+                // if the filter is set to CLOSED only ElectionHeaders where the VotingPeriod is already over are requested from the bulletin board
             case CLOSED:
                 {
                     try {
@@ -290,11 +337,11 @@ public class CommunicationController {
         }        
             
         try {    
-
+            
             InputStream urlInputStream = url.openStream();
             JsonReader jsonReader = Json.createReader(urlInputStream);
             JsonArray obj = jsonReader.readArray();
-
+            //Recieved Json String is transformed into a list of ElectionHeader objects
             for (JsonObject result : obj.getValuesAs(JsonObject.class)) {
 
                int id = Integer.parseInt(result.getString("id"));       
@@ -313,6 +360,11 @@ public class CommunicationController {
        return electionHeaderlist;
     }
 
+    /**
+     * Gets the information for the given ElectionID from the bulletin board and returns it as a election object
+     * @param electionId
+     * @return 
+     */
     public Election getElectionById(int electionId) {
         Election election = null;
         try {
@@ -325,7 +377,9 @@ public class CommunicationController {
              DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
              Parameters parameters = this.getParameters();
              
-             //get Election Data       
+             //gets the json string and transforms it into a election object
+             
+             //translates the header information of the election
              String title = obj.getString("electionTitle");
              LocalDateTime beginDate = LocalDateTime.parse(obj.getString("beginDate"), format);
              LocalDateTime endDate = LocalDateTime.parse(obj.getString("endDate"), format);
@@ -333,7 +387,8 @@ public class CommunicationController {
              String coefficientsString = obj.getString("coefficients");
              String h_HatString = obj.getString("electionGenerator");
              List<Voter> voterlist = new ArrayList<Voter>(); 
-             //get voterlist
+             
+             //get th list of voters
              for (JsonObject result : obj.getJsonArray("voters").getValuesAs(JsonObject.class)) {
                    
                 String voterEmail = result.getString("email");       
@@ -344,7 +399,7 @@ public class CommunicationController {
                 Voter voter = new Voter(voterEmail, voterSignature, voterPublicCredential, voterAppVersion);
                 voterlist.add(voter);
              }
-             //get votingTopic
+             //get the votingTopic
              JsonObject electionTopicObj = obj.getJsonObject("votingTopic");
              
              String topic = electionTopicObj.getString("topic");
@@ -365,10 +420,14 @@ public class CommunicationController {
         return election;
     }
 
+    /**
+     * Posts the given ballot to the bulletin board
+     * @param ballot
+     * Ballot to be posted to the bulletin board
+     */
     public void postBallot(Ballot ballot) {
         JsonObjectBuilder jBuilder = Json.createObjectBuilder();
-        DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        
+        //Translate ballot object into a json string 
         JsonArrayBuilder optionsBuilder = Json.createArrayBuilder();
         for (String option : ballot.getSelectedOptions()) {
                 optionsBuilder.add(option);
@@ -383,7 +442,7 @@ public class CommunicationController {
         
         JsonObject model = jBuilder.build();
         
-
+        //josn gets posted to the bulletin board
         try { 
             boolean requestOK = postJsonStringToURL(bulletinBoardUrl +  "/elections/" + ballot.getElection().getId() + "/ballots", model.toString());
             if (requestOK) {
@@ -397,6 +456,13 @@ public class CommunicationController {
         }
     }
 
+    /**
+     * Gets a list of all the posted ballots of the given election form the bulletin board and returns it
+     * @param election
+     * Election for which the list of ballots should be retrieved 
+     * @return 
+     * the list of all posted ballots to the given election
+     */
     public List<Ballot> getBallotsByElection(Election election) {
         List<Ballot> ballots = new ArrayList<Ballot>();
         try {
@@ -407,10 +473,8 @@ public class CommunicationController {
              JsonReader jsonReader = Json.createReader(urlInputStream);
              JsonArray obj = jsonReader.readArray();
              DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-             
+             //transforms the recieved json string into a list of ballot objects
              for (JsonObject result : obj.getValuesAs(JsonObject.class)) {
-                
-
 
                 int id = Integer.parseInt(result.getString("id")); 
                 LocalDateTime timeStamp = LocalDateTime.parse(result.getString("timestamp"), format);
@@ -427,9 +491,7 @@ public class CommunicationController {
                 String pi1String = jsonData.getString("pi1");
                 String pi2String = jsonData.getString("pi2");
                 String pi3String = jsonData.getString("pi3");
- 
-                
-                
+                //create ballot object and add it to the list
                 Ballot ballot = new Ballot(id, election, selectedOptions,u_HatString, cString, dString, pi1String, pi2String, pi3String, timeStamp);
                 System.out.println(ballot.isValid());
                 ballots.add(ballot);
@@ -444,12 +506,17 @@ public class CommunicationController {
         
     }
 
+    /**
+     * Post the given result to a election to the bulletin board
+     * @param result 
+     * result to be posted to the bulletin board
+     */
     public void postResult(ElectionResult result) {
         Election election = result.getElection();
         ElectionTopic topic = election.getTopic();
         HashMap<String, Integer> optionResults = result.getOptionCount();
+        //translate the ElectionResult object into a json String
         JsonObjectBuilder jBuilder = Json.createObjectBuilder();
-        DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         
         //TODO get email address from certificate 
         jBuilder.add("author", "alice@bfh.ch");
@@ -477,6 +544,7 @@ public class CommunicationController {
         
         JsonObject model = jBuilder.build();
         
+        //sign json string 
         SignatureController signController = new SignatureController();
         JsonObject signedModel = null;
                 
@@ -487,6 +555,7 @@ public class CommunicationController {
         }
 
         try { 
+            //post JWS with the result to the bulletin board
             boolean requestOK = postJsonStringToURL(bulletinBoardUrl +  "/elections/" + election.getId() + "/results", signedModel.toString());
             if (requestOK) {
                 System.out.println("Results posted!");
