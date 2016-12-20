@@ -14,7 +14,6 @@ import javafx.stage.Stage;
  */
 public class VerifierApp extends Application {
 
-    
     //IDs and rescourcefile paths of all Scenes are defined, so all scenecontrollers can refrence other scenes
     public static final String HOMESCREENID = "home";
     public static final String HOMESCREENFILE = "/fxml/Home.fxml";
