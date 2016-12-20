@@ -24,13 +24,14 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 
 /**
- * FXML Controller class
+ * FXML Controller class for the ElectionsOverview screen
  *
  * @author t.buerk
  */
 public class ElectionsOverviewController implements Initializable, ControlledScreen {
 
     MainController parentController;
+    
     @FXML
     private Button btBack;
     @FXML
@@ -46,25 +47,83 @@ public class ElectionsOverviewController implements Initializable, ControlledScr
         // TODO
     }    
 
+    /**
+     * Sets the parentController for the communication with other controllers
+     * @param screenParent 
+     */
     @Override
     public void setScreenParent(MainController screenParent) {
         parentController = screenParent;
     }
 
+    /**
+     * Method to set the screen with a given election. Method not used in this controller class
+     * @param election 
+     */
     @Override
     public void setScene(Election election) {
         
     }
+    
+    /**
+     * Method to set the screen with a given ElectionResult. Method not used in this controller class
+     * @param result 
+     */
+    @Override
+    public void setScene(ElectionResult result) {
+        
+    }
 
+    /**
+     * Method to set the screen when the screen of the corresponding controller is displayed. 
+     */
     @Override
     public void setScene() {
-        //get Election Headers and display them in listView
+        //get a list of ElectionHeaders of all Election that have already ended and display it in listView
         List<ElectionHeader> electionHeadersList = parentController.getElectionHeaders(ElectionFilterTyp.ALL);
         populateElectionHeaderListView(electionHeadersList);
     }
     
+    /**
+     * btBack-Button Clicked-Event: Transfers the user back to the home screen
+     * @param event 
+     */
+    @FXML
+    private void btBackClicked(ActionEvent event) {
+        parentController.setScreen(VerifierApp.HOMESCREENID);
+    }
+
+    /**
+     * btNext-Button Clicked-Event: Fetches the Election data of the selected electionHeader and calculates the results for this election.
+     * Afterwards the result gets passed to the reult screen
+     * @param event 
+     */
+    @FXML
+    private void btNextClicked(ActionEvent event) {
+        // get selected ElectionHeader from view
+        ObservableList<ElectionHeader> selectedElections;
+        selectedElections = lvElections.getSelectionModel().getSelectedItems();
+        if( !selectedElections.isEmpty()){
+           ElectionHeader selectedElectionHeader = selectedElections.get(0);
+           int electionId = selectedElectionHeader.getId();
+           // get election object from bulletin board
+           Election election = parentController.getElectionById(electionId);           
+           // get all the posted ballots for this election
+           List<Ballot> ballots = parentController.getBallotsByElection(election);
+           //Calculate the results of the election
+           ElectionResult result = parentController.calculateElectionResult(election, ballots);
+           // pass electionResult to Resultscreen
+           parentController.setScreenWithResult(VerifierApp.RESULTOVERVIEWSCREENID, result);
+        }
+        
+  
+        
+    }
     
-        //Displays the given list of Voters in the ListView for selection
+    /**
+     * Displays the given list of Election in the ListView for selection
+     * @param electionHeaderList 
+     */
     private void populateElectionHeaderListView(List<ElectionHeader> electionHeaderList) {
         
         ObservableList<ElectionHeader> listViewList = FXCollections.observableArrayList(electionHeaderList);
@@ -72,36 +131,8 @@ public class ElectionsOverviewController implements Initializable, ControlledScr
         
     }
 
-    @FXML
-    private void btBackClicked(ActionEvent event) {
-        parentController.setScreen(VerifierApp.HOMESCREENID);
-    }
 
-    @FXML
-    private void btNextClicked(ActionEvent event) {
-        // get selected ElectionHeader
-        ObservableList<ElectionHeader> selectedElections;
-        selectedElections = lvElections.getSelectionModel().getSelectedItems();
-        if( !selectedElections.isEmpty()){
-           ElectionHeader selectedElectionHeader = selectedElections.get(0);
-           int electionId = selectedElectionHeader.getId();
-           // getElection
-           Election election = parentController.getElectionById(electionId);           
-           // getBallots
-           List<Ballot> ballots = parentController.getBallotsByElection(election);
-           //Calculate results
-           ElectionResult result = parentController.calculateElectionResult(election, ballots);
-           // pass election and ballots to Resultscreen
-           parentController.setScreenWithResult(VerifierApp.RESULTOVERVIEWSCREENID, result);
-        }
-        
-  
-        
-    }
 
-    @Override
-    public void setScene(ElectionResult result) {
-        
-    }
+
     
 }

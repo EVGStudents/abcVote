@@ -56,7 +56,9 @@ import javafx.util.Duration;
 import javafx.util.Pair;
 
 /**
- *
+ * The MainController Class acts as the root element of the Stage.
+ * It acts as a hub for the communication between the diffrent Screencontrollers
+ * and between the Screencontrollers and the other Controller-Classes
  * @author t.buerk
  */
 public class MainController extends StackPane {
@@ -69,21 +71,40 @@ public class MainController extends StackPane {
     
     public MainController(){
         super();
+        //new CommunicationController is created with the url of the bulletin board
         communicationController = new CommunicationController("http://abc.2488.ch/");   
     }
     
-    //Adds a new a new Controller and Screen Pair to the Hashmap
+    /**
+     * Adds a new Controller and Screen Pair to the Hashmap
+     * @param name 
+     * key value to store the screenPair in the hashmap
+     * @param screenPair 
+     * Pair<ControlledScreen,Node> containing the Controller and the corepsonding Screen 
+     */
     public void addScreen(String name, Pair<ControlledScreen,Node> screenPair){
         screens.put(name, screenPair);
     }
     
-    //Returns the Controller and Screen Pair for the given name
+    /**
+     * Returns the Controller and Screen Pair for the given name
+     * @param name
+     * key value to reference the element to be return from the hashmap
+     * @return 
+     */
     public Pair<ControlledScreen,Node> getScreen(String name) {
         return screens.get(name);
         
     }
     
-    //load the fxml file, and add its Controller and Screen Pair to the Hashmap for further refrence
+    /**
+     * Loads the fxml file and add its Controller and Screen Pair and stores it with the key name in the Hashmap for further reference
+     * @param name
+     * key value under which the created Controller and Screen Pair gets stored
+     * @param rescource
+     * contains path of the referenced fxml file
+     * @return 
+     */
     public boolean loadScreen(String name, String rescource){
         try{
             FXMLLoader loader = new FXMLLoader(getClass().getResource(rescource));
@@ -100,9 +121,13 @@ public class MainController extends StackPane {
         }
     }
     
-    //This method exchanges the current Screen with the new Screen given by the name
+    /**
+     * This method exchanges the current Screen with the new Screen given by the name  
+     * @param name
+     * @return 
+     */
     private boolean changeScreen(final String name){
-       //Checks if there is a Stored Screnn for the given name
+       //Checks if there is a Stored Screen for the given name
         if (screens.get(name) != null){
             final DoubleProperty opacity = opacityProperty();
             //checks if there is screen that is already displayed
@@ -144,15 +169,22 @@ public class MainController extends StackPane {
         } 
     }
     
-    //This method exchanges the current Screen with the new Screen given by the name
-    //And afterwards calls its setScrene Method
+    /**
+     * This method exchanges the current Screen with the new Screen given by the name and calls the new screens setScene method without passing any information  
+     * @param name
+     * @return 
+     */
     public boolean setScreen(final String name){
         changeScreen(name);
         screens.get(name).getKey().setScene();
         return true;
     }
     
-    //This method will remove the Controller and screen  pair with the given name from the collection of Pairs
+    /**
+     * This method will remove the Controller and screen  pair with the given name from the collection of Pairs
+     * @param name
+     * @return 
+     */
     public boolean unloadScreen(String name) {
         if (screens.remove(name) == null){
             System.out.println("Screen didn't exist");
@@ -164,8 +196,14 @@ public class MainController extends StackPane {
     }
 
     
-    //this method changes the current Screen to the given name
-    //and afterwards calls that screens setScene Method to pass the given election object for display 
+
+    /**
+     * this method changes the current Screen to the given name
+     * and afterwards calls that screens setScene Method to pass the given election object for display 
+     * @param name
+     * @param election
+     * @return 
+     */
     public boolean setScreenWithElection(String name, Election election) {
         
         changeScreen(name);
@@ -174,21 +212,57 @@ public class MainController extends StackPane {
         return true;
     }
 
+    /**
+     * this method changes the current Screen to the given name
+     * and afterwards calls that screens setScene Method to pass the given ElectionResult object for display 
+     * @param name
+     * @param result
+     * @return 
+     */
+    public boolean setScreenWithResult(String name, ElectionResult result) {
+        changeScreen(name);
+        screens.get(name).getKey().setScene(result);
+        
+        return true;
+    }
+    
+    /**
+     * Gets a list of ElectionHeaders from the bulletin board. The selected ElectionHeaders depend on the passed filter option
+     * @param electionFilterTyp
+     * given filter option can be set to ALL, CLOSED or OPEN
+     * @return 
+     */
     List<ElectionHeader> getElectionHeaders(ElectionFilterTyp electionFilterTyp) {
         List<ElectionHeader> electionHeadersList = communicationController.getElectionHeaders(electionFilterTyp);
         return electionHeadersList;
     }
 
+    /**
+     * Gets the election data for the given electionID from the bulletin board and rturns it as an election object
+     * @param electionId
+     * @return 
+     */
     Election getElectionById(int electionId) {
         Election election = communicationController.getElectionById(electionId);
         return election;
     }
 
+    /**
+     * Gets a list of all the posted ballots for the given election and returns it
+     * @param election
+     * @return 
+     */
     public List<Ballot>  getBallotsByElection(Election election) {
         List<Ballot> ballots = communicationController.getBallotsByElection(election);
         return ballots;
     }
 
+    /**
+     * Takes a ballot list and a corresponding election object an calculates the result. The result is return as an ElectionResult object
+     * @param election
+     * @param ballots
+     * @return 
+     */
     ElectionResult calculateElectionResult(Election election, List<Ballot> ballots) {
         ElectionResult result = new ElectionResult(election);
         List<Voter> voters = election.getVoterList();
@@ -272,6 +346,7 @@ public class MainController extends StackPane {
             }
         }
         
+        //select the first ballot posted by each voter that is still valid. 
         List<Element> usedU_Hats = new ArrayList<Element>();
         List<String> electionOptions = election.getTopic().getOptions();
         int pick = election.getTopic().getPick();
@@ -280,13 +355,13 @@ public class MainController extends StackPane {
                 continue;
             }
             if (usedU_Hats.contains(ballot.getU_Hat())){
+                //ballot gets rejected if a ballot of the same voter has already been selected
                 ballot.setValid(false);
                 System.out.println("Rejected! Reason: Already selected another vote: " + ballot.getId());
             }
             else{
+                //ballot gets selected regardless of wether the vote itself is valid or not
                 usedU_Hats.add(ballot.getU_Hat());
-                //check if vote is valid
-                
                 //check if the right amount of options was picked
                 if(pick == ballot.getSelectedOptions().size()){
                     //check if all selected options are part of the original options
@@ -294,6 +369,7 @@ public class MainController extends StackPane {
                         //Check for duplicates
                         Set<String> set = new HashSet<String>(ballot.getSelectedOptions());
                         if(!(set.size() < ballot.getSelectedOptions().size())){
+                            //if vote is valid it gets added to the totals
                             for (String option : ballot.getSelectedOptions()){
                               result.addToOptionCounter(option);  
                             }   
@@ -304,7 +380,12 @@ public class MainController extends StackPane {
         }
         return result;
     }
-    
+    /**
+     * Takes a list of voters and a the ZMOd Group Z_p and calculates the credential polynom with the public credentials of the listed voters
+     * @param Z_p
+     * @param voters
+     * @return 
+     */
     private PolynomialElement calculateCredentialPolynomial(ZMod Z_p, List<Voter> voters){
         DualisticElement zero = Z_p.getZeroElement();
 	DualisticElement one = Z_p.getOneElement();
@@ -331,13 +412,10 @@ public class MainController extends StackPane {
         return credentialPolynomial;
     }
 
-    public boolean setScreenWithResult(String name, ElectionResult result) {
-        changeScreen(name);
-        screens.get(name).getKey().setScene(result);
-        
-        return true;
-    }
-
+    /**
+     * Passes the recieved ElectionResult to the communicationController to post it to the bulletin board
+     * @param result 
+     */
     public void postResult(ElectionResult result) {
         communicationController.postResult(result);
     }

@@ -23,10 +23,10 @@ import javafx.scene.control.Button;
  */
 public class HomeController implements Initializable, ControlledScreen {
 
+    MainController parentController;
+    
     @FXML
     private Button btVerifyElection;
-
-    MainController parentController;
     
     /**
      * Initializes the controller class.
@@ -36,29 +36,51 @@ public class HomeController implements Initializable, ControlledScreen {
         // TODO
     }    
 
-    @FXML
-    private void btVerifiyElectionClicked(ActionEvent event) {
-        parentController.setScreen(VerifierApp.ELECTIONSOVERVIEWSCREENID);
-    }
-
+    /**
+     * Sets the parentController for the communication with other controllers
+     * @param screenParent 
+     */
     @Override
     public void setScreenParent(MainController screenParent) {
         parentController = screenParent;
     }
 
-    @Override
-    public void setScene(Election election) {
-        
-    }
-
-    @Override
-    public void setScene() {
-        
-    }
-
+    /**
+     * Method to set the screen with a given ElectionResult. Method not used in this controller class
+     * @param election 
+     */
     @Override
     public void setScene(ElectionResult result) {
         
     }
+    /**
+     * Method to set the screen with a given election. Method not used in this controller class
+     * @param election 
+     */
+    @Override
+    public void setScene(Election election) {
+        
+    }
+    /**
+     * Method to set the screen when the screen to corresponding to the controller is displayed.
+     * Method not used in this controller class
+     */
+    @Override
+    public void setScene() {
+        
+    }
+    
+    /**
+     * btVerifyElection-Button Clicked-Event: Starts the verifing process and transfers the user to the ElectionOverview screen
+     * @param event 
+     */
+    @FXML
+    private void btVerifiyElectionClicked(ActionEvent event) {
+        parentController.setScreen(VerifierApp.ELECTIONSOVERVIEWSCREENID);
+    }
+
+
+
+
     
 }

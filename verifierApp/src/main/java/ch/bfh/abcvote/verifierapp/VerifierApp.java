@@ -8,6 +8,10 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 
+/**
+ * 
+ * @author t.buerk
+ */
 public class VerifierApp extends Application {
 
     
