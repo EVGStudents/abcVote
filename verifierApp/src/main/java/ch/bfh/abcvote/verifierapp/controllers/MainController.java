@@ -6,6 +6,7 @@
 package ch.bfh.abcvote.verifierapp.controllers;
 
 import ch.bfh.abcvote.util.controllers.CommunicationController;
+import ch.bfh.abcvote.util.helpers.BallotComparator;
 import ch.bfh.abcvote.util.model.Ballot;
 import ch.bfh.abcvote.util.model.ElectionFilterTyp;
 import ch.bfh.abcvote.util.model.ElectionHeader;
@@ -36,6 +37,7 @@ import ch.bfh.unicrypt.math.function.classes.SelectionFunction;
 import ch.bfh.unicrypt.math.function.interfaces.Function;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -286,7 +288,9 @@ public class MainController extends StackPane {
         // We chain the selection Function and the discreteLogFunction together. So the output of the selection function acts as input for the discreteLogFunction
         Function adaptedDiscreteLogFunction = CompositeFunction.getInstance(adapterFunction,discreteLogFunction);
         
-  
+        //sort ballots in the order of thier timestamp
+        Collections.sort(ballots, new BallotComparator());
+        
         //check if ballot was posted druing voting period
         for(Ballot ballot: ballots){
             if (!ballot.isValid()){
