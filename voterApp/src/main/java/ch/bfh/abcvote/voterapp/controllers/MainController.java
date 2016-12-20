@@ -53,21 +53,40 @@ public class MainController extends StackPane {
     
     public MainController(){
         super();
+        //new CommunicationController is created with the url of the bulletin board
         communicationController = new CommunicationController("http://abc.2488.ch/");   
     }
     
-    //Adds a new a new Controller and Screen Pair to the Hashmap
+    /**
+     * Adds a new Controller and Screen Pair to the Hashmap
+     * @param name 
+     * key value to store the screenPair in the hashmap
+     * @param screenPair 
+     * Pair<ControlledScreen,Node> containing the Controller and the corepsonding Screen 
+     */
     public void addScreen(String name, Pair<ControlledScreen,Node> screenPair){
         screens.put(name, screenPair);
     }
     
-    //Returns the Controller and Screen Pair for the given name
+    /**
+     * Returns the Controller and Screen Pair for the given name
+     * @param name
+     * key value to reference the element to be return from the hashmap
+     * @return 
+     */
     public Pair<ControlledScreen,Node> getScreen(String name) {
         return screens.get(name);
         
     }
     
-    //load the fxml file, and add its Controller and Screen Pair to the Hashmap for further refrence
+    /**
+     * Loads the fxml file and add its Controller and Screen Pair and stores it with the key name in the Hashmap for further reference
+     * @param name
+     * key value under which the created Controller and Screen Pair gets stored
+     * @param rescource
+     * contains path of the referenced fxml file
+     * @return 
+     */
     public boolean loadScreen(String name, String rescource){
         try{
             FXMLLoader loader = new FXMLLoader(getClass().getResource(rescource));
@@ -84,7 +103,11 @@ public class MainController extends StackPane {
         }
     }
     
-    //This method exchanges the current Screen with the new Screen given by the name
+    /**
+     * This method exchanges the current Screen with the new Screen given by the name  
+     * @param name
+     * @return 
+     */
     private boolean changeScreen(final String name){
        //Checks if there is a Stored Screnn for the given name
         if (screens.get(name) != null){
@@ -128,15 +151,22 @@ public class MainController extends StackPane {
         } 
     }
     
-    //This method exchanges the current Screen with the new Screen given by the name
-    //And afterwards calls its setScrene Method
+    /**
+     * This method exchanges the current Screen with the new Screen given by the name and calls the new screens setScene method without passing any information  
+     * @param name
+     * @return 
+     */
     public boolean setScreen(final String name){
         changeScreen(name);
         screens.get(name).getKey().setScene();
         return true;
     }
     
-    //This method will remove the Controller and screen  pair with the given name from the collection of Pairs
+    /**
+     * This method will remove the Controller and screen  pair with the given name from the collection of Pairs
+     * @param name
+     * @return 
+     */
     public boolean unloadScreen(String name) {
         if (screens.remove(name) == null){
             System.out.println("Screen didn't exist");
@@ -148,8 +178,13 @@ public class MainController extends StackPane {
     }
 
     
-    //this method changes the current Screen to the given name
-    //and afterwards calls that screens setScene Method to pass the given election object for display 
+    /**
+     * this method changes the current Screen to the given name
+     * and afterwards calls that screens setScene Method to pass the given election object for display 
+     * @param name
+     * @param election
+     * @return 
+     */
     public boolean setScreenWithElection(String name, Election election) {
         
         changeScreen(name);
@@ -158,6 +193,11 @@ public class MainController extends StackPane {
         return true;
     }
 
+    /**
+     * Creates ne private credentials registers the corresponding public credential on the bulletin board using the given email address 
+     * @param email
+     * @throws Exception 
+     */
     public void registerNewVoter(String email) throws Exception {
         //get Parameters
         Parameters parameters = communicationController.getParameters();
@@ -168,28 +208,52 @@ public class MainController extends StackPane {
         Element u = privateCredentials.getU();
         
         if (communicationController.registerNewVoter(email, parameters, u)) {
+            //if the registration was successful the new private credentials are stored locally
             storePrivateCredentials(privateCredentials);
         } else {
             System.out.println("New Voter couldn't be registered.");
         };
     }
     
+    /**
+     * Gets a list of ElectionHeaders from the bulletin board. The selected ElectionHeaders depend on the passed filter option
+     * @param filter
+     * given filter option can be set to ALL, CLOSED or OPEN
+     * @return 
+     */
     public List<ElectionHeader> getElectionHeaders(ElectionFilterTyp filter) {
         List<ElectionHeader> electionHeadersList = communicationController.getElectionHeaders(filter);
         return electionHeadersList;
     }
-
+    
+    /**
+     * Gets the election data for the given electionID from the bulletin board and rturns it as an election object
+     * @param electionId
+     * @return 
+     */
     Election getElectionById(int electionId) {
         Election election = communicationController.getElectionById(electionId);
         return election;
     }
-
+    
+    /**
+     * this method changes the current Screen to the given name
+     * and afterwards calls that screens setScene Method to pass the given ballot object for display 
+     * @param name
+     * @param ballot
+     * @return 
+     */
     public boolean setScreenWithBallot(String name, Ballot ballot) {
         changeScreen(name);
         screens.get(name).getKey().setScene(ballot);
         return true;
     }
 
+    /**
+     * Retrieve the private credentials from a local key store
+     * @return
+     * @throws Exception 
+     */
     public PrivateCredentials getPrivateCredentials() throws Exception {
         Parameters parameters = communicationController.getParameters();
         KeyStore keyStore = KeyStoreController.loadKeyStoreFromFile(pathToKeyStore, keyStorePassword);
@@ -197,12 +261,21 @@ public class MainController extends StackPane {
         return privateCredentials;
     }
     
+    /**
+     * store the given private credentials in a local key store
+     * @param privateCredentials
+     * @throws Exception 
+     */
     public void storePrivateCredentials(PrivateCredentials privateCredentials) throws Exception{
         //Store private Credentials
         KeyStoreController.writeStringToKeyStore(pathToKeyStore, keyStorePassword, stringPassword, "alpha", privateCredentials.getAlpha().convertToString());
         KeyStoreController.writeStringToKeyStore(pathToKeyStore, keyStorePassword, stringPassword, "beta", privateCredentials.getBeta().convertToString());
     }
 
+    /**
+     * Posts the given ballot to the bulletin board
+     * @param ballot 
+     */
     void postBallot(Ballot ballot) {
         communicationController.postBallot(ballot);
     }

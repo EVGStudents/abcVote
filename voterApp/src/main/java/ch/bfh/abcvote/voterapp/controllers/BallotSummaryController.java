@@ -29,14 +29,13 @@ import javafx.scene.control.ListView;
  */
 public class BallotSummaryController implements Initializable,ControlledScreen {
 
+    private MainController parentController;
+    private Ballot ballot;
+        
     @FXML
     private Button btBack;
-
-    MainController parentController;
     @FXML
     private Button btCastBallot;
-    
-    private Ballot ballot;
     @FXML
     private Label lbElectionTitle;
     @FXML
@@ -51,44 +50,73 @@ public class BallotSummaryController implements Initializable,ControlledScreen {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-    }    
-
-    @FXML
-    private void btBackClicked(ActionEvent event) {
-        parentController.setScreen(VoterApp.PICKOPTIONSSCREENID);
+        
     }
-
-
+    
+    /**
+     * Sets the parentController for the communication with other controllers
+     * @param screenParent 
+     */
     @Override
     public void setScreenParent(MainController screenParent) {
         parentController = screenParent;
     }
 
+    /**
+     * Method to set the screen with a given election. Method not used in this controller class
+     * @param election 
+     */
     @Override
     public void setScene(Election election) {
         
     }
+    
+    /**
+     * Method to set the screen with a given Ballot.
+     * Stores the ballot in variable and displays it
+     * @param ballot 
+     */
+    @Override
+    public void setScene(Ballot ballot) {
+        this.ballot = ballot;
+        displayBallot(ballot);
+    }
+    
+    /**
+     * Method to set the screen when the screen of the corresponding controller is displayed. 
+     */
+    @Override
+    public void setScene() {
+        
+    }
+    
+    /**
+     * btBack-Button Clicked-Event: sends user back to the PickOptions screen
+     * @param event 
+     */
+    @FXML
+    private void btBackClicked(ActionEvent event) {
+        parentController.setScreen(VoterApp.PICKOPTIONSSCREENID);
+    }
 
+    /**
+     * btNext-Button Clicked-Event: Calculates the proves for the ballot and passes the ballot to the maincontroller to post it to the bulletin board
+     * @param event
+     * @throws Exception 
+     */
     @FXML
     private void btNextClicked(ActionEvent event) throws Exception {
+        //TODO: Check if the prove calculations should be down/initiated by maincontroller
         PrivateCredentials privateCredentials = parentController.getPrivateCredentials();
         ballot.calculateProves(privateCredentials);
         parentController.postBallot(ballot);
         parentController.setScreen(VoterApp.HOMESCREENID);
     }
 
-    @Override
-    public void setScene() {
-        
-    }
-
-    @Override
-    public void setScene(Ballot ballot) {
-        this.ballot = ballot;
-        displayBallot(ballot);
-    }
-
+    /**
+     * Displays the given ballot in the View
+     * @param ballot 
+     */
     private void displayBallot(Ballot ballot) {
         Election election = ballot.getElection();
         lbElectionTitle.setText(election.getTitle());
@@ -97,11 +125,15 @@ public class BallotSummaryController implements Initializable,ControlledScreen {
         populateSelectedOptionsListView(ballot.getSelectedOptions());
     }
     
-        private void populateSelectedOptionsListView(List<String> selectedOptionsList) {
+    /**
+     * Displays a list of selected Options strings in the lvSelectedOptions ListView
+     * @param selectedOptionsList 
+     */
+    private void populateSelectedOptionsListView(List<String> selectedOptionsList) {
         
         ObservableList<String> listViewList = FXCollections.observableArrayList(selectedOptionsList);
         lvSelectedOptions.setItems(listViewList);
-        
+   
     }
     
 }

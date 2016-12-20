@@ -29,10 +29,10 @@ import javafx.scene.control.ListView;
  */
 public class ElectionsOverviewController implements Initializable,ControlledScreen {
 
+    MainController parentController;
+    
     @FXML
     private Button btBack;
-
-    MainController parentController;
     @FXML
     private Button btNext;
     @FXML
@@ -44,24 +44,59 @@ public class ElectionsOverviewController implements Initializable,ControlledScre
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-    }    
-
-    @FXML
-    private void btBackClicked(ActionEvent event) {
-        parentController.setScreen(VoterApp.HOMESCREENID);
     }
-
-
+    
+    /**
+     * Sets the parentController for the communication with other controllers
+     * @param screenParent 
+     */
     @Override
     public void setScreenParent(MainController screenParent) {
         parentController = screenParent;
     }
 
+    /**
+     * Method to set the screen with a given election. Method not used in this controller class
+     * @param election 
+     */    
     @Override
     public void setScene(Election election) {
         
     }
-
+    
+    /**
+     * Method to set the screen with a given Ballot. Method not used in this controller class
+     * @param ballot 
+     */
+    @Override
+    public void setScene(Ballot ballot) {
+        
+    }
+    
+    /**
+     * Gets the ElectionHeaders of all currently open elections and displays them 
+     */
+    @Override
+    public void setScene() {
+        //get Election Headers and display them in listView
+        List<ElectionHeader> electionHeadersList = parentController.getElectionHeaders(ElectionFilterTyp.OPEN);
+        populateElectionHeaderListView(electionHeadersList);
+    }
+    
+    /**
+     * btBack-Button Clicked-Event: Transfers the voter back to home screen
+     * @param event 
+     */
+    @FXML
+    private void btBackClicked(ActionEvent event) {
+        parentController.setScreen(VoterApp.HOMESCREENID);
+    }
+    
+    /**
+     * btNext-Button Clicked-Event: Gets all the information to an election of the selected ElectionHeader
+     * and passes the recieved election object to the PickOption Screen
+     * @param event 
+     */
     @FXML
     private void btNextClicked(ActionEvent event) {
         ObservableList<ElectionHeader> selectedElections;
@@ -76,15 +111,11 @@ public class ElectionsOverviewController implements Initializable,ControlledScre
 
     }
     
-    @Override
-    public void setScene() {
-        //get Election Headers and display them in listView
-        List<ElectionHeader> electionHeadersList = parentController.getElectionHeaders(ElectionFilterTyp.OPEN);
-        populateElectionHeaderListView(electionHeadersList);
-    }
     
-    
-        //Displays the given list of Voters in the ListView for selection
+    /**
+     * Displays the given list of ElectionHeader in the ListView for selection
+     * @param electionHeaderList 
+     */
     private void populateElectionHeaderListView(List<ElectionHeader> electionHeaderList) {
         
         ObservableList<ElectionHeader> listViewList = FXCollections.observableArrayList(electionHeaderList);
@@ -92,8 +123,5 @@ public class ElectionsOverviewController implements Initializable,ControlledScre
         
     }
     
-    @Override
-    public void setScene(Ballot ballot) {
-        
-    }
+
 }

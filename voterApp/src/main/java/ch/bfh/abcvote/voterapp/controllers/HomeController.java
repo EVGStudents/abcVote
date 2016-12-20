@@ -23,12 +23,12 @@ import javafx.scene.control.Button;
  */
 public class HomeController implements Initializable, ControlledScreen {
 
+    MainController parentController;
+    
     @FXML
     private Button btRegister;
     @FXML
     private Button btVote;
-
-    MainController parentController;
     
 
     /**
@@ -37,37 +37,60 @@ public class HomeController implements Initializable, ControlledScreen {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-    }    
-
-    @FXML
-    private void btRegisterClicked(ActionEvent event) {
-        parentController.setScreen(VoterApp.VOTERREGISTRATIONSCREENID);
-    }
-
-    @FXML
-    private void btVoteClicked(ActionEvent event) {
-        parentController.setScreen(VoterApp.ELECTIONSOVERVIEWSCREENID);
-    }
-
-
+    }   
+    
+    /**
+     * Sets the parentController for the communication with other controllers
+     * @param screenParent 
+     */    
     @Override
     public void setScreenParent(MainController screenParent) {
         parentController = screenParent;
     }
-
+    
+    /**
+     * Method to set the screen with a given election. Method not used in this controller class
+     * @param election 
+     */
     @Override
     public void setScene(Election election) {
         
     }
     
-    @Override
-    public void setScene() {
-        
-    }
-    
-        
+    /**
+     * Method to set the screen with a given Ballot. Method not used in this controller class
+     * @param ballot 
+     */    
     @Override
     public void setScene(Ballot ballot) {
         
+    }    
+    
+    /**
+     * Method to set the screen when the screen of the corresponding controller is displayed. Method not used in this controller class 
+     */  
+    @Override
+    public void setScene() {
+
     }
+    
+    
+    /**
+     * btRegister-Button Clicked-Event: Transfers the user to the VoterRegister Screen to start the registration process
+     * @param event 
+     */
+    @FXML
+    private void btRegisterClicked(ActionEvent event) {
+        parentController.setScreen(VoterApp.VOTERREGISTRATIONSCREENID);
+    }
+    
+    /**
+     * btVote-Button Clicked-Event: Transfers the user to the ElectionsOverview Screen to start the voting process
+     * @param event 
+     */
+    @FXML
+    private void btVoteClicked(ActionEvent event) {
+        parentController.setScreen(VoterApp.ELECTIONSOVERVIEWSCREENID);
+    }
+    
 }

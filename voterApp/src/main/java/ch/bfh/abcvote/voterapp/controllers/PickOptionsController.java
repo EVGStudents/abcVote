@@ -30,10 +30,11 @@ import javafx.scene.control.TextField;
  */
 public class PickOptionsController implements Initializable,ControlledScreen {
 
+    MainController parentController;   
+    private Election election;
+    
     @FXML
     private Button btBack;
-
-    MainController parentController;
     @FXML
     private Button btNext;
     @FXML
@@ -43,7 +44,6 @@ public class PickOptionsController implements Initializable,ControlledScreen {
     @FXML
     private ListView<String> lvOptions;
     
-    private Election election;
     
     /**
      * Initializes the controller class.
@@ -51,28 +51,63 @@ public class PickOptionsController implements Initializable,ControlledScreen {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-    }    
-
-    @FXML
-    private void btBackClicked(ActionEvent event) {
-        parentController.setScreen(VoterApp.ELECTIONSOVERVIEWSCREENID);
     }
-
-
+    
+    /**
+     * Sets the parentController for the communication with other controllers
+     * @param screenParent 
+     */
     @Override
     public void setScreenParent(MainController screenParent) {
         parentController = screenParent;
     }
 
+    /**
+     * Takes the given election object and displays its available otions to vote on
+     * @param election 
+     */
     @Override
     public void setScene(Election election) {
+        //display header information
         this.election = election;
         ElectionTopic topic = election.getTopic();
         this.txtPick.setText(String.valueOf(topic.getPick()));
         this.txtTopic.setText(topic.getTitle());
+        //display options
         populateOptionsListView(topic.getOptions());
     }
-
+    
+    /**
+     * Method to set the screen with a given Ballot. Method not used in this controller class
+     * @param ballot 
+     */
+    @Override
+    public void setScene(Ballot ballot) {
+        
+    } 
+      
+    /**
+     * Method to set the screen when the screen of the corresponding controller is displayed. 
+     */    
+    @Override
+    public void setScene() {
+        
+    }
+    
+    /**
+     * btBack-Button Clicked-Event: Sents the user back to the Electionsoverview screen
+     * @param event 
+     */
+    @FXML
+    private void btBackClicked(ActionEvent event) {
+        parentController.setScreen(VoterApp.ELECTIONSOVERVIEWSCREENID);
+    } 
+    
+    /**
+     * btNext-Button Clicked-Event: Gets the selected options and creates a new ballot object with these options.
+     * the ballot object gets passed to the ballot summary screen
+     * @param event 
+     */
     @FXML
     private void btNextClicked(ActionEvent event) {
         
@@ -83,19 +118,15 @@ public class PickOptionsController implements Initializable,ControlledScreen {
 
     }
     
-    @Override
-    public void setScene() {
-        
-    }
-    
+    /**
+     * Takes the list of options strings and displays them for selection
+     * @param optionsList 
+     */
     private void populateOptionsListView(List<String> optionsList) {
         
         ObservableList<String> listViewList = FXCollections.observableArrayList(optionsList);
         lvOptions.setItems(listViewList);
         
     }
-    @Override
-    public void setScene(Ballot ballot) {
-        
-    }    
+   
 }
