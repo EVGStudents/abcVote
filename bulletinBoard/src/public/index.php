@@ -47,9 +47,22 @@ $container['errorHandler'] = function ($c) {
     };
 };
 
+// Enable rka-ip-address-middleware to get client's IP address
+// in case of using varnishing server / web accelerators, uncomment the lines below
+/*
+$checkProxyHeaders = true;
+$trustedProxies = ['10.0.0.1', '10.0.0.2'];
+$app->add(new RKA\Middleware\IpAddress($checkProxyHeaders, $trustedProxies));
+*/
+// and deactivate the ones below
+$checkProxyHeaders = true;
+$app->add(new RKA\Middleware\IpAddress($checkProxyHeaders));
+
 // GET / : routine for testing purposes
 $app->get('/', function (Request $request, Response $response) {
-    $response->getBody()->write("Hello, I'm Slim - a micro framework for PHP");
+    $response->getBody()->write("Hello, I'm Slim - a micro framework for PHP
+      <br />You're contacting me from " . $request->getAttribute('ip_address'));
+
     return $response;
 });
 
@@ -313,7 +326,11 @@ $app->post('/elections/{id}/ballots', function (Request $request, Response $resp
                               'jsonData' => $jsonBody);
         $ballot = new BallotEntity($ballotArray);
         $mapper = new BallotMapper($this->db);
-        return $mapper->storeBallot($ballot);
+        $result = $mapper->storeBallot($ballot);
+        return $response->withStatus(200)
+                        ->withHeader('Content-Type', 'text/html')
+                        ->withAddedHeader('Client-IP', $request->getAttribute('ip_address)')
+                        ->write($result);
       } catch (Exception $e) {
         return $response->withStatus(400)
                         ->withHeader('X-Status-Reason', $e->getMessage());

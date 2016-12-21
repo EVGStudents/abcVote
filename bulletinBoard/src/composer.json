@@ -2,6 +2,7 @@
     "require": {
         "slim/slim": "^3.5",
         "slim/php-view": "^2.2",
-	      "namshi/jose": "7.0.*"
+	      "namshi/jose": "7.0.*",
+        "akrabat/rka-ip-address-middleware": "^0.5.0"
     }
 }
