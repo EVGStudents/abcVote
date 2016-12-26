@@ -18,6 +18,7 @@
       <Label layoutX="140.0" layoutY="158.0" text="of the following options:" />
       <Label fx:id="txtTopic" layoutX="14.0" layoutY="111.0" text="Label" />
       <ListView fx:id="lvOptions" layoutX="14.0" layoutY="191.0" prefHeight="358.0" prefWidth="762.0" />
+      <CheckBox fx:id="chkTor" layoutX="534.0" layoutY="111.0" mnemonicParsing="false" onAction="#chkTorChanged" text="Send vote over Tor network" />
    </children>
 
 </AnchorPane>

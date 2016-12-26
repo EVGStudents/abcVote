@@ -51,10 +51,12 @@ public class MainController extends StackPane {
     private final String keyStorePassword = "Bern2016";
     private final String stringPassword = "Bern2016";
     
+    private Boolean useTor = false;
+    
     public MainController(){
         super();
         //new CommunicationController is created with the url of the bulletin board
-        communicationController = new CommunicationController("http://abc.2488.ch/");   
+        communicationController = new CommunicationController("http://abc.2488.ch");   
     }
     
     /**
@@ -241,9 +243,11 @@ public class MainController extends StackPane {
      * and afterwards calls that screens setScene Method to pass the given ballot object for display 
      * @param name
      * @param ballot
+     * @param useTor send vote using Tor network
      * @return 
      */
-    public boolean setScreenWithBallot(String name, Ballot ballot) {
+    public boolean setScreenWithBallot(String name, Ballot ballot, Boolean useTor) {
+        this.useTor = useTor;
         changeScreen(name);
         screens.get(name).getKey().setScene(ballot);
         return true;
@@ -277,7 +281,10 @@ public class MainController extends StackPane {
      * @param ballot 
      */
     void postBallot(Ballot ballot) {
-        communicationController.postBallot(ballot);
+        communicationController.postBallot(ballot, this.useTor);
     }
 
+    Boolean getTorUsage () {
+        return this.useTor;
+    }
 }

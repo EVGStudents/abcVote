@@ -22,6 +22,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.CheckBox;
 
 /**
  * FXML Controller class
@@ -32,6 +33,7 @@ public class PickOptionsController implements Initializable,ControlledScreen {
 
     MainController parentController;   
     private Election election;
+    private Boolean useTor = false;
     
     @FXML
     private Button btBack;
@@ -43,6 +45,8 @@ public class PickOptionsController implements Initializable,ControlledScreen {
     private Label txtTopic;
     @FXML
     private ListView<String> lvOptions;
+    @FXML
+    private CheckBox chkTor;
     
     
     /**
@@ -114,7 +118,7 @@ public class PickOptionsController implements Initializable,ControlledScreen {
         ObservableList<String> selectedOptions;
         selectedOptions = lvOptions.getSelectionModel().getSelectedItems();
         Ballot ballot = new Ballot(election,selectedOptions);
-        parentController.setScreenWithBallot(VoterApp.BALLOTSUMMARYSCREENID, ballot);
+        parentController.setScreenWithBallot(VoterApp.BALLOTSUMMARYSCREENID, ballot, useTor);
 
     }
     
@@ -127,6 +131,21 @@ public class PickOptionsController implements Initializable,ControlledScreen {
         ObservableList<String> listViewList = FXCollections.observableArrayList(optionsList);
         lvOptions.setItems(listViewList);
         
+    }
+   
+    
+    /**
+     * 
+     * @param event 
+     */
+    @FXML
+    private void chkTorChanged(ActionEvent event) {
+        
+        if (chkTor.isSelected()) {
+            useTor = true;
+        } else {
+            useTor = false;
+        }
     }
    
 }

@@ -33,6 +33,7 @@ import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonReader;
+import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
@@ -186,7 +187,7 @@ public class CommunicationController {
 
         //JWS gets posted to the bulletin board
         try { 
-            boolean requestOK = postJsonStringToURL(bulletinBoardUrl +  "/elections", signedModel.toString());
+            boolean requestOK = postJsonStringToURL(bulletinBoardUrl +  "/elections", signedModel.toString(), false);
             if (requestOK) {
                 System.out.println("Election posted!");
             }
@@ -209,28 +210,66 @@ public class CommunicationController {
      * retruns whether or not the data was sucessfully posted
      * @throws IOException 
      */
-    public boolean postJsonStringToURL(String url, String json) throws IOException{
+    public boolean postJsonStringToURL(String url, String json, Boolean useTor) throws IOException{
         boolean responseOK = true;
-        CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+        boolean usingTor = useTor;
+        System.out.println("Using Tor: " + usingTor);
+        HttpHost proxy = new HttpHost("127.0.0.1", 9050);
+        HttpClientBuilder httpClientBuilder = HttpClientBuilder.create().setProxy(proxy);
+        CloseableHttpClient httpClient = httpClientBuilder.create().build();
+  
+        //TODO App only get's new Tor circuit, when it's closed :-/
         
-        try {
-            //prepare the post request
-            HttpPost request = new HttpPost(url);
-            StringEntity params = new StringEntity(json);
-            request.addHeader("content-type", "application/json");
-            request.setEntity(params);
-            
-            //sending post request and checking response
-            HttpResponse  response = httpClient.execute(request);
-            if (response.getStatusLine().getStatusCode() != 200){
-                responseOK = false;
-            }
-            
-        } catch (Exception ex) {
-            responseOK = false;
-        } finally {
-            httpClient.close();
+        if (usingTor == true) {
+            try {
+                System.out.println("Case: TRUE");
+                // Set Proxy
+                System.setProperty("socksProxyHost", "127.0.0.1");
+                System.setProperty("socksProxyPort", "9050");
+                
+                //prepare the post request
+                HttpPost request = new HttpPost(url);
+                StringEntity params = new StringEntity(json);
+                request.addHeader("content-type", "application/json");
+                request.setEntity(params);
+                System.out.println(request);
 
+                //sending post request and checking response
+                HttpResponse  response = httpClient.execute(request);
+                System.out.println(response);
+                if (response.getStatusLine().getStatusCode() != 200){
+                    responseOK = false;
+                }
+                
+            } catch (Exception ex) {
+                responseOK = false;
+            } finally {
+                httpClient.close();
+                // Now, let's 'unset' the proxy.
+                System.clearProperty("socksProxyHost");  
+            }
+        } else {
+            try {
+                System.out.println("Case: False");
+                //prepare the post request
+                HttpPost request = new HttpPost(url);
+                StringEntity params = new StringEntity(json);
+                request.addHeader("content-type", "application/json");
+                request.setEntity(params);
+                System.out.println(request);
+
+                //sending post request and checking response
+                HttpResponse  response = httpClient.execute(request);
+                System.out.println(response);
+                if (response.getStatusLine().getStatusCode() != 200){
+                    responseOK = false;
+                }
+
+            } catch (Exception ex) {
+                responseOK = false;
+            } finally {
+                httpClient.close();
+            }
         } 
         return responseOK;
     }    
@@ -271,7 +310,7 @@ public class CommunicationController {
         
         //post Voter
         try { 
-            boolean requestOK = postJsonStringToURL(bulletinBoardUrl +  "/voters", signedModel.toString());
+            boolean requestOK = postJsonStringToURL(bulletinBoardUrl +  "/voters", signedModel.toString(), false);
             if (requestOK) {
                 System.out.println("Voter posted!");
                 return true;
@@ -425,7 +464,7 @@ public class CommunicationController {
      * @param ballot
      * Ballot to be posted to the bulletin board
      */
-    public void postBallot(Ballot ballot) {
+    public void postBallot(Ballot ballot, Boolean useTor) {
         JsonObjectBuilder jBuilder = Json.createObjectBuilder();
         //Translate ballot object into a json string 
         JsonArrayBuilder optionsBuilder = Json.createArrayBuilder();
@@ -444,7 +483,7 @@ public class CommunicationController {
         
         //josn gets posted to the bulletin board
         try { 
-            boolean requestOK = postJsonStringToURL(bulletinBoardUrl +  "/elections/" + ballot.getElection().getId() + "/ballots", model.toString());
+            boolean requestOK = postJsonStringToURL(bulletinBoardUrl +  "/elections/" + ballot.getElection().getId() + "/ballots", model.toString(), useTor);
             if (requestOK) {
                 System.out.println("Ballot posted!");
             }
@@ -556,7 +595,7 @@ public class CommunicationController {
 
         try { 
             //post JWS with the result to the bulletin board
-            boolean requestOK = postJsonStringToURL(bulletinBoardUrl +  "/elections/" + election.getId() + "/results", signedModel.toString());
+            boolean requestOK = postJsonStringToURL(bulletinBoardUrl +  "/elections/" + election.getId() + "/results", signedModel.toString(), false);
             if (requestOK) {
                 System.out.println("Results posted!");
             }

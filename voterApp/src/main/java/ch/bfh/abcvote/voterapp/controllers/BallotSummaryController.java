@@ -19,6 +19,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 
@@ -44,6 +45,8 @@ public class BallotSummaryController implements Initializable,ControlledScreen {
     private Label lbPick;
     @FXML
     private ListView<String> lvSelectedOptions;
+    @FXML
+    private CheckBox chkTor;
     
     /**
      * Initializes the controller class.
@@ -79,6 +82,7 @@ public class BallotSummaryController implements Initializable,ControlledScreen {
     @Override
     public void setScene(Ballot ballot) {
         this.ballot = ballot;
+        chkTor.setSelected(parentController.getTorUsage());
         displayBallot(ballot);
     }
     

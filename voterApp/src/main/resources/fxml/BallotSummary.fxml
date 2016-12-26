@@ -21,5 +21,6 @@
       <Label layoutX="12.0" layoutY="228.0" text="Selected options:" />
       <Label fx:id="lbPick" layoutX="98.0" layoutY="183.0" text="Label" />
       <ListView fx:id="lvSelectedOptions" layoutX="14.0" layoutY="253.0" prefHeight="301.0" prefWidth="771.0" />
+      <CheckBox fx:id="chkTor" disable="true" layoutX="500.0" layoutY="88.0" mnemonicParsing="false" text="Vote will be sent over Tor network" />
    </children>
 </AnchorPane>
