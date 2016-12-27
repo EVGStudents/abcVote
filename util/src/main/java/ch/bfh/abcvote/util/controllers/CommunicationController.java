@@ -35,6 +35,7 @@ import javax.json.JsonObjectBuilder;
 import javax.json.JsonReader;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -235,10 +236,13 @@ public class CommunicationController {
                 request.setEntity(params);
 
                 //sending post request and checking response
-                HttpResponse  response = httpClient.execute(request);
+                CloseableHttpResponse  response = httpClient.execute(request);
+                System.out.println(response);
                 if (response.getStatusLine().getStatusCode() != 200){
                     responseOK = false;
                 }
+                response.close();
+                request.completed();
                 
             } catch (Exception ex) {
                 responseOK = false;
@@ -250,13 +254,11 @@ public class CommunicationController {
             }
         } else {
             try {
-                System.out.println("Case: False");
                 //prepare the post request
                 HttpPost request = new HttpPost(url);
                 StringEntity params = new StringEntity(json);
                 request.addHeader("content-type", "application/json");
                 request.setEntity(params);
-                System.out.println(request);
 
                 //sending post request and checking response
                 HttpResponse  response = httpClient.execute(request);
