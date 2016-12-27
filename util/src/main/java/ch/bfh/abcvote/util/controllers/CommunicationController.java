@@ -206,6 +206,8 @@ public class CommunicationController {
      * Exact url where the jsonData should get posted to
      * @param json
      * String of the JsonData which should be posted to the bulletin board
+     * @param useTor
+     * Boolean indicating if Json should be posted over Tor network
      * @return
      * retruns whether or not the data was sucessfully posted
      * @throws IOException 
@@ -213,7 +215,7 @@ public class CommunicationController {
     public boolean postJsonStringToURL(String url, String json, Boolean useTor) throws IOException{
         boolean responseOK = true;
         boolean usingTor = useTor;
-        System.out.println("Using Tor: " + usingTor);
+        
         HttpHost proxy = new HttpHost("127.0.0.1", 9050);
         HttpClientBuilder httpClientBuilder = HttpClientBuilder.create().setProxy(proxy);
         CloseableHttpClient httpClient = httpClientBuilder.create().build();
@@ -222,7 +224,6 @@ public class CommunicationController {
         
         if (usingTor == true) {
             try {
-                System.out.println("Case: TRUE");
                 // Set Proxy
                 System.setProperty("socksProxyHost", "127.0.0.1");
                 System.setProperty("socksProxyPort", "9050");
@@ -232,11 +233,9 @@ public class CommunicationController {
                 StringEntity params = new StringEntity(json);
                 request.addHeader("content-type", "application/json");
                 request.setEntity(params);
-                System.out.println(request);
 
                 //sending post request and checking response
                 HttpResponse  response = httpClient.execute(request);
-                System.out.println(response);
                 if (response.getStatusLine().getStatusCode() != 200){
                     responseOK = false;
                 }
@@ -245,7 +244,8 @@ public class CommunicationController {
                 responseOK = false;
             } finally {
                 httpClient.close();
-                // Now, let's 'unset' the proxy.
+                
+                // 'Unset' the proxy.
                 System.clearProperty("socksProxyHost");  
             }
         } else {
@@ -462,6 +462,7 @@ public class CommunicationController {
     /**
      * Posts the given ballot to the bulletin board
      * @param ballot
+     * @param useTor Boolean indicating if Ballot should be posted over the Tor network
      * Ballot to be posted to the bulletin board
      */
     public void postBallot(Ballot ballot, Boolean useTor) {

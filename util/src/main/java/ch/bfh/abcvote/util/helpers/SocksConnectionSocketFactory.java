@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ch.bfh.abcvote.util.controllers;
+package ch.bfh.abcvote.util.helpers;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -15,11 +15,15 @@ import org.apache.http.protocol.HttpContext;
 
 /**
  *
+ * ConnectionSocketFactory needed for Socks Proxy
+ *  based on answer http://stackoverflow.com/a/22960881 
+ *  from http://stackoverflow.com/questions/22937983/how-to-use-socks-5-proxy-with-apache-http-client-4 
+ * 
  * @author Sebastian Nellen <sebastian at nellen.it>
  */
-class MyConnectionSocketFactory extends SSLConnectionSocketFactory {
+class SocksConnectionSocketFactory extends SSLConnectionSocketFactory {
 
-    public MyConnectionSocketFactory(final SSLContext sslContext) {
+    public SocksConnectionSocketFactory(final SSLContext sslContext) {
         super(sslContext);
     }
 
