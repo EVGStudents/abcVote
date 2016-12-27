@@ -20,7 +20,10 @@ public class VerifierApp extends Application {
     public static final String ELECTIONSOVERVIEWSCREENID = "electionsOverview";
     public static final String ELECTIONSOVERVIEWFILE = "/fxml/ElectionsOverview.fxml";
     public static final String RESULTOVERVIEWSCREENID = "resultOverview";
-    public static final String RESULTOVERVIEWFILE = "/fxml/ResultOverview.fxml"; 
+    public static final String RESULTOVERVIEWFILE = "/fxml/ResultOverview.fxml";
+    public static final String TIMESTAMPVALIDATIONSCREENID = "timestampValidation";
+    public static final String TIMESTAMPVALIDATIONFILE = "/fxml/TimeStampValidation.fxml";
+    
     
     @Override
     public void start(Stage mainStage) throws Exception {
@@ -29,6 +32,7 @@ public class VerifierApp extends Application {
         mainController.loadScreen(VerifierApp.HOMESCREENID, VerifierApp.HOMESCREENFILE);
         mainController.loadScreen(VerifierApp.ELECTIONSOVERVIEWSCREENID, VerifierApp.ELECTIONSOVERVIEWFILE);
         mainController.loadScreen(VerifierApp.RESULTOVERVIEWSCREENID, VerifierApp.RESULTOVERVIEWFILE);
+        mainController.loadScreen(VerifierApp.TIMESTAMPVALIDATIONSCREENID, VerifierApp.TIMESTAMPVALIDATIONFILE);
         mainController.setScreen(VerifierApp.HOMESCREENID);
         
         //Maincontroller is defined as root element of the stage

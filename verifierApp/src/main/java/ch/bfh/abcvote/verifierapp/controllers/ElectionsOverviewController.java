@@ -35,9 +35,11 @@ public class ElectionsOverviewController implements Initializable, ControlledScr
     @FXML
     private Button btBack;
     @FXML
-    private Button btNext;
-    @FXML
     private ListView<ElectionHeader> lvElections;
+    @FXML
+    private Button btResult;
+    @FXML
+    private Button btStepByStep;
     
     /**
      * Initializes the controller class.
@@ -92,15 +94,15 @@ public class ElectionsOverviewController implements Initializable, ControlledScr
     private void btBackClicked(ActionEvent event) {
         parentController.setScreen(VerifierApp.HOMESCREENID);
     }
-
+        
     /**
      * btNext-Button Clicked-Event: Fetches the Election data of the selected electionHeader and calculates the results for this election.
      * Afterwards the result gets passed to the reult screen
      * @param event 
      */
     @FXML
-    private void btNextClicked(ActionEvent event) {
-        // get selected ElectionHeader from view
+    private void btResultClicked(ActionEvent event) {
+                // get selected ElectionHeader from view
         ObservableList<ElectionHeader> selectedElections;
         selectedElections = lvElections.getSelectionModel().getSelectedItems();
         if( !selectedElections.isEmpty()){
@@ -115,9 +117,25 @@ public class ElectionsOverviewController implements Initializable, ControlledScr
            // pass electionResult to Resultscreen
            parentController.setScreenWithResult(VerifierApp.RESULTOVERVIEWSCREENID, result);
         }
-        
-  
-        
+    }
+
+    @FXML
+    private void btStepByStepClicked(ActionEvent event) {
+        // get selected ElectionHeader from view
+        ObservableList<ElectionHeader> selectedElections;
+        selectedElections = lvElections.getSelectionModel().getSelectedItems();
+        if( !selectedElections.isEmpty()){
+           ElectionHeader selectedElectionHeader = selectedElections.get(0);
+           int electionId = selectedElectionHeader.getId();
+           // get election object from bulletin board
+           Election election = parentController.getElectionById(electionId);           
+           // get all the posted ballots for this election
+           List<Ballot> ballots = parentController.getBallotsByElection(election);
+           //preform the timestamp validation process for all ballots
+           ElectionResult result = parentController.doTimestampVaildation(election, ballots);
+           // pass electionResult to Resultscreen
+           parentController.setScreenWithResult(VerifierApp.TIMESTAMPVALIDATIONSCREENID, result);
+        }
     }
     
     /**
@@ -130,9 +148,5 @@ public class ElectionsOverviewController implements Initializable, ControlledScr
         lvElections.setItems(listViewList);
         
     }
-
-
-
-
-    
+ 
 }

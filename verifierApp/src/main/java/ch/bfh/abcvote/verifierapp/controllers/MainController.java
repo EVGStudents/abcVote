@@ -423,6 +423,37 @@ public class MainController extends StackPane {
     public void postResult(ElectionResult result) {
         communicationController.postResult(result);
     }
+
+    /**
+     * Method checks if the ballots were commited during the voting period. Ballots that were not commited during the voting period are marked as invalid
+     * @param election
+     * @param ballots
+     * @return 
+     */
+    ElectionResult doTimestampVaildation(Election election, List<Ballot> ballots) {
+        ElectionResult result = new ElectionResult(election);
+    
+        //sort ballots in the order of thier timestamp
+        Collections.sort(ballots, new BallotComparator());
+        
+        //check if ballot was posted druing voting period
+        for(Ballot ballot: ballots){
+            if (!ballot.isValid()){
+                continue;
+            }
+            LocalDateTime startDate = election.getStartDate();
+            LocalDateTime endDate = election.getEndDate();
+            LocalDateTime ballotTimeStamp = ballot.getTimeStamp();
+            if (!(startDate.compareTo(ballotTimeStamp) < 0 && endDate.compareTo(ballotTimeStamp) > 0)){
+                ballot.setValid(false);
+                System.out.println("Rejected! Reason: not in voting period ID: " + ballot.getId());
+            }  
+        }
+        
+        result.setBallots(ballots);
+
+        return result;
+    }
     
     
 }
