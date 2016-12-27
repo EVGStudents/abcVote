@@ -343,4 +343,13 @@ public class Ballot {
         return result;
     }
     
+    /**
+     * Get the String representation of the ballot for listing it
+     * @return 
+     */
+    @Override
+    public String toString(){
+        String printedString = "ID: " + getId() + ", timestamp: " + timeStamp + ", Option: " + this.getSelectedOptionsString() + ", Vaild: " + isValid() + ", u_Hat:" + this.u_Hat; 
+        return printedString;
+    }
 }
