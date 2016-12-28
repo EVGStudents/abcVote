@@ -10,10 +10,9 @@
  * @author Sebastian Nellen <sebastian at nellen.it>
  */
 
-use Namshi\JOSE\SimpleJWS;
-use Namshi\JOSE\JWS;
-use Namshi\JOSE\Base64\Base64UrlSafeEncoder;
-use Namshi\JOSE\Signer\SecLib\RS256;
+ use Jose\Factory\JWKFactory;
+ use Jose\Factory\JWSFactory;
+ use Jose\Loader;
 
 //function gets the voters as array and delivers the jsonData concatenated as string
 function get_voters_jsonData(Array $data){
@@ -91,15 +90,33 @@ function get_ballots_as_JSON(Array $data){
 
 //function verifies the JWS signature passed in jsonData against the value stored in DB
 function verify_signature($email, $certificate, $jwsSignature){
-  $jws = JWS::load($jwsSignature);
-  $publicKey = openssl_pkey_get_public($certificate);
-  return $jws->verify($publicKey); // Returns true
+  // create JWK from X.509 certificate
+  $jwk = JWKFactory::createFromCertificate($certificate, ['use' => 'sig', 'alg'=> 'RS256']);
+
+  $loader = new Loader();
+
+  try {
+    // The JwsSignature is verified using our key.
+    $jws = $loader->loadAndVerifySignatureUsingKey(
+        $jwsSignature,
+        $jwk,
+        ['RS256'],
+        $signature_index
+    );
+  } catch (Exception $e) {
+      //echo 'Exception: ',  $e->getMessage(), "\n";
+      return false; // exception is thrown if the verification failed
+  }
+  // verification suceeded
+  return true;
 }
 
-//function returns the payload of a given JWS
+//function returns the payload of a given JWS without verifiying it, as that was done before
 function get_jwsPayload($jwsSignature){
-  $jws = JWS::load($jwsSignature);
-  return $jws->getPayload();
+  $loader = new Loader();
+  $jws = $loader->load($jwsSignature);
+  $payload = $jws->getPayload();
+  return $payload;
 }
 
 //function returns certificates as array
@@ -108,7 +125,7 @@ function get_certificates_as_JSON(Array $data){
   foreach ($data as $value) {
     $returnString .= $returnString ? ',' : '';
     $returnString .= '{"email":"' . $value->getEmailAdress() . '",';
-    $returnString .= '"certificate":"' . $value->getCertificate() . '"}';
+    $returnString .= '"certificate":"' . $value->getCertificate() . '"';
   }
   $returnString = "[" . $returnString . "]";
   return $returnString;
