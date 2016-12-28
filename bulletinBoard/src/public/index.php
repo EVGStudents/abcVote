@@ -110,7 +110,7 @@ $app->post('/elections', function (Request $request, Response $response) {
       if (verify_signature($email, $certificate, $jwsSignature . "") === TRUE) {
         $payload = get_jwsPayload($jwsSignature);
         $electionArray = array('jsonData' => json_encode($payload),
-                          'electionTitle' => $payload['electionTitle'],
+                          'electionTitle' => substr(json_encode($payload['electionTitle']), 1, -1),
                           'beginDate' => $payload['beginDate'],
                           'endDate' => $payload['endDate'],
                           'coefficients' => $payload['coefficients'],
