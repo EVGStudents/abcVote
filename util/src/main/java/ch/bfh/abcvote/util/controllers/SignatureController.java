@@ -19,7 +19,7 @@ import javax.json.JsonObjectBuilder;
 public class SignatureController {
     
     /**
-     * 
+     * signs a given JSON object and returns it
      * @param jsonInput the JSON to be signed
      * @return a JWS (signed json object)
      * @throws Exception 

@@ -26,17 +26,39 @@ import javax.crypto.spec.PBEKeySpec;
  */
 public class KeyStoreController {
     
+    /**
+     * method returning a file input stream
+     * @param filePath the file path
+     * @return returns a file input stream
+     * @throws FileNotFoundException 
+     */
     private static FileInputStream getFileInputStreamFromArg(String filePath) throws FileNotFoundException {
         File file = new File(filePath);
         return new FileInputStream(file);
     }
     
-    public static KeyStore loadKeyStoreFromFile(String pathToFile, String keystorePassword) throws Exception {
+    /**
+     * loads a keystore into an object and returns it
+     * @param pathToKeyStore path to keystore file
+     * @param keystorePassword the keystore's password
+     * @return returns a KeyStore object
+     * @throws Exception 
+     */
+    public static KeyStore loadKeyStoreFromFile(String pathToKeyStore, String keystorePassword) throws Exception {
         KeyStore keyStore = KeyStore.getInstance("JCEKS");
-        keyStore.load(getFileInputStreamFromArg(pathToFile), keystorePassword.toCharArray());
+        keyStore.load(getFileInputStreamFromArg(pathToKeyStore), keystorePassword.toCharArray());
         return keyStore;
     }
     
+    /**
+     * writes a string into the keystore
+     * @param pathToKeyStore path to keystore file
+     * @param keyStorePassword the keystore's password
+     * @param stringPassword the string's password
+     * @param stringAlias the string's alias within the keystore
+     * @param stringToStore the real string to be stored
+     * @throws Exception 
+     */
     public static void writeStringToKeyStore(String pathToKeyStore, String keyStorePassword, String stringPassword, String stringAlias, String stringToStore)
             throws Exception {
         
@@ -58,6 +80,15 @@ public class KeyStoreController {
         keyStore.store(outputStream, keyStorePassword.toCharArray());
     }
     
+    /**
+     * reads a string from the keystore
+     * @param keyStore the keystore as an object
+     * @param keyStorePassword the keystore's password
+     * @param stringPassword the string's password
+     * @param stringAlias the string's alias within the keystore
+     * @return returns the store string
+     * @throws Exception 
+     */
     public static String readStringFromKeyStore(KeyStore keyStore, String keyStorePassword, String stringPassword, String stringAlias) throws Exception {
         
         KeyStore.PasswordProtection keyStorePP = new KeyStore.PasswordProtection(stringPassword.toCharArray());
@@ -73,20 +104,37 @@ public class KeyStoreController {
         return new String(keySpec.getPassword());
     }
     
-    public static PrivateKey readPrivateKeyFromKeyStore (String pathToKeyStore, String keyStorePassword, String stringKeyPassword, String stringAlias) throws Exception {
+    /**
+     * get a specific private key from the keystore
+     * @param pathToKeyStore path to keystore file
+     * @param keyStorePassword the keystore's password
+     * @param stringKeyPassword the key's password
+     * @param stringKeyAlias the key's alias
+     * @return returns the private key from a given alias
+     * @throws Exception 
+     */
+    public static PrivateKey readPrivateKeyFromKeyStore (String pathToKeyStore, String keyStorePassword, String stringKeyPassword, String stringKeyAlias) throws Exception {
         
         KeyStore keyStore = loadKeyStoreFromFile(pathToKeyStore, keyStorePassword);
         
-        PrivateKey privateKey = (PrivateKey)keyStore.getKey(stringAlias, stringKeyPassword.toCharArray());
+        PrivateKey privateKey = (PrivateKey)keyStore.getKey(stringKeyAlias, stringKeyPassword.toCharArray());
         
         return privateKey;
     }
     
-    public static PublicKey readPublicKeyFromKeyStore (String pathToKeyStore, String keyStorePassword, String stringAlias) throws Exception {
+    /**
+     * get a specific public key from the keystore
+     * @param pathToKeyStore path to keystore file
+     * @param keyStorePassword the keystore's password
+     * @param stringKeyAlias the key's alias
+     * @return returns the public key from a given alias
+     * @throws Exception 
+     */
+    public static PublicKey readPublicKeyFromKeyStore (String pathToKeyStore, String keyStorePassword, String stringKeyAlias) throws Exception {
         
         KeyStore keyStore = loadKeyStoreFromFile(pathToKeyStore, keyStorePassword);
         
-        Certificate cert = keyStore.getCertificate(stringAlias);
+        Certificate cert = keyStore.getCertificate(stringKeyAlias);
         PublicKey publicKey = cert.getPublicKey();
         
         return publicKey;
