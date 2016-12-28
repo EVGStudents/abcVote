@@ -300,7 +300,7 @@ public class MainController extends StackPane {
             LocalDateTime endDate = election.getEndDate();
             LocalDateTime ballotTimeStamp = ballot.getTimeStamp();
             if (!(startDate.compareTo(ballotTimeStamp) < 0 && endDate.compareTo(ballotTimeStamp) > 0)){
-                ballot.setValid(false);
+                ballot.setInvalid("not in voting period");
                 System.out.println("Rejected! Reason: not in voting period ID: " + ballot.getId());
             }  
         }
@@ -329,14 +329,14 @@ public class MainController extends StackPane {
             //P1 Proofsystem
             PolynomialMembershipProofSystem pmps = PolynomialMembershipProofSystem.getInstance(fsscg,credentialPolynomial, parameters.getCommitmentSchemeP());
             if(!pmps.verify(ballot.getPi1(), ballot.getC())){
-               ballot.setValid(false);
+               ballot.setInvalid("PI1-Proof failed");
                 System.out.println("Rejected! Reason: PI1-Proof failed: " + ballot.getId());
                continue;
             }
             //P2 Proofsystem
             DoubleDiscreteLogProofSystem ddlps = DoubleDiscreteLogProofSystem.getInstance(fsscg, parameters.getCommitmentSchemeP(), parameters.getCommitmentSchemeQ(), parameters.getSECURITY_FACTOR());
             if(!ddlps.verify(ballot.getPi2(), Tuple.getInstance(ballot.getC(), ballot.getD()))){
-               ballot.setValid(false);
+               ballot.setInvalid("PI2-Proof failed");
                System.out.println("Rejected! Reason: PI2-Proof failed: " + ballot.getId());
                continue;
             }
@@ -344,7 +344,7 @@ public class MainController extends StackPane {
             //Create a EqualityPreimageProofSystem with the PedersenCommitmentFunction and the adapted DicreteLogFunction
             EqualityPreimageProofSystem epps = EqualityPreimageProofSystem.getInstance(fsscg2, pedersenFunction, adaptedDiscreteLogFunction);
             if(!epps.verify(ballot.getPi3(), Tuple.getInstance(ballot.getD(), ballot.getU_Hat()))){
-               ballot.setValid(false);
+               ballot.setInvalid("PI3-Proof failed");
                System.out.println("Rejected! Reason: PI3-Proof failed: " + ballot.getId());
                continue; 
             }
@@ -360,7 +360,7 @@ public class MainController extends StackPane {
             }
             if (usedU_Hats.contains(ballot.getU_Hat())){
                 //ballot gets rejected if a ballot of the same voter has already been selected
-                ballot.setValid(false);
+                ballot.setInvalid("Already selected another vote of the same voter");
                 System.out.println("Rejected! Reason: Already selected another vote: " + ballot.getId());
             }
             else{
@@ -445,7 +445,7 @@ public class MainController extends StackPane {
             LocalDateTime endDate = election.getEndDate();
             LocalDateTime ballotTimeStamp = ballot.getTimeStamp();
             if (!(startDate.compareTo(ballotTimeStamp) < 0 && endDate.compareTo(ballotTimeStamp) > 0)){
-                ballot.setValid(false);
+                ballot.setInvalid("not in voting period");
                 System.out.println("Rejected! Reason: not in voting period ID: " + ballot.getId());
             }  
         }
