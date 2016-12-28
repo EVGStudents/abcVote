@@ -266,124 +266,12 @@ public class MainController extends StackPane {
      * @return 
      */
     ElectionResult calculateElectionResult(Election election, List<Ballot> ballots) {
-        ElectionResult result = new ElectionResult(election);
-        List<Voter> voters = election.getVoterList();
-        Parameters parameters = election.getGenerators();
-        ZMod Z_p = parameters.getZ_p();
-        PolynomialElement credentialPolynomial = calculateCredentialPolynomial(Z_p, voters); 
-        
-        HashMap<String, Pair<SigmaChallengeGenerator,SigmaChallengeGenerator>> challengeGenerators = new HashMap<>();
-        
-        //pereparation for Pi3
-        DiscreteLogarithmCommitmentScheme discreteLogCommitmentScheme = DiscreteLogarithmCommitmentScheme.getInstance(election.getH_Hat());
-        //Extract DicreteLogFunction
-        Function discreteLogFunction = discreteLogCommitmentScheme.getCommitmentFunction();
-        //Extract the the CommitmentFunction from the pedersenCommitmentScheme
-        Function pedersenFunction = parameters.getCommitmentSchemeQ().getCommitmentFunction();
-	
-        //in order to put the two functions in the same ProofSystem they need to have the same Domains.	
-        //define a selection Function with the same Domain as the PedersenCommitmentFunction that simply selects the Beta Element and returns it
-        ProductSet space = (ProductSet) pedersenFunction.getDomain();		
-        Function adapterFunction = SelectionFunction.getInstance(space, 0,1); //0,1 : Pfad für selektiertes Element 0 für MessageElements -> 1 für Beta
-        // We chain the selection Function and the discreteLogFunction together. So the output of the selection function acts as input for the discreteLogFunction
-        Function adaptedDiscreteLogFunction = CompositeFunction.getInstance(adapterFunction,discreteLogFunction);
-        
-        //sort ballots in the order of thier timestamp
-        Collections.sort(ballots, new BallotComparator());
-        
-        //check if ballot was posted druing voting period
-        for(Ballot ballot: ballots){
-            if (!ballot.isValid()){
-                continue;
-            }
-            LocalDateTime startDate = election.getStartDate();
-            LocalDateTime endDate = election.getEndDate();
-            LocalDateTime ballotTimeStamp = ballot.getTimeStamp();
-            if (!(startDate.compareTo(ballotTimeStamp) < 0 && endDate.compareTo(ballotTimeStamp) > 0)){
-                ballot.setInvalid("not in voting period");
-                System.out.println("Rejected! Reason: not in voting period ID: " + ballot.getId());
-            }  
-        }
-        
-        //generate ChallengeGenerators for all valid Ballots
-        for(Ballot ballot: ballots){
-            if (!ballot.isValid()){
-                continue;
-            }
-            if (!challengeGenerators.containsKey(ballot.getSelectedOptionsString())){
-                Element e = StringMonoid.getInstance(Alphabet.ALPHANUMERIC).getElement(ballot.getSelectedOptionsString());
-                SigmaChallengeGenerator fsscg = FiatShamirSigmaChallengeGenerator.getInstance(parameters.getCommitmentSchemeP().getMessageSpace(), e);
-                SigmaChallengeGenerator fsscg2 = FiatShamirSigmaChallengeGenerator.getInstance(parameters.getZ_q(), e);
-                challengeGenerators.put(ballot.getSelectedOptionsString(), new Pair(fsscg,fsscg2));
-            }
- 
-        }
-        
-        //check if proves are valid     
-        for(Ballot ballot: ballots){
-            if (!ballot.isValid()){
-                continue;
-            }
-            SigmaChallengeGenerator fsscg = challengeGenerators.get(ballot.getSelectedOptionsString()).getKey();
-            SigmaChallengeGenerator fsscg2 = challengeGenerators.get(ballot.getSelectedOptionsString()).getValue();
-            //P1 Proofsystem
-            PolynomialMembershipProofSystem pmps = PolynomialMembershipProofSystem.getInstance(fsscg,credentialPolynomial, parameters.getCommitmentSchemeP());
-            if(!pmps.verify(ballot.getPi1(), ballot.getC())){
-               ballot.setInvalid("PI1-Proof failed");
-                System.out.println("Rejected! Reason: PI1-Proof failed: " + ballot.getId());
-               continue;
-            }
-            //P2 Proofsystem
-            DoubleDiscreteLogProofSystem ddlps = DoubleDiscreteLogProofSystem.getInstance(fsscg, parameters.getCommitmentSchemeP(), parameters.getCommitmentSchemeQ(), parameters.getSECURITY_FACTOR());
-            if(!ddlps.verify(ballot.getPi2(), Tuple.getInstance(ballot.getC(), ballot.getD()))){
-               ballot.setInvalid("PI2-Proof failed");
-               System.out.println("Rejected! Reason: PI2-Proof failed: " + ballot.getId());
-               continue;
-            }
-            //P3
-            //Create a EqualityPreimageProofSystem with the PedersenCommitmentFunction and the adapted DicreteLogFunction
-            EqualityPreimageProofSystem epps = EqualityPreimageProofSystem.getInstance(fsscg2, pedersenFunction, adaptedDiscreteLogFunction);
-            if(!epps.verify(ballot.getPi3(), Tuple.getInstance(ballot.getD(), ballot.getU_Hat()))){
-               ballot.setInvalid("PI3-Proof failed");
-               System.out.println("Rejected! Reason: PI3-Proof failed: " + ballot.getId());
-               continue; 
-            }
-        }
-        
-        //select the first ballot posted by each voter that is still valid. 
-        List<Element> usedU_Hats = new ArrayList<Element>();
-        List<String> electionOptions = election.getTopic().getOptions();
-        int pick = election.getTopic().getPick();
-        for(Ballot ballot: ballots){
-            if (!ballot.isValid()){
-                continue;
-            }
-            if (usedU_Hats.contains(ballot.getU_Hat())){
-                //ballot gets rejected if a ballot of the same voter has already been selected
-                ballot.setInvalid("Already selected another vote of the same voter");
-                System.out.println("Rejected! Reason: Already selected another vote: " + ballot.getId());
-            }
-            else{
-                //ballot gets selected regardless of wether the vote itself is valid or not
-                usedU_Hats.add(ballot.getU_Hat());
-                //check if the right amount of options was picked
-                if(pick == ballot.getSelectedOptions().size()){
-                    //check if all selected options are part of the original options
-                    if (electionOptions.containsAll(ballot.getSelectedOptions())){
-                        //Check for duplicates
-                        Set<String> set = new HashSet<String>(ballot.getSelectedOptions());
-                        if(!(set.size() < ballot.getSelectedOptions().size())){
-                            //if vote is valid it gets added to the totals
-                            for (String option : ballot.getSelectedOptions()){
-                              result.addToOptionCounter(option);  
-                            }   
-                        }
-                    }
-                }             
-            }           
-        }
+        ElectionResult result = doTimestampVaildation(election, ballots);
+        result = doNIZKPVaildation(result);
+        result = SelectFromValidBallotsAndCalculateResult(result);
         return result;
     }
+    
     /**
      * Takes a list of voters and a the ZMOd Group Z_p and calculates the credential polynom with the public credentials of the listed voters
      * @param Z_p
@@ -452,6 +340,128 @@ public class MainController extends StackPane {
         
         result.setBallots(ballots);
 
+        return result;
+    }
+
+    /**
+     * Method checks all for all valid ballots in the given result object if thier NIZKPs are valid
+     * If a ballot fails one of the checks it gest marked as invalid
+     * @param result
+     * @return 
+     */
+    ElectionResult doNIZKPVaildation(ElectionResult result) {
+        Election election = result.getElection();
+        List<Ballot> ballots = result.getBallots();
+        List<Voter> voters = election.getVoterList();
+        Parameters parameters = election.getGenerators();
+        ZMod Z_p = parameters.getZ_p();
+        PolynomialElement credentialPolynomial = calculateCredentialPolynomial(Z_p, voters); 
+        
+        HashMap<String, Pair<SigmaChallengeGenerator,SigmaChallengeGenerator>> challengeGenerators = new HashMap<>();
+        
+        //pereparation for Pi3
+        DiscreteLogarithmCommitmentScheme discreteLogCommitmentScheme = DiscreteLogarithmCommitmentScheme.getInstance(election.getH_Hat());
+        //Extract DicreteLogFunction
+        Function discreteLogFunction = discreteLogCommitmentScheme.getCommitmentFunction();
+        //Extract the the CommitmentFunction from the pedersenCommitmentScheme
+        Function pedersenFunction = parameters.getCommitmentSchemeQ().getCommitmentFunction();
+	
+        //in order to put the two functions in the same ProofSystem they need to have the same Domains.	
+        //define a selection Function with the same Domain as the PedersenCommitmentFunction that simply selects the Beta Element and returns it
+        ProductSet space = (ProductSet) pedersenFunction.getDomain();		
+        Function adapterFunction = SelectionFunction.getInstance(space, 0,1); //0,1 : Pfad für selektiertes Element 0 für MessageElements -> 1 für Beta
+        // We chain the selection Function and the discreteLogFunction together. So the output of the selection function acts as input for the discreteLogFunction
+        Function adaptedDiscreteLogFunction = CompositeFunction.getInstance(adapterFunction,discreteLogFunction);
+        
+        //generate ChallengeGenerators for all valid Ballots
+        for(Ballot ballot: ballots){
+            if (!ballot.isValid()){
+                continue;
+            }
+            if (!challengeGenerators.containsKey(ballot.getSelectedOptionsString())){
+                Element e = StringMonoid.getInstance(Alphabet.ALPHANUMERIC).getElement(ballot.getSelectedOptionsString());
+                SigmaChallengeGenerator fsscg = FiatShamirSigmaChallengeGenerator.getInstance(parameters.getCommitmentSchemeP().getMessageSpace(), e);
+                SigmaChallengeGenerator fsscg2 = FiatShamirSigmaChallengeGenerator.getInstance(parameters.getZ_q(), e);
+                challengeGenerators.put(ballot.getSelectedOptionsString(), new Pair(fsscg,fsscg2));
+            }
+ 
+        }
+        
+        //check if proves are valid     
+        for(Ballot ballot: ballots){
+            if (!ballot.isValid()){
+                continue;
+            }
+            SigmaChallengeGenerator fsscg = challengeGenerators.get(ballot.getSelectedOptionsString()).getKey();
+            SigmaChallengeGenerator fsscg2 = challengeGenerators.get(ballot.getSelectedOptionsString()).getValue();
+            //P1 Proofsystem
+            PolynomialMembershipProofSystem pmps = PolynomialMembershipProofSystem.getInstance(fsscg,credentialPolynomial, parameters.getCommitmentSchemeP());
+            if(!pmps.verify(ballot.getPi1(), ballot.getC())){
+               ballot.setInvalid("PI1-Proof failed");
+                System.out.println("Rejected! Reason: PI1-Proof failed: " + ballot.getId());
+               continue;
+            }
+            //P2 Proofsystem
+            DoubleDiscreteLogProofSystem ddlps = DoubleDiscreteLogProofSystem.getInstance(fsscg, parameters.getCommitmentSchemeP(), parameters.getCommitmentSchemeQ(), parameters.getSECURITY_FACTOR());
+            if(!ddlps.verify(ballot.getPi2(), Tuple.getInstance(ballot.getC(), ballot.getD()))){
+               ballot.setInvalid("PI2-Proof failed");
+               System.out.println("Rejected! Reason: PI2-Proof failed: " + ballot.getId());
+               continue;
+            }
+            //P3
+            //Create a EqualityPreimageProofSystem with the PedersenCommitmentFunction and the adapted DicreteLogFunction
+            EqualityPreimageProofSystem epps = EqualityPreimageProofSystem.getInstance(fsscg2, pedersenFunction, adaptedDiscreteLogFunction);
+            if(!epps.verify(ballot.getPi3(), Tuple.getInstance(ballot.getD(), ballot.getU_Hat()))){
+               ballot.setInvalid("PI3-Proof failed");
+               System.out.println("Rejected! Reason: PI3-Proof failed: " + ballot.getId());
+               continue; 
+            }
+        }
+        
+        return result; 
+    }
+
+    /**
+     * Selects the first posted ballot of each voter that is still valid and calculates the result of the election
+     * @param result
+     * @return 
+     */
+    ElectionResult SelectFromValidBallotsAndCalculateResult(ElectionResult result) {
+        Election election = result.getElection();
+        List<Ballot> ballots = result.getBallots();
+
+        //select the first ballot posted by each voter that is still valid. 
+        List<Element> usedU_Hats = new ArrayList<Element>();
+        List<String> electionOptions = election.getTopic().getOptions();
+        int pick = election.getTopic().getPick();
+        for(Ballot ballot: ballots){
+            if (!ballot.isValid()){
+                continue;
+            }
+            if (usedU_Hats.contains(ballot.getU_Hat())){
+                //ballot gets rejected if a ballot of the same voter has already been selected
+                ballot.setInvalid("Already selected another vote of the same voter");
+                System.out.println("Rejected! Reason: Already selected another vote: " + ballot.getId());
+            }
+            else{
+                //ballot gets selected regardless of wether the vote itself is valid or not
+                usedU_Hats.add(ballot.getU_Hat());
+                //check if the right amount of options was picked
+                if(pick == ballot.getSelectedOptions().size()){
+                    //check if all selected options are part of the original options
+                    if (electionOptions.containsAll(ballot.getSelectedOptions())){
+                        //Check for duplicates
+                        Set<String> set = new HashSet<String>(ballot.getSelectedOptions());
+                        if(!(set.size() < ballot.getSelectedOptions().size())){
+                            //if vote is valid it gets added to the totals
+                            for (String option : ballot.getSelectedOptions()){
+                              result.addToOptionCounter(option);  
+                            }   
+                        }
+                    }
+                }             
+            }           
+        }
         return result;
     }
     

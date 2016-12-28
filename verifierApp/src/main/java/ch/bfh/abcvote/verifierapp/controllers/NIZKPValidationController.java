@@ -24,11 +24,11 @@ import javafx.scene.control.ListView;
 import javafx.util.Callback;
 
 /**
- * FXML Controller class for the TimeStampValidation.fxml Screen
+ * FXML Controller class
  *
  * @author t.buerk
  */
-public class TimeStampValidationController implements Initializable, ControlledScreen {
+public class NIZKPValidationController implements Initializable, ControlledScreen {
 
     private MainController parentController;
     private ElectionResult result;
@@ -84,12 +84,12 @@ public class TimeStampValidationController implements Initializable, ControlledS
     }
 
     /**
-     * btBack-Button Clicked-Event: Transfers the user back to the election overview screen
+     * btBack-Button Clicked-Event: Transfers the user back to the timestamp validation screen
      * @param event 
      */
     @FXML
     private void btBackClicked(ActionEvent event) {
-         parentController.setScreen(VerifierApp.ELECTIONSOVERVIEWSCREENID);
+         parentController.setScreen(VerifierApp.TIMESTAMPVALIDATIONSCREENID);
     }
     
     /**
@@ -99,9 +99,9 @@ public class TimeStampValidationController implements Initializable, ControlledS
      */
     @FXML
     private void btNextClicked(ActionEvent event) {
-           ElectionResult result = parentController.doNIZKPVaildation(this.result);
+           ElectionResult result = parentController.SelectFromValidBallotsAndCalculateResult(this.result);
            // pass electionResult to Resultscreen
-           parentController.setScreenWithResult(VerifierApp.NIZKPVALIDATIONSCREENID, result);
+           parentController.setScreenWithResult(VerifierApp.RESULTOVERVIEWSCREENID, result);
     }
     
     /**

@@ -23,7 +23,8 @@ public class VerifierApp extends Application {
     public static final String RESULTOVERVIEWFILE = "/fxml/ResultOverview.fxml";
     public static final String TIMESTAMPVALIDATIONSCREENID = "timestampValidation";
     public static final String TIMESTAMPVALIDATIONFILE = "/fxml/TimeStampValidation.fxml";
-    
+    public static final String NIZKPVALIDATIONSCREENID = "NIZKPValidation";
+    public static final String NIZKPVALIDATIONFILE = "/fxml/NIZKPValidation.fxml";    
     
     @Override
     public void start(Stage mainStage) throws Exception {
@@ -33,6 +34,7 @@ public class VerifierApp extends Application {
         mainController.loadScreen(VerifierApp.ELECTIONSOVERVIEWSCREENID, VerifierApp.ELECTIONSOVERVIEWFILE);
         mainController.loadScreen(VerifierApp.RESULTOVERVIEWSCREENID, VerifierApp.RESULTOVERVIEWFILE);
         mainController.loadScreen(VerifierApp.TIMESTAMPVALIDATIONSCREENID, VerifierApp.TIMESTAMPVALIDATIONFILE);
+        mainController.loadScreen(VerifierApp.NIZKPVALIDATIONSCREENID, VerifierApp.NIZKPVALIDATIONFILE);
         mainController.setScreen(VerifierApp.HOMESCREENID);
         
         //Maincontroller is defined as root element of the stage

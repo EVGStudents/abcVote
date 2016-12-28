@@ -5,6 +5,7 @@
  */
 package ch.bfh.abcvote.verifierapp.controllers;
 
+import ch.bfh.abcvote.util.model.Ballot;
 import ch.bfh.abcvote.util.model.Election;
 import ch.bfh.abcvote.util.model.ElectionResult;
 import ch.bfh.abcvote.verifierapp.ControlledScreen;
@@ -21,7 +22,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.util.Callback;
 
 /**
  * FXML Controller class for the ResultOverview.fxml Screen
@@ -45,6 +48,8 @@ public class ResultOverviewController implements Initializable, ControlledScreen
     private Label lbTopic;
     @FXML
     private ListView<String> lvResult;
+    @FXML
+    private ListView<Ballot> lvBallots;
     
     /**
      * Initializes the controller class.
@@ -128,6 +133,9 @@ public class ResultOverviewController implements Initializable, ControlledScreen
         //Display Header information
         Election election = result.getElection();
         lbElectionTitle.setText(election.getTopic().getTitle());
+        
+        populateBallotsListView(result.getBallots());
+        
         lbTopic.setText(election.getTitle());
         //display results
         HashMap<String,Integer> counterList =  result.getOptionCount();
@@ -136,7 +144,6 @@ public class ResultOverviewController implements Initializable, ControlledScreen
             lvResultList.add(option + ": " + counterList.get(option));
         }
         populateElectionHeaderListView(lvResultList);
-        
     }
     
     /**
@@ -148,6 +155,44 @@ public class ResultOverviewController implements Initializable, ControlledScreen
         ObservableList<String> listViewList = FXCollections.observableArrayList(resultList);
         lvResult.setItems(listViewList);
         
+    }
+    
+    /**
+     * Displays the given list of Ballots in the lvBallots-ListView
+     * @param ballotList 
+     */
+    private void populateBallotsListView(List<Ballot> ballotList) {
+        
+        ObservableList<Ballot> listViewList = FXCollections.observableArrayList(ballotList);
+        lvBallots.setItems(listViewList);
+        //set the text color of the ballot depoending on the validity
+        lvBallots.setCellFactory(new Callback<ListView<Ballot>, ListCell<Ballot>>(){
+ 
+            @Override
+            public ListCell<Ballot> call(ListView<Ballot> p) {
+                 
+                ListCell<Ballot> cell = new ListCell<Ballot>(){
+ 
+                    @Override
+                    protected void updateItem(Ballot t, boolean bln) {
+                        super.updateItem(t, bln);
+                        if (t != null) {
+                            setText(t.toString());
+                            if (t.isValid()){
+                                setStyle("-fx-text-fill:green;");
+                            }
+                            else{
+                                setStyle("-fx-text-fill:red;");
+                            }
+                            
+                        }
+                    }
+ 
+                };
+                 
+                return cell;
+            }
+        });
     }
     
 }

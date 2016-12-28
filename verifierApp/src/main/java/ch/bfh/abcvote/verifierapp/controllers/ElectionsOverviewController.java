@@ -96,7 +96,7 @@ public class ElectionsOverviewController implements Initializable, ControlledScr
     }
         
     /**
-     * btNext-Button Clicked-Event: Fetches the Election data of the selected electionHeader and calculates the results for this election.
+     * btResult-Button Clicked-Event: Fetches the Election data of the selected electionHeader and calculates the results for this election.
      * Afterwards the result gets passed to the reult screen
      * @param event 
      */
@@ -119,6 +119,11 @@ public class ElectionsOverviewController implements Initializable, ControlledScr
         }
     }
 
+    /**
+     * btStepByStep-Button Clicked-Event: Fetches the Election data of the selected electionHeader and only preforms the validation process of the timestamp
+     * Afterwards the result gets passed to the timestamp validation screen
+     * @param event 
+     */
     @FXML
     private void btStepByStepClicked(ActionEvent event) {
         // get selected ElectionHeader from view
