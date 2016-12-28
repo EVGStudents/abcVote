@@ -47,6 +47,7 @@ public class Ballot {
     private LocalDateTime timeStamp;
     
     private boolean valid;
+    private String reason;
     
     
     /**
@@ -78,6 +79,7 @@ public class Ballot {
         this.selectedOptions = selectedOptions;
         this.timeStamp = timeStamp;
         this.valid = true;
+        reason = "-";
         Parameters parameters = election.getGenerators();
         
         
@@ -122,6 +124,7 @@ public class Ballot {
         } catch (UniCryptException ex) {
             Logger.getLogger(Ballot.class.getName()).log(Level.SEVERE, null, ex);
             valid = false;
+            reason = "unable to cast from json data";
         }
 
     }
@@ -308,11 +311,12 @@ public class Ballot {
     }
 
     /**
-     * set if the ballot is still valid
+     * Changes the valid Flag to fals and stores the given reason String
      * @param valid 
      */
-    public void setValid(boolean valid) {
-        this.valid = valid;
+    public void setInvalid(String reason) {
+        this.valid = false;
+        this.reason = reason;
     }
 
     /**
@@ -349,7 +353,7 @@ public class Ballot {
      */
     @Override
     public String toString(){
-        String printedString = "ID: " + getId() + ", timestamp: " + timeStamp + ", Option: " + this.getSelectedOptionsString() + ", Vaild: " + isValid() + ", u_Hat:" + this.u_Hat; 
+        String printedString = "ID: " + getId() + ", timestamp: " + timeStamp + ", Option: " + this.getSelectedOptionsString() + ", Vaild: " + isValid() + ", Reason: " + reason + ", u_Hat:" + this.u_Hat; 
         return printedString;
     }
 }
