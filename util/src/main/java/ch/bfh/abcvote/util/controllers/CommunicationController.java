@@ -111,11 +111,10 @@ public class CommunicationController {
              for (JsonObject result : obj.getValuesAs(JsonObject.class)) {
                  //JsonData converted into Voter Object and added to the list  
                 String email = result.getString("email");       
-                String signature = result.getString("signature");
                 String publicCredential = result.getString("publicCredential");
                 String appVersion = result.getString("appVersion");
                 
-                Voter voter = new Voter(email, signature, publicCredential, appVersion);
+                Voter voter = new Voter(email, publicCredential, appVersion);
                 voterlist.add(voter);
              }
              
@@ -166,7 +165,6 @@ public class CommunicationController {
         for (Voter voter : election.getVoterList()){
             JsonObjectBuilder voterBuilder = Json.createObjectBuilder();
             voterBuilder.add("email", voter.getEmail());
-            voterBuilder.add("signature", voter.getSignature());
             voterBuilder.add("publicCredential", voter.getPublicCredential());
             voterBuilder.add("appVersion", voter.getAppVersion());
             
@@ -181,7 +179,7 @@ public class CommunicationController {
         JsonObject signedModel = null;
                 
         try {
-            signedModel = signController.signJson(model);   
+            signedModel = signController.signJson(model);
         } catch (Exception ex) {
             Logger.getLogger(CommunicationController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -294,8 +292,6 @@ public class CommunicationController {
         JsonObjectBuilder jBuilder = Json.createObjectBuilder();
         
         jBuilder.add("email", email);
-        //TODO remove standInStignatur
-        jBuilder.add("signature", "standInSignatur");
         jBuilder.add("publicCredential", u.convertToString());
         jBuilder.add("appVersion", "1.15");
         
@@ -305,7 +301,7 @@ public class CommunicationController {
         JsonObject signedModel = null;
                 
         try {
-            signedModel = signController.signJson(model);   
+            signedModel = signController.signJson(model); 
         } catch (Exception ex) {
             Logger.getLogger(CommunicationController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -394,8 +390,8 @@ public class CommunicationController {
                electionHeaderlist.add(electionHeader);
             }
         } catch (IOException x) {
-            System.err.println(x);
-        }
+            System.err.println(x); 
+       }
         
         
        return electionHeaderlist;
@@ -433,11 +429,10 @@ public class CommunicationController {
              for (JsonObject result : obj.getJsonArray("voters").getValuesAs(JsonObject.class)) {
                    
                 String voterEmail = result.getString("email");       
-                String voterSignature = result.getString("signature");
                 String voterPublicCredential = result.getString("publicCredential");
                 String voterAppVersion = result.getString("appVersion");
                    
-                Voter voter = new Voter(voterEmail, voterSignature, voterPublicCredential, voterAppVersion);
+                Voter voter = new Voter(voterEmail, voterPublicCredential, voterAppVersion);
                 voterlist.add(voter);
              }
              //get the votingTopic
@@ -591,7 +586,7 @@ public class CommunicationController {
         JsonObject signedModel = null;
                 
         try {
-            signedModel = signController.signJson(model);   
+            signedModel = signController.signJson(model);  
         } catch (Exception ex) {
             Logger.getLogger(CommunicationController.class.getName()).log(Level.SEVERE, null, ex);
         }

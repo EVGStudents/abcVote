@@ -12,20 +12,17 @@ package ch.bfh.abcvote.util.model;
 public class Voter {
     
     String email;
-    String signature;
     String publicCredential;
     String appVersion;
     
     /**
      * Create a new voter object
      * @param email
-     * @param signature
      * @param publicCredential
      * @param appVersion 
      */
-    public Voter(String email, String signature, String publicCredential, String appVersion){
+    public Voter(String email, String publicCredential, String appVersion){
         this.email = email;
-        this.signature = signature;
         this.publicCredential = publicCredential;
         this.appVersion = appVersion;
     }
@@ -36,15 +33,6 @@ public class Voter {
      */
     public String getEmail(){
         return email;
-    }
-    
-    /**
-     * Get signature
-     * @return 
-     */
-    public String getSignature(){
-        //TODO: Check if signature is still needed
-        return signature;
     }
     
     /**
