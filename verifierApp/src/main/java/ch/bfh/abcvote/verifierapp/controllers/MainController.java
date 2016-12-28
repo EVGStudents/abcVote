@@ -74,7 +74,7 @@ public class MainController extends StackPane {
     public MainController(){
         super();
         //new CommunicationController is created with the url of the bulletin board
-        communicationController = new CommunicationController("http://abc.2488.ch/");   
+        communicationController = new CommunicationController("https://abc.2488.ch/");   
     }
     
     /**
