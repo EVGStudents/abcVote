@@ -329,7 +329,7 @@ $app->post('/elections/{id}/ballots', function (Request $request, Response $resp
         $result = $mapper->storeBallot($ballot);
         return $response->withStatus(200)
                         ->withHeader('Content-Type', 'text/html')
-                        ->withAddedHeader('Client-IP', $request->getAttribute('ip_address)')
+                        ->withAddedHeader('Client-IP', $request->getAttribute('ip_address'))
                         ->write($result);
       } catch (Exception $e) {
         return $response->withStatus(400)
