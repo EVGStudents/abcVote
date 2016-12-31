@@ -29,7 +29,7 @@ class BallotEntity
         }
         $this->electionIdentifier = $data['electionIdentifier'];
         $this->jsonData = $data['jsonData'];
-        $this->timestamp = $data['timestamp'];
+        $this->timestamp = $data['ballotTimestamp'];
     }
 
     // GETters

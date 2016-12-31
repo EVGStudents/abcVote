@@ -17,7 +17,7 @@ class BallotMapper extends Mapper
   * and storing it into ballot object's
   */
   public function getBallots() {
-    $sql = "SELECT id, electionIdentifier, jsonData, timestamp
+    $sql = "SELECT id, electionIdentifier, jsonData, ballotTimestamp
       FROM tbl_ballots";
     $stmt = $this->db->query($sql);
     $results = [];
