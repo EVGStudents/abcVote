@@ -356,4 +356,13 @@ public class Ballot {
         String printedString = "ID: " + getId() + ", timestamp: " + timeStamp + ", Option: " + this.getSelectedOptionsString() + ", Vaild: " + isValid() + ", Reason: " + reason + ", u_Hat:" + this.u_Hat; 
         return printedString;
     }
+    
+    /**
+     * get the reason String
+     * @return 
+     */
+    public String getReason(){
+        
+        return reason;
+    }
 }
