@@ -117,10 +117,10 @@ $app->post('/elections', function (Request $request, Response $response) {
                           'appVersion' => $payload['appVersion']);
         $election = new ElectionEntity($electionArray);
         return $electMapper->storeElection($election);
-      } else {
+      } else { //wrong signature or signer's certificate isn't in tbl_certificates
         $response = $response->withStatus(401);
         $response = $response->withHeader('Content-Type', 'text/html')
-                              ->write('Wrong signature!');
+                              ->write('Wrong or unknown signature!');
         return $response;
       }
 
@@ -182,10 +182,10 @@ $app->post('/voters', function (Request $request, Response $response) {
         $voterArray = array('jsonData' => json_encode($payload));
         $voter = new VoterEntity($voterArray);
         return $mapper->storeVoter($voter);
-      } else {
+      } else { //wrong signature or signer's certificate isn't in tbl_certificates
         $response = $response->withStatus(401);
         $response = $response->withHeader('Content-Type', 'text/html')
-                              ->write('Wrong signature!');
+                              ->write('Wrong or unknown signature!');
         return $response;
       }
 
@@ -416,10 +416,10 @@ $app->post('/elections/{id}/results', function (Request $request, Response $resp
                           'jsonData' => json_encode($payload));
         $resultEntity = new ResultEntity($resultArray);
         return $resultMapper->storeResult($resultEntity);
-      } else {
+      } else { //wrong signature or signer's certificate isn't in tbl_certificates
         $response = $response->withStatus(401);
         $response = $response->withHeader('Content-Type', 'text/html')
-                              ->write('Wrong signature!');
+                              ->write('Wrong or unknown signature!');
         return $response;
       }
 
