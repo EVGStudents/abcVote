@@ -17,6 +17,7 @@ import ch.bfh.unicrypt.math.algebra.general.interfaces.Element;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -578,6 +579,23 @@ public class CommunicationController {
         resultBuilder.add(topicBuilder);
         
         jBuilder.add("result", resultBuilder);
+        JsonArrayBuilder ballotsBuilder = Json.createArrayBuilder();
+        for (Ballot ballot : result.getBallots()){
+            JsonObjectBuilder ballotBuilder = Json.createObjectBuilder();
+            //Translate ballot object into a json string 
+            JsonArrayBuilder ballotOptionsBuilder = Json.createArrayBuilder();
+            for (String option : ballot.getSelectedOptions()) {
+                ballotOptionsBuilder.add(option);
+            }
+            ballotBuilder.add("id", ballot.getId());
+            ballotBuilder.add("e", ballotOptionsBuilder);
+            ballotBuilder.add("valid", ballot.isValid());
+            ballotBuilder.add("reason", ballot.getReason());
+            
+            ballotsBuilder.add( ballotBuilder);
+        }
+        
+        jBuilder.add("ballots", ballotsBuilder);
         
         JsonObject model = jBuilder.build();
         
