@@ -216,11 +216,8 @@ public class CommunicationController {
         boolean responseOK = true;
         boolean usingTor = useTor;
         
-        HttpHost proxy = new HttpHost("127.0.0.1", 9050);
-        HttpClientBuilder httpClientBuilder = HttpClientBuilder.create().setProxy(proxy);
+        HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
         CloseableHttpClient httpClient = httpClientBuilder.create().build();
-  
-        //TODO App only get's new Tor circuit, when it's closed :-/
         
         if (usingTor == true) {
             try {
@@ -236,7 +233,7 @@ public class CommunicationController {
 
                 //sending post request and checking response
                 CloseableHttpResponse  response = httpClient.execute(request);
-                System.out.println(response);
+                //System.out.println(response);
                 if (response.getStatusLine().getStatusCode() != 200){
                     responseOK = false;
                 }
@@ -261,7 +258,7 @@ public class CommunicationController {
 
                 //sending post request and checking response
                 HttpResponse  response = httpClient.execute(request);
-                System.out.println(response);
+                //System.out.println(response);
                 if (response.getStatusLine().getStatusCode() != 200){
                     responseOK = false;
                 }
