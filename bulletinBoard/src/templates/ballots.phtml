@@ -24,6 +24,7 @@
             <th>electionIdentifier</th>
             <th>jsonData</th>
             <th>timestamp</th>
+            <th>ipAddress</th>
         </tr>
 
     <?php foreach($data['ballots'] as $ballot): ?>
@@ -31,8 +32,9 @@
         <tr>
             <td><?=$ballot->getId() ?></td>
             <td><?=$ballot->getElectionIdentifier() ?></td>
-            <td><?=$ballot->getJsonData() ?></td>
+            <td><?=substr($ballot->getJsonData(), 0, 50).'...' ?></td>
             <td><?=$ballot->getTimestamp() ?></td>
+            <td><?=$ballot->getIpAddress() ?></td>
         </tr>
 
     <?php endforeach; ?>

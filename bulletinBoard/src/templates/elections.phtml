@@ -33,11 +33,11 @@
 
         <tr>
             <td><?=$election->getId() ?></td>
-            <td><?=$election->getJsonData() ?></td>
+            <td><?=substr($election->getJsonData(), 0, 100).'...' ?></td>
             <td><?=$election->getElectionTitle() ?></td>
             <td><?=$election->getBeginDate() ?></td>
             <td><?=$election->getEndDate() ?></td>
-            <td><?=$election->getCoefficients() ?></td>
+            <td><?=substr($election->getCoefficients(), 0, 100).'...' ?></td>
             <td><?=$election->getAppVersion() ?></td>
         </tr>
 
