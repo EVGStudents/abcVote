@@ -17,7 +17,7 @@ class BallotMapper extends Mapper
   * and storing it into ballot object's
   */
   public function getBallots() {
-    $sql = "SELECT id, electionIdentifier, jsonData, ballotTimestamp
+    $sql = "SELECT id, electionIdentifier, jsonData, ballotTimestamp, ipAddress
       FROM tbl_ballots";
     $stmt = $this->db->query($sql);
     $results = [];
@@ -31,14 +31,16 @@ class BallotMapper extends Mapper
   * method storing a ballot object into the database
   */
   public function storeBallot(BallotEntity $ballot) {
-    $stmt = $this->db->prepare("INSERT INTO tbl_ballots (electionIdentifier, jsonData)
-      VALUES (:electionIdentifier, :jsonData)");
+    $stmt = $this->db->prepare("INSERT INTO tbl_ballots (electionIdentifier, jsonData, ipAddress)
+      VALUES (:electionIdentifier, :jsonData, :ipAddress)");
 
     $stmt->bindParam(':electionIdentifier', $electionIdentifier);
     $stmt->bindParam(':jsonData', $jsonData);
+    $stmt->bindParam(':ipAddress', $ipAddress);
 
     $electionIdentifier = $ballot->getElectionIdentifier();
     $jsonData = $ballot->getJsonData();
+    $ipAddress = $ballot->getIpAddress();
 
     return $stmt->execute();
   }

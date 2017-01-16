@@ -323,13 +323,13 @@ $app->post('/elections/{id}/ballots', function (Request $request, Response $resp
         $route = $request->getAttribute('route');
         $electionIdentifier = $route->getArgument('id');
         $ballotArray = array('electionIdentifier' => $electionIdentifier,
-                              'jsonData' => $jsonBody);
+                            'jsonData' => $jsonBody,
+                            'ipAddress' => $request->getAttribute('ip_address'));
         $ballot = new BallotEntity($ballotArray);
         $mapper = new BallotMapper($this->db);
         $result = $mapper->storeBallot($ballot);
         return $response->withStatus(200)
                         ->withHeader('Content-Type', 'text/html')
-                        ->withAddedHeader('Client-IP', $request->getAttribute('ip_address'))
                         ->write($result);
       } catch (Exception $e) {
         return $response->withStatus(400)

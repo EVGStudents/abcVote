@@ -16,6 +16,7 @@ class BallotEntity
     protected $electionIdentifier;
     protected $jsonData;
     protected $timestamp;
+    protected $ipAddress;
     /**
      * Accept an array of data matching properties of this class
      * and create the class
@@ -30,6 +31,7 @@ class BallotEntity
         $this->electionIdentifier = $data['electionIdentifier'];
         $this->jsonData = $data['jsonData'];
         $this->timestamp = $data['ballotTimestamp'];
+        $this->ipAddress = $data['ipAddress'];
     }
 
     // GETters
@@ -58,6 +60,12 @@ class BallotEntity
     public function getTimestamp() {
         return $this->timestamp;
     }
+    /**
+    * method returning this ballot's source IP address
+    */
+    public function getIpAddress() {
+        return $this->ipAddress;
+    }
 
     // SETters
 
@@ -72,5 +80,11 @@ class BallotEntity
     */
     public function setJsonData($jsonData) {
         $this->jsonData = $jsonData;
+    }
+    /**
+    * method for settings this ballot's source IP address
+    */
+    public function setIpAddress($ipAddress) {
+        $this->ipAddress = $ipAddress;
     }
 }
