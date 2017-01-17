@@ -49,19 +49,19 @@ public interface ControlledScreen {
     
     /**
      * This method allwos to pass the MainController to the controller of a screen 
-     * @param screenParent 
+     * @param screenParent pass the MainController to the controller of a screen 
      */
     public void setScreenParent(MainController screenParent);
     
     /**
      * This method will allow the maincontroller to pass the controller a election object to save and/or display
-     * @param election 
+     * @param election pass the controller a election object to save and/or display
      */
     public void setScene(Election election);
     
     /**
      * This method will allow the maincontroller to pass the controller a Ballot object to save and/or display
-     * @param ballot 
+     * @param ballot pass the controller a Ballot object to save and/or display
      */
     public void setScene(Ballot ballot);
     

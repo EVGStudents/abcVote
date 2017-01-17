@@ -85,6 +85,9 @@ public class MainController extends StackPane {
     
     private Boolean useTor = false;
     
+    /**
+     *
+     */
     public MainController(){
         super();
         //new CommunicationController is created with the url of the bulletin board
@@ -96,7 +99,7 @@ public class MainController extends StackPane {
      * @param name 
      * key value to store the screenPair in the hashmap
      * @param screenPair 
-     * Pair<ControlledScreen,Node> containing the Controller and the corepsonding Screen 
+     * Pair of ControlledScreen and Node containing the Controller and the corepsonding Screen 
      */
     public void addScreen(String name, Pair<ControlledScreen,Node> screenPair){
         screens.put(name, screenPair);

@@ -45,21 +45,61 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 /**
- * 
+ * VoterApp
  * @author t.buerk
  */
 public class VoterApp extends Application {
 
     //IDs and rescourcefile paths of all Scenes are defined, so all scenecontrollers can refrence other scenes
+
+    /**
+     * home screen's id
+     */
     public static final String HOMESCREENID = "home";
+
+    /**
+     * home screen's fxml
+     */
     public static final String HOMESCREENFILE = "/fxml/Home.fxml";
+
+    /**
+     * voter registration screen's id
+     */
     public static final String VOTERREGISTRATIONSCREENID = "voterRegistration";
+
+    /**
+     * voter registration screen's fxml 
+     */
     public static final String VOTERREGISTRATIONFILE = "/fxml/VoterRegistration.fxml";
+
+    /**
+     * election overview screen's id
+     */
     public static final String ELECTIONSOVERVIEWSCREENID = "electionsOverview";
+
+    /**
+     * election overview screen's fxml
+     */
     public static final String ELECTIONSOVERVIEWFILE = "/fxml/ElectionsOverview.fxml";
+
+    /**
+     * pick option screen's id
+     */
     public static final String PICKOPTIONSSCREENID = "pickOptions";
+
+    /**
+     * pick option screen's fxml
+     */
     public static final String PICKOPTIONSFILE = "/fxml/PickOptions.fxml";
+
+    /**
+     * ballot summary screen's id
+     */
     public static final String BALLOTSUMMARYSCREENID = "ballotSummary";
+
+    /**
+     * ballot summary screen's fxml
+     */
     public static final String BALLOTSUMMARYFILE = "/fxml/BallotSummary.fxml";
     
     @Override
