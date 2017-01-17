@@ -79,7 +79,7 @@ public class HomeController implements Initializable, ControlledScreen {
 
     /**
      * Method to set the screen with a given ElectionResult. Method not used in this controller class
-     * @param election 
+     * @param result the election result to be displayed 
      */
     @Override
     public void setScene(ElectionResult result) {
