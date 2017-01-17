@@ -42,5 +42,19 @@ package ch.bfh.abcvote.util.model;
  * @author t.buerk
  */
 public enum ElectionFilterTyp {
-    ALL, OPEN, CLOSED
+
+    /**
+     * get all elections' headers
+     */
+    ALL,
+
+    /**
+     * get all open elections' headers
+     */
+    OPEN,
+
+    /**
+     * get all closed elections' headers
+     */
+    CLOSED
 }

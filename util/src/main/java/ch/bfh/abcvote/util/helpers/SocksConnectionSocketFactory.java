@@ -37,7 +37,6 @@
  */
 package ch.bfh.abcvote.util.helpers;
 
-import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.Socket;
@@ -59,8 +58,12 @@ class SocksConnectionSocketFactory extends SSLConnectionSocketFactory {
         super(sslContext);
     }
 
-    @Override
-    public Socket createSocket(final HttpContext context) throws IOException {
+    /**
+     * ConnectionSocketFactory needed for Socks Proxy
+     * @param context the http context
+     * @return returns a proxy socket
+     */
+    public Socket createSocket(final HttpContext context) {
         InetSocketAddress socksaddr = (InetSocketAddress) context.getAttribute("socks.address");
         Proxy proxy = new Proxy(Proxy.Type.SOCKS, socksaddr);
         return new Socket(proxy);

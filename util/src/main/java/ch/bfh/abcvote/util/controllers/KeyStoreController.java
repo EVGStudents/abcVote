@@ -54,7 +54,7 @@ import javax.crypto.spec.PBEKeySpec;
  * KeyStoreController - helper class for communication with Java KeyStores.
  * Based on "d-smith/KeyUtils.java" https://gist.github.com/d-smith/c6a9d84e33466a530ca8
  * 
- * @author Sebastian Nellen <sebastian at nellen.it>
+ * @author Sebastian Nellen, sebastian@nellen.it
  */
 public class KeyStoreController {
     
@@ -74,7 +74,7 @@ public class KeyStoreController {
      * @param pathToKeyStore path to keystore file
      * @param keystorePassword the keystore's password
      * @return returns a KeyStore object
-     * @throws Exception 
+     * @throws Exception An Exception will be thrown in case of problems with the KeyStore (e.g. can't be found, wrong password, etc.)
      */
     public static KeyStore loadKeyStoreFromFile(String pathToKeyStore, String keystorePassword) throws Exception {
         KeyStore keyStore = KeyStore.getInstance("JCEKS");
@@ -89,7 +89,7 @@ public class KeyStoreController {
      * @param stringPassword the string's password
      * @param stringAlias the string's alias within the keystore
      * @param stringToStore the real string to be stored
-     * @throws Exception 
+     * @throws Exception An Exception will be thrown in case of problems with the KeyStore (e.g. can't be found, wrong password, etc.)
      */
     public static void writeStringToKeyStore(String pathToKeyStore, String keyStorePassword, String stringPassword, String stringAlias, String stringToStore)
             throws Exception {
@@ -119,7 +119,7 @@ public class KeyStoreController {
      * @param stringPassword the string's password
      * @param stringAlias the string's alias within the keystore
      * @return returns the store string
-     * @throws Exception 
+     * @throws Exception An Exception will be thrown in case of problems with the KeyStore (e.g. can't be found, wrong password, etc.)
      */
     public static String readStringFromKeyStore(KeyStore keyStore, String keyStorePassword, String stringPassword, String stringAlias) throws Exception {
         
@@ -143,7 +143,7 @@ public class KeyStoreController {
      * @param stringKeyPassword the key's password
      * @param stringKeyAlias the key's alias
      * @return returns the private key from a given alias
-     * @throws Exception 
+     * @throws Exception An Exception will be thrown in case of problems with the KeyStore (e.g. can't be found, wrong password, etc.)
      */
     public static PrivateKey readPrivateKeyFromKeyStore (String pathToKeyStore, String keyStorePassword, String stringKeyPassword, String stringKeyAlias) throws Exception {
         
@@ -160,7 +160,7 @@ public class KeyStoreController {
      * @param keyStorePassword the keystore's password
      * @param stringKeyAlias the key's alias
      * @return returns the public key from a given alias
-     * @throws Exception 
+     * @throws Exception An Exception will be thrown in case of problems with the KeyStore (e.g. can't be found, wrong password, etc.)
      */
     public static PublicKey readPublicKeyFromKeyStore (String pathToKeyStore, String keyStorePassword, String stringKeyAlias) throws Exception {
         

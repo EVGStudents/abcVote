@@ -104,13 +104,14 @@ public class Election {
     
     /**
      * Get the title of the election
-     * @return 
+     * @return the title of the election
      */
     public String getTitle(){
         return title;
     }
     /**
      * Set the title of the election
+     * @param title the election title
      */
     public void setTitle(String title){
         this.title = title;
@@ -126,6 +127,7 @@ public class Election {
 
     /**
      * set the voter list of the election
+     * @param voterList 
      */
     public void setVoterList(List<Voter> voterList) {
             this.voterList = voterList;
@@ -149,6 +151,7 @@ public class Election {
 
     /**
      * Set the electionTopic of the election
+     * @param topic 
      */
     public void setTopic(ElectionTopic topic) {
         this.topic = topic;

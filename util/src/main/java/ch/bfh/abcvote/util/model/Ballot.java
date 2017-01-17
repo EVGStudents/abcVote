@@ -163,7 +163,7 @@ public class Ballot {
 
     /**
      * Get the corresponding election of the ballot
-     * @return 
+     * @return the corresponding election of the ballot
      */
     public Election getElection() {
         return election;
@@ -171,7 +171,7 @@ public class Ballot {
 
     /**
      * get the list of the selected options of the ballot
-     * @return 
+     * @return the list of the selected options of the ballot
      */
     public List<String> getSelectedOptions() {
         return selectedOptions;
@@ -179,7 +179,7 @@ public class Ballot {
 
     /**
      * Takes the given privateCredentials as input and calculates all nessacairy proves for the ballot (c,d,u_Hat, pi1, pi2, pi3)
-     * @param privatCredentials 
+     * @param privatCredentials the private voter credentials to be used for proof calculation
      */
     public void calculateProves(PrivateCredentials privatCredentials) {
         Parameters parameters = election.getGenerators();
@@ -232,31 +232,31 @@ public class Ballot {
 
     /**
      * Get the ballots id
-     * @return 
+     * @return the ballots id
      */
     public int getId() {
         return id;
     }  
     
     /**
-     * get the Commitment C
-     * @return 
+     * get the Commitment c
+     * @return the Commitment c
      */
     public Element getC() {
         return c;
     }
 
     /**
-     * get the Commitment D
-     * @return 
+     * get the Commitment d
+     * @return the Commitment d
      */
     public Element getD() {
         return d;
     }
 
     /**
-     * get Election identifier u_Hat
-     * @return 
+     * get election identifier u_Hat
+     * @return election credential u_Hat
      */
     public Element getU_Hat() {
         return u_Hat;
@@ -264,7 +264,7 @@ public class Ballot {
 
     /**
      * Get the pi1 proof
-     * @return 
+     * @return the pi1 proof
      */
     public Tuple getPi1() {
         return pi1;
@@ -272,7 +272,7 @@ public class Ballot {
 
     /**
      * Get the pi2 proof
-     * @return 
+     * @return the pi2 proof
      */
     public Tuple getPi2() {
         return pi2;
@@ -280,7 +280,7 @@ public class Ballot {
 
     /**
      * Get the pi3 proof
-     * @return 
+     * @return the pi3 proof
      */
     public Tuple getPi3() {
         return pi3;
@@ -288,7 +288,7 @@ public class Ballot {
     
     /**
      * Get the string repersentation of commitment c
-     * @return 
+     * @return the string repersentation of commitment c
      */
     public String getCString() {
         return c.convertToString();
@@ -296,7 +296,7 @@ public class Ballot {
 
     /**
      * Get the string repersentation of commitment d
-     * @return 
+     * @return the string repersentation of commitment d
      */
     public String getDString() {
         return d.convertToString();
@@ -304,7 +304,7 @@ public class Ballot {
 
     /**
      * Get the string repersentation of celection identifier u_Hat
-     * @return 
+     * @return the string repersentation of celection identifier u_Hat
      */
     public String getU_HatString() {
         return u_Hat.convertToString();
@@ -312,7 +312,7 @@ public class Ballot {
 
     /**
      * Get the string repersentation of proof pi1
-     * @return 
+     * @return the string repersentation of proof pi1
      */
     public String getPi1String() {
         return pi1.convertToString();
@@ -320,7 +320,7 @@ public class Ballot {
 
     /**
      * Get the string repersentation of proof pi2
-     * @return 
+     * @return the string repersentation of proof pi2
      */
     public String getPi2String() {
         return pi2.convertToString();
@@ -328,23 +328,23 @@ public class Ballot {
 
     /**
      * Get the string repersentation of proof pi3
-     * @return 
+     * @return the string repersentation of proof pi3
      */
     public String getPi3String() {
         return pi3.convertToString();
     }  
 
     /**
-     * get if the the ballot is valid
-     * @return 
+     * get if the ballot is valid
+     * @return validity of a ballot
      */
     public boolean isValid() {
         return valid;
     }
 
     /**
-     * Changes the valid Flag to fals and stores the given reason String
-     * @param valid 
+     * Changes the valid Flag to false and stores the given reason as string 
+     * @param reason string indicating the reason of invalidity
      */
     public void setInvalid(String reason) {
         this.valid = false;
@@ -353,7 +353,7 @@ public class Ballot {
 
     /**
      * get the timestamp of the ballot
-     * @return 
+     * @return the timestamp of the ballot
      */
     public LocalDateTime getTimeStamp() {
         return timeStamp;
@@ -361,7 +361,7 @@ public class Ballot {
     
     /**
      * get the string representation of the selected options
-     * @return 
+     * @return the string representation of the selected options
      */
     public String getSelectedOptionsString(){
         String result = "";
@@ -381,7 +381,7 @@ public class Ballot {
     
     /**
      * Get the String representation of the ballot for listing it
-     * @return 
+     * @return the String representation of the ballot for listing it
      */
     @Override
     public String toString(){
@@ -391,10 +391,9 @@ public class Ballot {
     
     /**
      * get the reason String
-     * @return 
+     * @return the reason as String
      */
     public String getReason(){
-        
         return reason;
     }
 }

@@ -46,7 +46,7 @@ import javax.json.JsonObjectBuilder;
 
 /**
  * controller for working with JWS and signature stuff
- * @author Sebastian Nellen <sebastian at nellen.it>
+ * @author Sebastian Nellen, sebastian@nellen.it
  */
 public class SignatureController {
     
@@ -54,7 +54,7 @@ public class SignatureController {
      * signs a given JSON object and returns it
      * @param jsonInput the JSON to be signed
      * @return a JWS (signed json object)
-     * @throws Exception 
+     * @throws Exception An Exception is either thrown from the KeyStoreController, or from the jws serialization stuff
      */
     public JsonObject signJson (JsonObject jsonInput) throws Exception {
         

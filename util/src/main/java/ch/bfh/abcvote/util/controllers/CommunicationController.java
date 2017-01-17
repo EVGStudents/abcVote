@@ -49,7 +49,6 @@ import ch.bfh.unicrypt.math.algebra.general.interfaces.Element;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -66,14 +65,12 @@ import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonReader;
-import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.jose4j.lang.JoseException;
 
 
 /**
@@ -88,8 +85,8 @@ public class CommunicationController {
     
     /**
      * Creates a new CommunicationController Object with the given bulletinBoardUrl.
-     * The bulletinBoardUrl is stored in a global variable and used as the baseUrl for every conntction with the bulletin board
      * @param bulletinBoardUrl 
+     * The bulletinBoardUrl is stored in a global variable and used as the baseUrl for every conntction with the bulletin board
      */
     public CommunicationController(String bulletinBoardUrl){
         this.bulletinBoardUrl = bulletinBoardUrl;
@@ -97,7 +94,7 @@ public class CommunicationController {
     
     /**
      * Gets the parameters of the bulletin board from the bulletin board and converts the recieved Json in a Parameters object and returns it
-     * @return 
+     * @return returns bulletin board's parameters in form of a parameter object
      */
     public Parameters getParameters() {
         try {
@@ -129,7 +126,7 @@ public class CommunicationController {
 
     /**
      * gets the all registered voters from the bulletin board and returns them as a List of Voter objects
-     * @return 
+     * @return returns a list of all voters
      */
     public List<Voter> getAllARegisteredVoters() {
        List<Voter> voterlist = new ArrayList<Voter>(); 
@@ -242,7 +239,7 @@ public class CommunicationController {
      * Boolean indicating if Json should be posted over Tor network
      * @return
      * retruns whether or not the data was sucessfully posted
-     * @throws IOException 
+     * @throws IOException IOException is thrown from the CloseableHttpClient
      */
     public boolean postJsonStringToURL(String url, String json, Boolean useTor) throws IOException{
         boolean responseOK = true;
@@ -310,13 +307,12 @@ public class CommunicationController {
      * email address under which the new voter should be registered
      * @param parameters
      * parameters used by the bulletin board
-     * @param u
-     * @return
-     * @throws JoseException
-     * @throws Exception 
+     * @param u 
+     * public voter credential u
+     * @return returns true if a new voter could be registered
      */
     //TODO check if parameters are still needed
-    public boolean registerNewVoter(String email, Parameters parameters, Element u) throws JoseException, Exception{
+    public boolean registerNewVoter(String email, Parameters parameters, Element u) {
         
         //create Voter json
         JsonObjectBuilder jBuilder = Json.createObjectBuilder();
@@ -358,7 +354,7 @@ public class CommunicationController {
      * Gets a List of ElectionHeaders from the Bulletin Board and returns it. Fetched list depends on the given ElectionFilterTyp
      * @param filter
      * The filter can be set to All, Open or Closed
-     * @return 
+     * @return returns a list of election headers
      */
     public List<ElectionHeader> getElectionHeaders(ElectionFilterTyp filter) {
         List<ElectionHeader> electionHeaderlist = new ArrayList<ElectionHeader>(); 
@@ -430,7 +426,8 @@ public class CommunicationController {
     /**
      * Gets the information for the given ElectionID from the bulletin board and returns it as a election object
      * @param electionId
-     * @return 
+     * the identifier (id) for the desired election
+     * @return returns tje election object for a given id
      */
     public Election getElectionById(int electionId) {
         Election election = null;
@@ -488,9 +485,8 @@ public class CommunicationController {
 
     /**
      * Posts the given ballot to the bulletin board
-     * @param ballot
+     * @param ballot Ballot to be posted to the bulletin board
      * @param useTor Boolean indicating if Ballot should be posted over the Tor network
-     * Ballot to be posted to the bulletin board
      */
     public void postBallot(Ballot ballot, Boolean useTor) {
         JsonObjectBuilder jBuilder = Json.createObjectBuilder();
