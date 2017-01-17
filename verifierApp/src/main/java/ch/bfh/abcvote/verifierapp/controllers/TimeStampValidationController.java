@@ -21,6 +21,10 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Callback;
 
 /**
@@ -38,7 +42,7 @@ public class TimeStampValidationController implements Initializable, ControlledS
     @FXML
     private Button btNext;
     @FXML
-    private ListView<Ballot> lvBallots;
+    private TableView<Ballot> tvBallots;
     
     /**
      * Initializes the controller class.
@@ -72,7 +76,7 @@ public class TimeStampValidationController implements Initializable, ControlledS
     @Override
     public void setScene(ElectionResult result) {
         this.result = result;
-        populateBallotsListView(result.getBallots());
+        populateBallotsTableView(result.getBallots());
     }
     
     /**
@@ -105,27 +109,38 @@ public class TimeStampValidationController implements Initializable, ControlledS
     }
     
     /**
-     * Displays the given list of Ballots in the lvBallots-ListView
+     * Displays the given list of Ballots in the tvBallots-TableView
      * @param ballotList 
      */
-    private void populateBallotsListView(List<Ballot> ballotList) {
+    private void populateBallotsTableView(List<Ballot> ballotList) {
         
         ObservableList<Ballot> listViewList = FXCollections.observableArrayList(ballotList);
-        lvBallots.setItems(listViewList);
-        //set the text color of the ballot depoending on the validity
-        lvBallots.setCellFactory(new Callback<ListView<Ballot>, ListCell<Ballot>>(){
- 
+        //construct tableView
+        tvBallots.getColumns().clear();
+        TableColumn idColumn = new TableColumn("Id");
+        idColumn.setCellValueFactory(new PropertyValueFactory("id"));
+        TableColumn timestampColumn = new TableColumn("Timestamp");
+        timestampColumn.setCellValueFactory(new PropertyValueFactory("timeStamp"));
+        TableColumn optionColumn = new TableColumn("Option");
+        optionColumn.setCellValueFactory(new PropertyValueFactory("selectedOptionsString"));
+        TableColumn validColumn = new TableColumn("Valid");
+        validColumn.setCellValueFactory(new PropertyValueFactory("valid"));
+        TableColumn reasonColumn = new TableColumn("Reason");
+        reasonColumn.setCellValueFactory(new PropertyValueFactory("reason"));        
+        TableColumn identifierColumn = new TableColumn("Identifier");
+        identifierColumn.setCellValueFactory(new PropertyValueFactory("u_HatString"));
+        
+        //add conditional coloring to validColumn cells
+        validColumn.setCellFactory(new Callback<TableColumn<Ballot, Boolean>, TableCell<Ballot, Boolean>>() {
             @Override
-            public ListCell<Ballot> call(ListView<Ballot> p) {
-                 
-                ListCell<Ballot> cell = new ListCell<Ballot>(){
- 
+            public TableCell<Ballot, Boolean> call(TableColumn<Ballot, Boolean> personStringTableColumn) {
+                return new TableCell<Ballot, Boolean>() {
                     @Override
-                    protected void updateItem(Ballot t, boolean bln) {
-                        super.updateItem(t, bln);
-                        if (t != null) {
-                            setText(t.toString());
-                            if (t.isValid()){
+                    protected void updateItem(Boolean name, boolean empty) {
+                        super.updateItem(name, empty);
+                        if (name != null) {
+                            setText(name.toString());
+                            if (name){
                                 setStyle("-fx-text-fill:green;");
                             }
                             else{
@@ -134,12 +149,13 @@ public class TimeStampValidationController implements Initializable, ControlledS
                             
                         }
                     }
- 
                 };
-                 
-                return cell;
             }
         });
+
+        tvBallots.getColumns().addAll(idColumn, timestampColumn, optionColumn, validColumn, reasonColumn, identifierColumn);
+        tvBallots.setItems(listViewList);
+        
     }
     
 }
