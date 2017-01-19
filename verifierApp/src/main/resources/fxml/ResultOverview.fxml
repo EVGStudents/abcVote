@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
 <?import javafx.scene.*?>
@@ -8,22 +9,49 @@
 
 <AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.bfh.abcvote.verifierapp.controllers.ResultOverviewController">
         <children>
-         <Button fx:id="btBack" layoutX="14.0" layoutY="561.0" mnemonicParsing="false" onAction="#btBackClicked" text="Back" />
-         
-   
-   
-            <Button fx:id="btPublish" layoutX="731.0" layoutY="561.0" mnemonicParsing="false" onAction="#btPublishClicked" text="Publish" />
-      <Button fx:id="btHome" layoutX="674.0" layoutY="561.0" mnemonicParsing="false" onAction="#btHomeClicked" text="Home" />
-      <Label layoutX="14.0" layoutY="14.0" text="Result:" />
-      <Label layoutX="14.0" layoutY="56.0" text="Election:" />
-      <Label fx:id="lbElectionTitle" layoutX="66.0" layoutY="56.0" text="Label" />
-      <Label layoutX="15.0" layoutY="421.0" text="Topic:" />
-      <Label fx:id="lbTopic" layoutX="67.0" layoutY="421.0" text="Label" />
-      <ListView fx:id="lvResult" layoutX="14.0" layoutY="444.0" prefHeight="108.0" prefWidth="772.0" />
-      <Label layoutX="14.0" layoutY="83.0" text="Ballots:" />
       <TableView fx:id="tvBallots" layoutX="15.0" layoutY="107.0" prefHeight="292.0" prefWidth="772.0">
          <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy></TableView>
+         
+   
+   
+            <Button fx:id="btPublish" layoutX="700.0" layoutY="552.0" minHeight="40.0" minWidth="80.0" mnemonicParsing="false" onAction="#btPublishClicked" text="Publish">
+         <font>
+            <Font size="18.0" />
+         </font></Button>
+      <Button fx:id="btHome" layoutX="599.0" layoutY="552.0" minHeight="40.0" minWidth="80.0" mnemonicParsing="false" onAction="#btHomeClicked" text="Home">
+         <font>
+            <Font size="18.0" />
+         </font></Button>
+         <Button fx:id="btBack" layoutX="15.0" layoutY="552.0" minHeight="40.0" minWidth="80.0" mnemonicParsing="false" onAction="#btBackClicked" text="Back">
+         <font>
+            <Font size="18.0" />
+         </font></Button>
+      <ListView id="list-view" fx:id="lvResult" layoutX="14.0" layoutY="434.0" prefHeight="108.0" prefWidth="772.0" stylesheets="@../styles/Styles.css" />
+      <Label layoutX="14.0" layoutY="14.0" text="Result:">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font></Label>
+      <Label layoutX="14.0" layoutY="56.0" text="Election:">
+         <font>
+            <Font size="18.0" />
+         </font></Label>
+      <Label fx:id="lbElectionTitle" layoutX="115.0" layoutY="56.0" text="Label">
+         <font>
+            <Font size="18.0" />
+         </font></Label>
+      <Label layoutX="15.0" layoutY="405.0" text="Topic:">
+         <font>
+            <Font size="18.0" />
+         </font></Label>
+      <Label fx:id="lbTopic" layoutX="115.0" layoutY="405.0" text="Label">
+         <font>
+            <Font size="18.0" />
+         </font></Label>
+      <Label layoutX="14.0" layoutY="83.0" text="Ballots:">
+         <font>
+            <Font size="18.0" />
+         </font></Label>
    </children>
 </AnchorPane>
