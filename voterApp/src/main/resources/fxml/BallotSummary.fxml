@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
 <?import javafx.scene.*?>
@@ -8,19 +9,52 @@
 
 <AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.bfh.abcvote.voterapp.controllers.BallotSummaryController">
    <children>
-         <Button fx:id="btBack" layoutX="14.0" layoutY="561.0" mnemonicParsing="false" onAction="#btBackClicked" text="Back" />
-         <Label layoutX="14.0" layoutY="27.0" text="Ballot Summary" />
    
    
-            <Button fx:id="btCastBallot" layoutX="714.0" layoutY="561.0" mnemonicParsing="false" onAction="#btNextClicked" text="Cast Ballot" />
-      <Label layoutX="14.0" layoutY="88.0" text="Election:" />
-      <Label fx:id="lbElectionTitle" layoutX="98.0" layoutY="88.0" text="Label" />
-      <Label layoutX="14.0" layoutY="146.0" text="Topic:" />
-      <Label fx:id="lbTopic" layoutX="98.0" layoutY="146.0" text="Label" />
-      <Label layoutX="14.0" layoutY="183.0" text="Pick:" />
-      <Label layoutX="12.0" layoutY="228.0" text="Selected options:" />
-      <Label fx:id="lbPick" layoutX="98.0" layoutY="183.0" text="Label" />
-      <ListView fx:id="lvSelectedOptions" layoutX="14.0" layoutY="253.0" prefHeight="301.0" prefWidth="771.0" />
-      <CheckBox fx:id="chkTor" disable="true" layoutX="500.0" layoutY="88.0" mnemonicParsing="false" text="Vote will be sent over Tor network" />
+            <Button fx:id="btCastBallot" layoutX="670.0" layoutY="546.0" mnemonicParsing="false" onAction="#btNextClicked" prefHeight="40.0" text="Cast Ballot">
+         <font>
+            <Font size="18.0" />
+         </font></Button>
+         <Button fx:id="btBack" layoutX="16.0" layoutY="546.0" mnemonicParsing="false" onAction="#btBackClicked" prefHeight="40.0" prefWidth="80.0" text="Back">
+         <font>
+            <Font size="18.0" />
+         </font></Button>
+         <Label layoutX="14.0" layoutY="27.0" text="Ballot Summary">
+         <font>
+            <Font size="18.0" />
+         </font></Label>
+      <Label layoutX="14.0" layoutY="88.0" text="Election:">
+         <font>
+            <Font size="18.0" />
+         </font></Label>
+      <Label fx:id="lbElectionTitle" layoutX="98.0" layoutY="88.0" text="Label">
+         <font>
+            <Font size="18.0" />
+         </font></Label>
+      <Label layoutX="14.0" layoutY="146.0" text="Topic:">
+         <font>
+            <Font size="18.0" />
+         </font></Label>
+      <Label fx:id="lbTopic" layoutX="98.0" layoutY="146.0" text="Label">
+         <font>
+            <Font size="18.0" />
+         </font></Label>
+      <Label layoutX="14.0" layoutY="183.0" text="Pick:">
+         <font>
+            <Font size="18.0" />
+         </font></Label>
+      <Label layoutX="12.0" layoutY="228.0" text="Selected options:">
+         <font>
+            <Font size="18.0" />
+         </font></Label>
+      <Label fx:id="lbPick" layoutX="98.0" layoutY="183.0" text="Label">
+         <font>
+            <Font size="18.0" />
+         </font></Label>
+      <ListView id="list-view" fx:id="lvSelectedOptions" layoutX="14.0" layoutY="253.0" prefHeight="277.0" prefWidth="771.0" stylesheets="@../styles/Styles.css" />
+      <CheckBox fx:id="chkTor" disable="true" layoutX="461.0" layoutY="87.0" mnemonicParsing="false" selected="true" text="Vote will be sent over Tor network">
+         <font>
+            <Font size="18.0" />
+         </font></CheckBox>
    </children>
 </AnchorPane>

@@ -1,3 +1,11 @@
 .button {
     -fx-font-weight: bold;
 }
+.list-cell {
+  -fx-font: 16pt "System";
+  -fx-background-insets: 0;
+}
+
+.date-picker {
+  -fx-font: 16pt "System";
+}
