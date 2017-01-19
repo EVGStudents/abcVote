@@ -79,7 +79,7 @@ public class MainController extends StackPane {
     private HashMap<String, Pair<ControlledScreen,Node>> screens = new HashMap<>();
     private CommunicationController communicationController;
     
-    private final String pathToKeyStore = System.getProperty("user.home") + File.separator + "Documents" + File.separator + "abcVote" + File.separator + "test.jks";
+    private final String pathToKeyStore = System.getProperty("user.home") + File.separator + "Documents" + File.separator + "abcVote" + File.separator + "alice_at_bfh.ch-KeyStore.jks";
     private final String keyStorePassword = "Bern2016";
     private final String stringPassword = "Bern2016";
     

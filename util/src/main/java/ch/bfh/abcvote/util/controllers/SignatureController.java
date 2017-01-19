@@ -70,10 +70,10 @@ public class SignatureController {
         // Set the signing key on the JWS
         // Note that your application will need to determine where/how to get the key
         // and here we just use an example from the JWS spec
-        String pathToKeyStore = System.getProperty("user.home") + File.separator + "Documents" + File.separator + "abcVote" + File.separator + "test.jks";
+        String pathToKeyStore = System.getProperty("user.home") + File.separator + "Documents" + File.separator + "abcVote" + File.separator + "alice_at_bfh.ch-KeyStore.jks";
         String keyStorePassword = "Bern2016";
         String stringKeyPassword = "Bern2016";
-        String stringAlias = "alice-at-bfh.ch";
+        String stringAlias = "alice_at_bfh.ch";
         PrivateKey privateKey = KeyStoreController.readPrivateKeyFromKeyStore(pathToKeyStore, keyStorePassword, stringKeyPassword, stringAlias);
         jws.setKey(privateKey);
         
