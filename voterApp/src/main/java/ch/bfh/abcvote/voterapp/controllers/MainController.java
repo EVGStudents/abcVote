@@ -83,7 +83,7 @@ public class MainController extends StackPane {
     private final String keyStorePassword = "Bern2016";
     private final String stringPassword = "Bern2016";
     
-    private Boolean useTor = false;
+    private Boolean useTor = true;
     
     /**
      *

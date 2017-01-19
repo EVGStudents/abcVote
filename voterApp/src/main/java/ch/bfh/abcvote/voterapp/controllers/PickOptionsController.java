@@ -113,6 +113,8 @@ public class PickOptionsController implements Initializable,ControlledScreen {
         this.txtTopic.setText(topic.getTitle());
         //display options
         populateOptionsListView(topic.getOptions());
+        this.chkTor.setSelected(true);
+        useTor = true;
     }
     
     /**
