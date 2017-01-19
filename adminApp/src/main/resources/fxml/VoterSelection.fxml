@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
 <?import javafx.scene.*?>
@@ -8,9 +9,18 @@
 
 <AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.bfh.abcvote.adminapp.controllers.VoterSelectionController">
    <children>
-      <Button fx:id="btBack" layoutX="14.0" layoutY="561.0" mnemonicParsing="false" onAction="#btBackClicked" text="Back" />
-      <Button fx:id="btNext" layoutX="745.0" layoutY="561.0" mnemonicParsing="false" onAction="#btNextClicked" text="Next" />
-      <Label fx:id="lbSelectVoters" layoutX="14.0" layoutY="30.0" text="Please choose voters for the election :" />
-      <ListView fx:id="lvVoters" layoutX="14.0" layoutY="53.0" prefHeight="497.0" prefWidth="770.0" />
+      <ListView id="list-cell" fx:id="lvVoters" layoutX="14.0" layoutY="53.0" prefHeight="479.0" prefWidth="770.0" styleClass="list-cell" stylesheets="@../styles/Styles.css" />
+      <Button fx:id="btNext" layoutX="704.0" layoutY="547.0" mnemonicParsing="false" onAction="#btNextClicked" prefHeight="40.0" prefWidth="80.0" text="Next">
+         <font>
+            <Font size="18.0" />
+         </font></Button>
+      <Button fx:id="btBack" layoutX="14.0" layoutY="547.0" mnemonicParsing="false" onAction="#btBackClicked" prefHeight="40.0" prefWidth="80.0" text="Back">
+         <font>
+            <Font size="18.0" />
+         </font></Button>
+      <Label fx:id="lbSelectVoters" layoutX="14.0" layoutY="30.0" text="Please choose voters for the election :">
+         <font>
+            <Font size="16.0" />
+         </font></Label>
    </children>
 </AnchorPane>

@@ -9,14 +9,29 @@
 
 <AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.bfh.abcvote.adminapp.controllers.VotingPeriodSelectionController">
     <children>
-      <Button fx:id="btBack" layoutX="14.0" layoutY="561.0" mnemonicParsing="false" onAction="#btBackClicked" text="Back" />
-      <Label layoutX="14.0" layoutY="27.0" text="Please enter the voting period for the election :" />
+      <Button fx:id="btBack" layoutX="10.0" layoutY="551.0" mnemonicParsing="false" onAction="#btBackClicked" text="Back">
+         <font>
+            <Font size="18.0" />
+         </font></Button>
+      <Label layoutX="14.0" layoutY="27.0" text="Please enter the voting period for the election :">
+         <font>
+            <Font size="18.0" />
+         </font></Label>
 
 
-      <Button fx:id="btNext" layoutX="745.0" layoutY="561.0" mnemonicParsing="false" onAction="#btNextClicked" text="Next" />
-      <Text layoutX="14.0" layoutY="81.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Starting date:" />
-      <Text layoutX="14.0" layoutY="141.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Ending date:" />
-      <DatePicker fx:id="dateStart" layoutX="14.0" layoutY="93.0" />
-      <DatePicker fx:id="dateEnd" layoutX="14.0" layoutY="154.0" />
+      <Button fx:id="btNext" layoutX="722.0" layoutY="551.0" mnemonicParsing="false" onAction="#btNextClicked" text="Next">
+         <font>
+            <Font size="18.0" />
+         </font></Button>
+      <Text layoutX="14.0" layoutY="81.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Starting date:">
+         <font>
+            <Font size="18.0" />
+         </font></Text>
+      <Text layoutX="14.0" layoutY="155.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Ending date:">
+         <font>
+            <Font size="18.0" />
+         </font></Text>
+      <DatePicker id="date-picker" fx:id="dateStart" layoutX="14.0" layoutY="93.0" prefHeight="43.0" prefWidth="209.0" styleClass="data-picker" stylesheets="@../styles/Styles.css" />
+      <DatePicker id="date-picker" fx:id="dateEnd" layoutX="14.0" layoutY="168.0" prefHeight="43.0" prefWidth="209.0" styleClass="date-picker" stylesheets="@../styles/Styles.css" />
    </children>
 </AnchorPane>

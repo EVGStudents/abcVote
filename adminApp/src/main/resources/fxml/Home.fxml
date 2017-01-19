@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
 <?import javafx.scene.*?>
@@ -8,6 +9,9 @@
 
 <AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.bfh.abcvote.adminapp.controllers.HomeController">
    <children>
-      <Button fx:id="btCreateElection" layoutX="288.0" layoutY="247.0" mnemonicParsing="false" onAction="#btcreateNewElectionClicked" prefHeight="87.0" prefWidth="225.0" text="Create election" />
+      <Button fx:id="btCreateElection" layoutX="288.0" layoutY="247.0" mnemonicParsing="false" onAction="#btcreateNewElectionClicked" prefHeight="87.0" prefWidth="225.0" text="Create election">
+         <font>
+            <Font size="18.0" />
+         </font></Button>
    </children>
 </AnchorPane>

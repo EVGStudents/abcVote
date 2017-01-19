@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
 <?import javafx.scene.*?>
@@ -8,23 +9,62 @@
 
 <AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.bfh.abcvote.adminapp.controllers.ElectionSummaryController">
     <children>
-      <Button fx:id="btBack" layoutX="14.0" layoutY="561.0" mnemonicParsing="false" onAction="#btBackClicked" text="Back" />
-      <Label layoutX="14.0" layoutY="27.0" text="Election Summary:" />
 
 
-      <Button fx:id="btCreate" layoutX="735.0" layoutY="561.0" mnemonicParsing="false" onAction="#btCreateClicked" text="Create" />
-      <Label layoutX="14.0" layoutY="52.0" text="Title:" />
-      <Label layoutX="13.0" layoutY="106.0" text="Voters:" />
-      <ListView fx:id="lvVoters" layoutX="14.0" layoutY="131.0" prefHeight="184.0" prefWidth="775.0" />
-      <ListView fx:id="lvOptions" layoutX="14.0" layoutY="417.0" prefHeight="126.0" prefWidth="775.0" />
-      <Label layoutX="16.0" layoutY="346.0" text="Topic:" />
-      <Label layoutX="15.0" layoutY="369.0" text="Pick:" />
-      <Label layoutX="13.0" layoutY="392.0" text="Options:" />
-      <Label fx:id="lbTitle" layoutX="110.0" layoutY="52.0" text="Label" />
-      <Label fx:id="lbTopic" layoutX="110.0" layoutY="346.0" text="Label" />
-      <Label fx:id="lbPick" layoutX="110.0" layoutY="369.0" text="Label" />
-      <Label layoutX="13.0" layoutY="79.0" text="Voting period:" />
-      <Label fx:id="lbVotingPeriod" layoutX="110.0" layoutY="79.0" text="Label" />
+      <Button fx:id="btCreate" layoutX="708.0" layoutY="551.0" mnemonicParsing="false" onAction="#btCreateClicked" text="Create">
+         <font>
+            <Font size="18.0" />
+         </font></Button>
+      <Button fx:id="btBack" layoutX="16.0" layoutY="551.0" mnemonicParsing="false" onAction="#btBackClicked" text="Back">
+         <font>
+            <Font size="18.0" />
+         </font></Button>
+      <Label layoutX="14.0" layoutY="27.0" text="Election Summary:">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font></Label>
+      <Label layoutX="14.0" layoutY="52.0" text="Title:">
+         <font>
+            <Font size="18.0" />
+         </font></Label>
+      <Label layoutX="13.0" layoutY="106.0" text="Voters:">
+         <font>
+            <Font size="18.0" />
+         </font></Label>
+      <ListView id="list-cell" fx:id="lvVoters" layoutX="14.0" layoutY="131.0" prefHeight="184.0" prefWidth="775.0" styleClass="list-cell" stylesheets="@../styles/Styles.css" />
+      <ListView id="list-cell" fx:id="lvOptions" layoutX="14.0" layoutY="417.0" prefHeight="126.0" prefWidth="775.0" styleClass="list-cell" stylesheets="@../styles/Styles.css" />
+      <Label layoutX="15.0" layoutY="335.0" text="Topic:">
+         <font>
+            <Font size="18.0" />
+         </font></Label>
+      <Label layoutX="14.0" layoutY="365.0" text="Pick:">
+         <font>
+            <Font size="18.0" />
+         </font></Label>
+      <Label layoutX="13.0" layoutY="392.0" text="Options:">
+         <font>
+            <Font size="18.0" />
+         </font></Label>
+      <Label fx:id="lbTitle" layoutX="150.0" layoutY="52.0" text="Label">
+         <font>
+            <Font size="18.0" />
+         </font></Label>
+      <Label fx:id="lbTopic" layoutX="137.0" layoutY="335.0" text="Label">
+         <font>
+            <Font size="18.0" />
+         </font></Label>
+      <Label fx:id="lbPick" layoutX="137.0" layoutY="365.0" text="Label">
+         <font>
+            <Font size="18.0" />
+         </font></Label>
+      <Label layoutX="13.0" layoutY="79.0" text="Voting period:">
+         <font>
+            <Font size="18.0" />
+         </font></Label>
+      <Label fx:id="lbVotingPeriod" layoutX="150.0" layoutY="79.0" text="Label">
+         <font>
+            <Font size="18.0" />
+         </font></Label>
 
    </children>
 </AnchorPane>
