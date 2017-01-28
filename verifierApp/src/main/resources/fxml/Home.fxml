@@ -9,9 +9,15 @@
 
 <AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.bfh.abcvote.verifierapp.controllers.HomeController">
    <children>
-      <Button fx:id="btVerifyElection" layoutX="250.0" layoutY="210.0" mnemonicParsing="false" onAction="#btVerifiyElectionClicked" prefHeight="109.0" prefWidth="291.0" text="Verify election">
+      <Button fx:id="btVerifyElection" layoutX="250.0" layoutY="210.0" mnemonicParsing="false" onAction="#btVerifiyElectionClicked" prefHeight="109.0" prefWidth="291.0" stylesheets="@../styles/Styles.css" text="Verify election">
          <font>
             <Font size="18.0" />
          </font></Button>
+      <Label id="verifierAppLabel" layoutX="600.0" layoutY="20.0" stylesheets="@../styles/Styles.css" text="VerifierApp" textAlignment="RIGHT">
+         <font>
+            <Font name="System Bold" size="24.0" />
+         </font>
+      </Label>
+      <Pane id="headerBanner" prefHeight="20.0" prefWidth="800.0" stylesheets="@../styles/Styles.css" />
    </children>
 </AnchorPane>

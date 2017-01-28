@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.net.*?>
+<?import javafx.scene.effect.*?>
 <?import javafx.scene.text.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
@@ -7,15 +9,21 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.bfh.abcvote.voterapp.controllers.HomeController">
+<AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="800.0" styleClass="anchorpane" stylesheets="@../styles/Styles.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.bfh.abcvote.voterapp.controllers.HomeController">
    <children>
-      <Button fx:id="btRegister" layoutX="100.0" layoutY="200.0" mnemonicParsing="false" onAction="#btRegisterClicked" prefHeight="75.0" prefWidth="200.0" text="Register">
+      <Pane id="headerBanner" prefHeight="20.0" prefWidth="800.0" />
+      <Button id="registerButton" fx:id="btRegister" layoutX="100.0" layoutY="200.0" mnemonicParsing="false" onAction="#btRegisterClicked" prefHeight="75.0" prefWidth="200.0" stylesheets="@../styles/Styles.css" text="Register">
          <font>
             <Font size="18.0" />
          </font></Button>
-      <Button fx:id="btVote" layoutX="500.0" layoutY="200.0" mnemonicParsing="false" onAction="#btVoteClicked" prefHeight="75.0" prefWidth="200.0" text="Vote">
+      <Button id="voteButton" fx:id="btVote" layoutX="500.0" layoutY="200.0" mnemonicParsing="false" onAction="#btVoteClicked" prefHeight="75.0" prefWidth="200.0" stylesheets="@../styles/Styles.css" text="Vote">
          <font>
             <Font size="18.0" />
          </font></Button>
+      <Label id="voterAppLabel" layoutX="631.0" layoutY="20.0" stylesheets="@../styles/Styles.css" text="VoterApp" textAlignment="RIGHT">
+         <font>
+            <Font name="System Bold" size="24.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

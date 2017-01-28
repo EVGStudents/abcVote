@@ -81,7 +81,7 @@ public class AdminApp extends Application {
         root.getChildren().addAll(mainController);
         Scene scene = new Scene(root);
         mainStage.setScene(scene);
-        mainStage.setTitle("AdminApp");
+        mainStage.setTitle("abcVote");
         mainStage.show();
     }
 

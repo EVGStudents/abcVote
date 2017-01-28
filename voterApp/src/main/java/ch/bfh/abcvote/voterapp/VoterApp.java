@@ -117,7 +117,7 @@ public class VoterApp extends Application {
         Group root = new Group();
         root.getChildren().addAll(mainController);
         Scene scene = new Scene(root);
-        mainStage.setTitle("VoterApp");
+        mainStage.setTitle("abcVote");
         mainStage.setScene(scene);
         mainStage.show();
     }

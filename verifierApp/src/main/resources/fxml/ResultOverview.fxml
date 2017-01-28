@@ -16,20 +16,20 @@
          
    
    
-            <Button fx:id="btPublish" layoutX="700.0" layoutY="552.0" minHeight="40.0" minWidth="80.0" mnemonicParsing="false" onAction="#btPublishClicked" text="Publish">
+            <Button fx:id="btPublish" layoutX="672.0" layoutY="541.0" minHeight="40.0" minWidth="80.0" mnemonicParsing="false" onAction="#btPublishClicked" stylesheets="@../styles/Styles.css" text="Publish">
          <font>
             <Font size="18.0" />
          </font></Button>
-      <Button fx:id="btHome" layoutX="599.0" layoutY="552.0" minHeight="40.0" minWidth="80.0" mnemonicParsing="false" onAction="#btHomeClicked" text="Home">
+      <Button fx:id="btHome" layoutX="551.0" layoutY="541.0" minHeight="40.0" minWidth="80.0" mnemonicParsing="false" onAction="#btHomeClicked" stylesheets="@../styles/Styles.css" text="Home">
          <font>
             <Font size="18.0" />
          </font></Button>
-         <Button fx:id="btBack" layoutX="15.0" layoutY="552.0" minHeight="40.0" minWidth="80.0" mnemonicParsing="false" onAction="#btBackClicked" text="Back">
+         <Button fx:id="btBack" layoutX="15.0" layoutY="541.0" minHeight="40.0" minWidth="80.0" mnemonicParsing="false" onAction="#btBackClicked" stylesheets="@../styles/Styles.css" text="Back">
          <font>
             <Font size="18.0" />
          </font></Button>
-      <ListView id="list-view" fx:id="lvResult" layoutX="14.0" layoutY="434.0" prefHeight="108.0" prefWidth="772.0" stylesheets="@../styles/Styles.css" />
-      <Label layoutX="14.0" layoutY="14.0" text="Result:">
+      <ListView id="list-view" fx:id="lvResult" layoutX="14.0" layoutY="434.0" prefHeight="100.0" prefWidth="772.0" stylesheets="@../styles/Styles.css" />
+      <Label layoutX="14.0" layoutY="24.0" text="Result:">
          <font>
             <Font name="System Bold" size="18.0" />
          </font></Label>
@@ -53,5 +53,11 @@
          <font>
             <Font size="18.0" />
          </font></Label>
+      <Pane id="headerBanner" layoutY="-4.0" prefHeight="20.0" prefWidth="800.0" stylesheets="@../styles/Styles.css" />
+      <Label id="verifierAppLabel" layoutX="600.0" layoutY="16.0" stylesheets="@../styles/Styles.css" text="VerifierApp" textAlignment="RIGHT">
+         <font>
+            <Font name="System Bold" size="24.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

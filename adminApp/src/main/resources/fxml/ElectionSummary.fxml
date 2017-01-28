@@ -11,11 +11,11 @@
     <children>
 
 
-      <Button fx:id="btCreate" layoutX="708.0" layoutY="551.0" mnemonicParsing="false" onAction="#btCreateClicked" text="Create">
+      <Button fx:id="btCreate" layoutX="681.0" layoutY="543.0" minHeight="40.0" minWidth="80.0" mnemonicParsing="false" onAction="#btCreateClicked" stylesheets="@../styles/Styles.css" text="Create">
          <font>
             <Font size="18.0" />
          </font></Button>
-      <Button fx:id="btBack" layoutX="16.0" layoutY="551.0" mnemonicParsing="false" onAction="#btBackClicked" text="Back">
+      <Button fx:id="btBack" layoutX="13.0" layoutY="543.0" minHeight="40.0" minWidth="80.0" mnemonicParsing="false" onAction="#btBackClicked" stylesheets="@../styles/Styles.css" text="Back">
          <font>
             <Font size="18.0" />
          </font></Button>
@@ -32,7 +32,7 @@
             <Font size="18.0" />
          </font></Label>
       <ListView id="list-cell" fx:id="lvVoters" layoutX="14.0" layoutY="131.0" prefHeight="184.0" prefWidth="775.0" styleClass="list-cell" stylesheets="@../styles/Styles.css" />
-      <ListView id="list-cell" fx:id="lvOptions" layoutX="14.0" layoutY="417.0" prefHeight="126.0" prefWidth="775.0" styleClass="list-cell" stylesheets="@../styles/Styles.css" />
+      <ListView id="list-cell" fx:id="lvOptions" layoutX="14.0" layoutY="417.0" prefHeight="117.0" prefWidth="775.0" styleClass="list-cell" stylesheets="@../styles/Styles.css" />
       <Label layoutX="15.0" layoutY="335.0" text="Topic:">
          <font>
             <Font size="18.0" />
@@ -65,6 +65,12 @@
          <font>
             <Font size="18.0" />
          </font></Label>
+      <Pane id="headerBanner" layoutY="-2.0" prefHeight="20.0" prefWidth="800.0" stylesheets="@../styles/Styles.css" />
+      <Label id="adminAppLabel" layoutX="617.0" layoutY="18.0" stylesheets="@../styles/Styles.css" text="AdminApp" textAlignment="RIGHT">
+         <font>
+            <Font name="System Bold" size="24.0" />
+         </font>
+      </Label>
 
    </children>
 </AnchorPane>

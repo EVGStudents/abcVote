@@ -9,24 +9,30 @@
 
 <AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.bfh.abcvote.verifierapp.controllers.NIZKPValidationController">
     <children>
-      <TableView fx:id="tvBallots" layoutX="14.0" layoutY="52.0" prefHeight="485.0" prefWidth="762.0">
+      <TableView fx:id="tvBallots" layoutX="19.0" layoutY="64.0" prefHeight="475.0" prefWidth="766.0">
          <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>
       </TableView>
    
    
-            <Button fx:id="btNext" layoutX="696.0" layoutY="548.0" minHeight="40.0" minWidth="80.0" mnemonicParsing="false" onAction="#btNextClicked" text="Next">
+            <Button fx:id="btNext" layoutX="701.0" layoutY="548.0" minHeight="40.0" minWidth="80.0" mnemonicParsing="false" onAction="#btNextClicked" stylesheets="@../styles/Styles.css" text="Next">
          <font>
             <Font size="18.0" />
          </font></Button>
-         <Button fx:id="btBack" layoutX="14.0" layoutY="548.0" minHeight="40.0" minWidth="80.0" mnemonicParsing="false" onAction="#btBackClicked" text="Back">
+         <Button fx:id="btBack" layoutX="19.0" layoutY="548.0" minHeight="40.0" minWidth="80.0" mnemonicParsing="false" onAction="#btBackClicked" stylesheets="@../styles/Styles.css" text="Back">
          <font>
             <Font size="18.0" />
          </font></Button>
-         <Label layoutX="14.0" layoutY="27.0" text="Result after validating the NIZKPs:">
+         <Label layoutX="19.0" layoutY="39.0" text="Result after validating the NIZKPs:">
          <font>
             <Font size="18.0" />
          </font></Label>
+      <Pane id="headerBanner" layoutY="-2.0" prefHeight="20.0" prefWidth="800.0" stylesheets="@../styles/Styles.css" />
+      <Label id="verifierAppLabel" layoutX="600.0" layoutY="19.0" stylesheets="@../styles/Styles.css" text="VerifierApp" textAlignment="RIGHT">
+         <font>
+            <Font name="System Bold" size="24.0" />
+         </font>
+      </Label>
    </children>  
 </AnchorPane>

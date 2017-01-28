@@ -1,5 +1,6 @@
 .button {
     -fx-font-weight: bold;
+    -fx-font: 18pt "System";
 }
 .list-cell {
   -fx-font: 16pt "System";
@@ -8,4 +9,13 @@
 
 .date-picker {
   -fx-font: 16pt "System";
+}
+
+#adminAppLabel {
+    -fx-font: 24pt "System";
+    -fx-font-weight: bold;
+}
+
+#headerBanner {
+    -fx-background-color: #4A87CC;
 }

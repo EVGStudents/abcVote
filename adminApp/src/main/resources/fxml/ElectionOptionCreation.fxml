@@ -9,7 +9,7 @@
 
 <AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.bfh.abcvote.adminapp.controllers.ElectionOptionCreationController">
    <children>
-      <TextField fx:id="txtVotingTopic" layoutX="11.0" layoutY="58.0" prefHeight="17.0" prefWidth="766.0">
+      <TextField fx:id="txtVotingTopic" layoutX="11.0" layoutY="69.0" prefHeight="35.0" prefWidth="774.0">
          <font>
             <Font size="18.0" />
          </font></TextField>
@@ -21,15 +21,15 @@
          <font>
             <Font size="18.0" />
          </font></TextField>
-      <Button fx:id="btNext" layoutX="697.0" layoutY="547.0" mnemonicParsing="false" onAction="#btNextClicked" prefHeight="40.0" prefWidth="80.0" text="Next">
+      <Button fx:id="btNext" layoutX="701.0" layoutY="541.0" minHeight="40.0" minWidth="80.0" mnemonicParsing="false" onAction="#btNextClicked" stylesheets="@../styles/Styles.css" text="Next">
          <font>
             <Font size="18.0" />
          </font></Button>
-      <Button fx:id="btBack" layoutX="13.0" layoutY="547.0" mnemonicParsing="false" onAction="#btBackClicked" prefHeight="40.0" prefWidth="80.0" text="Back">
+      <Button fx:id="btBack" layoutX="9.0" layoutY="541.0" minHeight="40.0" minWidth="80.0" mnemonicParsing="false" onAction="#btBackClicked" stylesheets="@../styles/Styles.css" text="Back">
          <font>
             <Font size="18.0" />
          </font></Button>
-      <Label layoutX="14.0" layoutY="27.0" text="What is the election about:">
+      <Label layoutX="14.0" layoutY="38.0" text="What is the election about:">
          <font>
             <Font size="18.0" />
          </font></Label>
@@ -53,5 +53,11 @@
          <font>
             <Font size="18.0" />
          </font></TextField>
+      <Pane id="headerBanner" layoutY="-2.0" prefHeight="20.0" prefWidth="800.0" stylesheets="@../styles/Styles.css" />
+      <Label id="adminAppLabel" layoutX="617.0" layoutY="18.0" stylesheets="@../styles/Styles.css" text="AdminApp" textAlignment="RIGHT">
+         <font>
+            <Font name="System Bold" size="24.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>
